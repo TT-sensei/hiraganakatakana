@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>はなまる練習帳</title>
+    <title>鬼コーチの練習帳</title>
     <style>
         body {
             font-family: "Helvetica Neue", Arial, sans-serif;
@@ -47,24 +47,19 @@
             cursor: crosshair;
         }
 
-        /* はなまるのアニメーション */
-        #hanamaru {
+        /* 判定結果の表示 */
+        #message {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 200px;
-            color: #ff3333;
-            z-index: 10;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            font-weight: bold;
             pointer-events: none;
             opacity: 0;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            text-shadow: 2px 2px 0px #fff; 
-        }
-
-        #hanamaru.show {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
+            transition: opacity 0.3s;
+            text-shadow: 2px 2px 0 #fff;
+            white-space: nowrap;
         }
 
         .controls {
@@ -85,25 +80,24 @@
         }
         button.secondary { background-color: #f44336; }
         
-        /* 判定用の見えないキャンバス */
         #checkCanvas { display: none; }
     </style>
 </head>
 <body>
 
-    <h1>かきかたれんしゅう</h1>
-    <div style="margin-bottom:10px; font-weight:bold; color:#555;">ていねいになぞってね！</div>
+    <h1>かきかたれんしゅう（厳しめ）</h1>
+    <div style="margin-bottom:10px; font-weight:bold; color:#555;">線からはみ出さないように書いてね</div>
 
     <div class="canvas-wrapper">
         <canvas id="bgCanvas" width="300" height="300"></canvas>
         <canvas id="drawingCanvas" width="300" height="300"></canvas>
-        <div id="hanamaru">💮</div>
+        <div id="message"></div>
     </div>
 
     <canvas id="checkCanvas" width="300" height="300"></canvas>
 
     <div class="controls">
-        <button class="secondary" onclick="resetCanvas()">クリア</button>
+        <button class="secondary" onclick="resetCanvas()">やりなおし</button>
         <button onclick="nextChar()">つぎへ ＞</button>
     </div>
 
@@ -111,17 +105,17 @@
         const drawingCanvas = document.getElementById('drawingCanvas');
         const bgCanvas = document.getElementById('bgCanvas');
         const checkCanvas = document.getElementById('checkCanvas');
+        const messageEl = document.getElementById('message');
         
         const ctxDraw = drawingCanvas.getContext('2d');
         const ctxBg = bgCanvas.getContext('2d');
         const ctxCheck = checkCanvas.getContext('2d');
         
-        const chars = ["あ","い","う","え","お","か","き","く","け","こ"];
+        const chars = ["あ","い","う","え","お"];
         let currentIndex = 0;
         let isDrawing = false;
-        let hasScored = false; // すでにはなまるが出たか
+        let hasScored = false;
 
-        // 初期化
         init();
 
         function init() {
@@ -129,15 +123,12 @@
             setupEvents();
         }
 
-        // イベント設定
         function setupEvents() {
-            // PC
             drawingCanvas.addEventListener('mousedown', startDrawing);
             drawingCanvas.addEventListener('mousemove', draw);
             drawingCanvas.addEventListener('mouseup', stopDrawing);
             drawingCanvas.addEventListener('mouseout', stopDrawing);
 
-            // スマホ
             drawingCanvas.addEventListener('touchstart', startDrawing, {passive: false});
             drawingCanvas.addEventListener('touchmove', draw, {passive: false});
             drawingCanvas.addEventListener('touchend', stopDrawing);
@@ -145,7 +136,7 @@
 
         function startDrawing(e) {
             e.preventDefault();
-            if(hasScored) return; // 正解後は書かせない（好みで変更可）
+            if(hasScored) return;
             isDrawing = true;
             ctxDraw.beginPath();
             const pos = getPos(e);
@@ -157,11 +148,11 @@
             e.preventDefault();
             const pos = getPos(e);
             
-            // 描画スタイル
-            ctxDraw.lineWidth = 25; // 太めにする（判定しやすくするため）
+            // ★変更点1：線を細くしました（25 -> 12）
+            ctxDraw.lineWidth = 12; 
             ctxDraw.lineCap = 'round';
             ctxDraw.lineJoin = 'round';
-            ctxDraw.strokeStyle = 'rgba(0, 0, 0, 0.8)'; // 少し透けさせる
+            ctxDraw.strokeStyle = 'rgba(0, 0, 0, 0.9)';
             
             ctxDraw.lineTo(pos.x, pos.y);
             ctxDraw.stroke();
@@ -170,7 +161,7 @@
         function stopDrawing() {
             if (isDrawing) {
                 isDrawing = false;
-                checkResult(); // 書き終わったら判定！
+                checkResult();
             }
         }
 
@@ -187,85 +178,104 @@
             return { x, y };
         }
 
-        // お手本を描く
         function drawGuide() {
             const char = chars[currentIndex];
             
-            // 1. 背景キャンバス（ユーザーに見える薄い文字）
+            // 背景（ユーザーに見えるガイド）
             ctxBg.clearRect(0,0,300,300);
             
             // 十字線
-            ctxBg.strokeStyle = '#ddd';
-            ctxBg.beginPath();
-            ctxBg.setLineDash([5, 5]);
-            ctxBg.moveTo(150, 0); ctxBg.lineTo(150, 300);
-            ctxBg.moveTo(0, 150); ctxBg.lineTo(300, 150);
-            ctxBg.stroke();
+            ctxBg.strokeStyle = '#eee';
+            ctxBg.beginPath(); ctxBg.moveTo(150, 0); ctxBg.lineTo(150, 300); ctxBg.stroke();
+            ctxBg.beginPath(); ctxBg.moveTo(0, 150); ctxBg.lineTo(300, 150); ctxBg.stroke();
 
-            // 文字
             ctxBg.font = "200px 'KaiTi', 'Kyokasho', serif";
-            ctxBg.fillStyle = "#e0e0e0";
             ctxBg.textAlign = "center";
             ctxBg.textBaseline = "middle";
-            ctxBg.fillText(char, 150, 170);
+            
+            // ★変更点2：ガイドを「道」として表示するため、少し太めに描画
+            ctxBg.lineWidth = 35; 
+            ctxBg.lineJoin = "round";
+            ctxBg.strokeStyle = "#e0e0e0"; // 道の色
+            ctxBg.strokeText(char, 150, 170);
 
-            // 2. 判定用キャンバス（裏方：計算用）
-            // ここに「正解の形」を赤色で描いておく
+            // 判定用（裏方）
+            // 赤色で「ここなら正解」というエリアを塗る
             ctxCheck.clearRect(0,0,300,300);
             ctxCheck.font = "200px 'KaiTi', 'Kyokasho', serif";
-            ctxCheck.fillStyle = "#FF0000"; // 赤色で描く
             ctxCheck.textAlign = "center";
             ctxCheck.textBaseline = "middle";
-            ctxCheck.fillText(char, 150, 170);
+            ctxCheck.lineWidth = 40; // 判定エリアは少し広めに（遊びを持たせる）
+            ctxCheck.lineJoin = "round";
+            ctxCheck.strokeStyle = "#FF0000"; 
+            ctxCheck.strokeText(char, 150, 170);
         }
 
-        // ★★★ 正誤判定ロジック ★★★
+        // ★★★ 厳格判定ロジック ★★★
         function checkResult() {
             if(hasScored) return;
 
-            // 1. 判定用キャンバス（正解の赤文字）のデータを取得
             const guideData = ctxCheck.getImageData(0, 0, 300, 300).data;
-            // 2. ユーザーが書いたキャンバスのデータを取得
             const userData = ctxDraw.getImageData(0, 0, 300, 300).data;
 
-            let hitCount = 0;   // 正解エリアに書いた数
+            let hitCount = 0;    // 正解エリアを塗った数
+            let missCount = 0;   // はみ出し数
             let guidePixels = 0; // 正解エリアの総面積
 
-            // 全ピクセルをスキャン（4つ飛ばしで高速化）
-            for (let i = 0; i < guideData.length; i += 4 * 4) { // *4はスキップ処理
-                // 赤色成分がある＝そこは正解エリア
-                if (guideData[i] > 100) { 
+            for (let i = 0; i < guideData.length; i += 4 * 2) { // *2で少し精密に
+                const isRed = guideData[i] > 100;       // そこは正解エリアか
+                const isPainted = userData[i+3] > 50;   // ユーザーが塗ったか
+
+                if (isRed) {
                     guidePixels++;
-                    
-                    // 同じ場所のユーザーキャンバスが不透明（書かれている）か？
-                    // userData[i+3] はアルファ値（透明度）
-                    if (userData[i+3] > 50) {
-                        hitCount++;
-                    }
+                    if (isPainted) hitCount++;
+                } else {
+                    // 赤くない場所（白紙）なのに塗ってたらペナルティ
+                    if (isPainted) missCount++;
                 }
             }
 
-            // 判定基準：正解エリアの何％を塗ったか
-            // ここでは50%以上塗ればOKとしています（子供向けに甘めに）
-            const ratio = hitCount / guidePixels;
+            // スコア計算
+            // 塗りつぶし率 (0.0 ~ 1.0)
+            const coverage = hitCount / guidePixels;
             
-            console.log("カバー率: " + Math.floor(ratio * 100) + "%");
+            // はみ出し率（塗った量に対してどれくらいはみ出したか）
+            // ミスが許されるのは全体の画素数のごく一部
+            const missRatio = missCount / (hitCount + 1); 
 
-            if (ratio > 0.55) {
-                showHanamaru();
+            console.log(`カバー率:${Math.floor(coverage*100)}% はみ出し:${Math.floor(missRatio*100)}%`);
+
+            // 判定基準
+            // 1. お手本の50%以上をなぞっていること
+            // 2. はみ出しがお手本エリアの30%以下であること（ここを厳しくすると難易度が上がる）
+            
+            if (coverage > 0.5 && missRatio < 0.3) {
+                showResult("💮", "#ff3333");
+            } else if (missRatio >= 0.3) {
+                // はみ出しすぎると警告
+                // まだ書き途中かもしれないので、あからさまな時だけ出す
+                 if (coverage > 0.2) showResult("ざつ！", "#333");
             }
         }
 
-        function showHanamaru() {
-            const el = document.getElementById('hanamaru');
-            el.classList.add('show');
-            hasScored = true;
-            // お祝いの効果音をここに入れることも可能
+        function showResult(text, color) {
+            messageEl.innerText = text;
+            messageEl.style.color = color;
+            messageEl.style.opacity = 1;
+            
+            if(text === "💮") {
+                hasScored = true;
+            } else {
+                // 失敗表示はすぐ消す
+                setTimeout(() => {
+                    if(!hasScored) messageEl.style.opacity = 0;
+                }, 1000);
+            }
         }
 
         function resetCanvas() {
             ctxDraw.clearRect(0, 0, 300, 300);
-            document.getElementById('hanamaru').classList.remove('show');
+            messageEl.style.opacity = 0;
             hasScored = false;
         }
 
