@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>かなマスター</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #FF6B9D;
+  --secondary: #FF9DC6;
+  --green: #00D084;
+  --blue: #3B82F6;
+  --yellow: #F59E0B;
+  --purple: #8B5CF6;
+  --bg: #FFF5F9;
+  --card: #FFFFFF;
+}
+body {
+  font-family: 'Hiragino Rounded Gothic Pro', 'ヒラギノ丸ゴ Pro', 'BIZ UDPGothic', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: #333;
+}
+
+/* ============ SCREENS ============ */
+.screen { display: none; padding: 16px; max-width: 480px; margin: 0 auto; }
+.screen.active { display: block; }
+
+/* ============ TITLE SCREEN ============ */
+.title-header {
+  text-align: center;
+  padding: 24px 0 16px;
+}
+.title-logo {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(255,107,157,0.3);
+}
+.title-logo span { font-size: 1.8rem; margin-right: 6px; }
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin: 10px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+.level-mascot { font-size: 1.8rem; }
+.level-info { text-align: left; }
+.level-num { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
+.level-title-name { font-size: 0.75rem; color: #888; }
+.xp-bar-wrap {
+  background: #F0F0F0;
+  border-radius: 99px;
+  height: 8px;
+  margin: 4px 0;
+  overflow: hidden;
+}
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.xp-text { font-size: 0.7rem; color: #aaa; }
+
+/* グループ選択 */
+.section-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #888;
+  margin: 14px 0 6px;
+  padding-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.group-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.group-btn {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  position: relative;
+}
+.group-btn:active { transform: scale(0.97); }
+.group-btn.selected {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+}
+.group-btn .g-name { font-size: 1rem; font-weight: 900; }
+.group-btn .g-sub { font-size: 0.7rem; opacity: 0.7; margin-top: 2px; }
+.group-btn .g-prog {
+  font-size: 0.65rem;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+.group-btn .g-lap {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 0.65rem;
+}
+.prog-bar-mini {
+  height: 4px;
+  background: rgba(0,0,0,0.1);
+  border-radius: 99px;
+  margin-top: 5px;
+  overflow: hidden;
+}
+.group-btn.selected .prog-bar-mini { background: rgba(255,255,255,0.3); }
+.prog-bar-mini-inner {
+  height: 100%;
+  background: var(--green);
+  border-radius: 99px;
+}
+.group-btn.selected .prog-bar-mini-inner { background: white; }
+
+/* モードボタン */
+.mode-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.mode-btn {
+  flex: 1;
+  min-width: 80px;
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 10px 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s;
+  color: #555;
+}
+.mode-btn:hover { border-color: var(--primary); color: var(--primary); }
+.mode-btn:active { transform: scale(0.96); }
+.mode-btn.tokkun-btn { border-color: #4CAF50; color: #4CAF50; }
+.mode-btn.nigate-btn { border-color: #9C27B0; color: #9C27B0; }
+.mode-btn.random-btn { border-color: var(--yellow); color: var(--yellow); }
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: #CCC;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: block;
+  margin: 8px auto 0;
+}
+
+/* 保護者向け */
+.parent-note {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 0.72rem;
+  color: #666;
+  margin-top: 12px;
+  line-height: 1.6;
+}
+.parent-note strong { color: #444; }
+
+/* ============ LIST SCREEN ============ */
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.back-btn {
+  background: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.mode-badge {
+  flex: 1;
+  text-align: center;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.list-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.action-btn {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: #666;
+  font-weight: 700;
+}
+.folder-btn {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 700;
+  color: #666;
+}
+.folder-btn.active.tokkun { border-color: #4CAF50; color: #4CAF50; background: #F0FFF4; }
+.folder-btn.active.nigate { border-color: #9C27B0; color: #9C27B0; background: #F5F3FF; }
+
+/* カナグリッド */
+.kana-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 80px;
+}
+.kana-card {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 10px 4px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.kana-card:active { transform: scale(0.93); }
+.kana-card .reading { font-size: 0.55rem; color: #AAA; font-weight: 400; display: block; margin-top: 2px; }
+.kana-card.cleared-p { background: #F0FFF8; border-color: #A7F3D0; }
+.kana-card.cleared-t { background: #FFF7ED; border-color: #FED7AA; }
+.mark-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid white;
+  font-size: 0.5rem;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+}
+.tokkun-mark {
+  position: absolute;
+  top: -5px; left: -5px;
+  font-size: 0.6rem;
+}
+.nigate-mark {
+  position: absolute;
+  bottom: -5px; left: -5px;
+  font-size: 0.6rem;
+}
+.lap-badge-mini {
+  position: absolute;
+  top: 1px; left: 2px;
+  font-size: 0.5rem;
+}
+
+/* ============ PRACTICE SCREEN ============ */
+.practice-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.practice-top-right {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+.icon-btn {
+  background: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.msg-area {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 8px;
+  color: var(--green);
+  min-height: 36px;
+}
+
+.kana-display-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin: 8px 0;
+}
+.reading-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 70px;
+}
+.reading-chip {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  border: 2px solid #E5E7EB;
+  color: #666;
+}
+
+.canvas-wrap {
+  position: relative;
+  width: 250px; height: 250px;
+  flex-shrink: 0;
+}
+.canvas-wrap canvas { position: absolute; top: 0; left: 0; }
+
+.practice-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.p-action-btn {
+  background: white;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #555;
+}
+.p-action-btn:active { transform: scale(0.95); }
+.folder-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* ============ OVERLAYS ============ */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.overlay.active { display: flex; }
+.overlay-card {
+  background: white;
+  border-radius: 24px;
+  padding: 30px 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.result-icon { font-size: 3rem; margin-bottom: 8px; }
+.result-msg { font-size: 1.5rem; font-weight: 900; margin-bottom: 16px; }
+.result-btns { display: flex; gap: 10px; justify-content: center; }
+.result-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-next { background: var(--green); color: white; }
+.btn-retry { background: #F3F4F6; color: #555; }
+
+.levelup-overlay .overlay-card { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.levelup-num { font-size: 3rem; font-weight: 900; }
+.levelup-mascot { font-size: 2.5rem; margin: 8px 0; }
+
+.reset-confirm-card .overlay-card { }
+.reset-title { font-size: 1.1rem; font-weight: 900; margin-bottom: 8px; }
+.reset-desc { font-size: 0.8rem; color: #888; margin-bottom: 20px; }
+.btn-danger { background: #EF4444; color: white; }
+.btn-cancel { background: #F3F4F6; color: #555; }
+
+/* 周回アップ */
+.lapup-inner { border-radius: 28px; padding: 30px 24px; text-align: center; color: white; width: 100%; max-width: 320px; }
+
+/* ランダムクリア */
+.random-clear .overlay-card { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+</style>
+</head>
+<body>
+
+<!-- ===== TITLE SCREEN ===== -->
+<div id="title-screen" class="screen active">
+  <div class="title-header">
+    <div class="title-logo"><span>✏️</span>かなマスター</div>
+    <div class="level-badge">
+      <div class="level-mascot" id="title-mascot">🥚</div>
+      <div class="level-info">
+        <div class="level-num">Lv.<span id="title-level">1</span></div>
+        <div class="level-title-name" id="title-name">かなタマゴ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">🌸 ひらがな</div>
+  <div class="group-grid">
+    <div class="group-btn" id="g-btn-h1" onclick="setGroup('h1')">
+      <div class="g-name">あ〜な行</div>
+      <div class="g-sub">あかさたな</div>
+      <div class="g-prog" id="g-prog-h1">0/25</div>
+      <div class="g-lap" id="g-lap-h1"></div>
+      <div class="prog-bar-mini"><div class="prog-bar-mini-inner" id="g-bar-h1" style="width:0%"></div></div>
+    </div>
+    <div class="group-btn" id="g-btn-h2" onclick="setGroup('h2')">
+      <div class="g-name">は〜ん</div>
+      <div class="g-sub">はまやらわをん</div>
+      <div class="g-prog" id="g-prog-h2">0/21</div>
+      <div class="g-lap" id="g-lap-h2"></div>
+      <div class="prog-bar-mini"><div class="prog-bar-mini-inner" id="g-bar-h2" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-label">🔷 カタカナ</div>
+  <div class="group-grid">
+    <div class="group-btn" id="g-btn-k1" onclick="setGroup('k1')">
+      <div class="g-name">ア〜ナ行</div>
+      <div class="g-sub">アカサタナ</div>
+      <div class="g-prog" id="g-prog-k1">0/25</div>
+      <div class="g-lap" id="g-lap-k1"></div>
+      <div class="prog-bar-mini"><div class="prog-bar-mini-inner" id="g-bar-k1" style="width:0%"></div></div>
+    </div>
+    <div class="group-btn" id="g-btn-k2" onclick="setGroup('k2')">
+      <div class="g-name">ハ〜ン</div>
+      <div class="g-sub">ハマヤラワヲン</div>
+      <div class="g-prog" id="g-prog-k2">0/21</div>
+      <div class="g-lap" id="g-lap-k2"></div>
+      <div class="prog-bar-mini"><div class="prog-bar-mini-inner" id="g-bar-k2" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="mode-row">
+    <button class="mode-btn" onclick="selectModeAndGo('practice')">✏️ れんしゅう</button>
+    <button class="mode-btn" onclick="selectModeAndGo('test')">🎯 テスト</button>
+    <button class="mode-btn tokkun-btn" onclick="selectModeAndGo('tokkun')">🏅 とっくん</button>
+    <button class="mode-btn nigate-btn" onclick="selectModeAndGo('nigate')">🐢 にがて</button>
+  </div>
+  <div class="mode-row">
+    <button class="mode-btn random-btn" onclick="startRandomTest()">🎲 ランダムテスト（10もん）</button>
+  </div>
+
+  <div class="parent-note">
+    <strong>⚠️ 保護者・先生方へ</strong><br>
+    本アプリは学習支援のために作成されました。なぞり判定はあくまで目安です。正しい書き方については学校の教科書・先生の指導を優先してください。<br>
+    <strong>使用データ：</strong>KanjiVG（Ulrich Apel, CC BY-SA 3.0）
+  </div>
+  <button class="reset-btn" onclick="showResetConfirm()">🗑 データリセット</button>
+</div>
+
+<!-- ===== LIST SCREEN ===== -->
+<div id="list-screen" class="screen">
+  <div class="list-header">
+    <button class="back-btn" onclick="showScreen('title-screen')">🏠 ホーム</button>
+    <div class="mode-badge" id="mode-badge" style="background:linear-gradient(135deg,#FF6B9D,#FF9DC6)">れんしゅう</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+    <div id="list-level-display" style="font-size:0.85rem;font-weight:700;color:#888;">Lv.<span id="list-level">1</span></div>
+    <div style="flex:1">
+      <div class="xp-bar-wrap"><div class="xp-bar" id="list-xp-bar"></div></div>
+    </div>
+    <div id="list-next-xp" style="font-size:0.7rem;color:#aaa;">あと<span id="next-xp">5</span></div>
+  </div>
+  <div id="list-prog-container"></div>
+  <div class="list-actions">
+    <button class="action-btn" id="uncleared-btn" onclick="toggleUnclearedFilter()">🔍 未クリアだけ</button>
+    <button class="action-btn" id="clear-tokkun-btn" style="display:none;color:#4CAF50;border-color:#4CAF50" onclick="confirmClearFolder('tokkun')">🏅 とっくん全解除</button>
+    <button class="action-btn" id="clear-nigate-btn" style="display:none;color:#9C27B0;border-color:#9C27B0" onclick="confirmClearFolder('nigate')">🐢 にがて全解除</button>
+  </div>
+  <div class="kana-grid" id="kana-grid"></div>
+</div>
+
+<!-- ===== PRACTICE SCREEN ===== -->
+<div id="practice-screen" class="screen">
+  <div class="practice-header">
+    <button class="back-btn" onclick="handleBackFromPractice()">← もどる</button>
+    <div class="practice-top-right">
+      <button class="icon-btn" onclick="playAnimation()" title="アニメーション">▶</button>
+      <button class="icon-btn" onclick="retry()" title="もういっかい">↺</button>
+    </div>
+  </div>
+  <div class="msg-area" id="message-area">うすいせんを なぞろう！</div>
+
+  <div id="character-target"></div>
+
+  <div class="practice-actions">
+    <button class="p-action-btn" onclick="handleNextClick()" style="background:var(--green);color:white;border-color:var(--green)">つぎへ →</button>
+    <button class="p-action-btn" onclick="retry()">もういっかい</button>
+  </div>
+  <div class="folder-row">
+    <button class="folder-btn" id="tokkun-toggle" onclick="toggleFolder('tokkun')">☆ とっくん</button>
+    <button class="folder-btn" id="nigate-toggle" onclick="toggleFolder('nigate')">☆ にがて</button>
+  </div>
+</div>
+
+<!-- ===== OVERLAYS ===== -->
+<!-- 結果 -->
+<div class="overlay" id="result-overlay">
+  <div class="overlay-card">
+    <div class="result-icon" id="result-icon">⭐</div>
+    <div class="result-msg" id="result-msg">できたー！</div>
+    <div class="result-btns">
+      <button class="result-btn btn-next" onclick="handleNextClick()">つぎへ →</button>
+      <button class="result-btn btn-retry" onclick="closeResultAndRetry()">もういっかい</button>
+    </div>
+  </div>
+</div>
+<!-- レベルアップ -->
+<div class="overlay levelup-overlay" id="levelup-overlay">
+  <div class="overlay-card">
+    <div style="font-size:1.5rem;font-weight:900;margin-bottom:4px;">✨ レベルアップ！！</div>
+    <div class="levelup-mascot" id="levelup-mascot">🐣</div>
+    <div class="levelup-num">Lv.<span id="new-level-num">2</span> になった！</div>
+    <div style="margin:8px 0;font-size:0.9rem;opacity:0.9">すごいぞ！ さらに強くなったね！</div>
+    <button class="result-btn" style="background:white;color:#764ba2;margin-top:12px" onclick="closeLevelUp()">🎉 やったー！</button>
+  </div>
+</div>
+<!-- 周回アップ -->
+<div class="overlay" id="lapup-overlay">
+  <div class="lapup-inner" id="lapup-inner">
+    <div id="lapup-emoji" style="font-size:3rem;margin-bottom:8px"></div>
+    <div id="lapup-group" style="font-size:1rem;font-weight:700;opacity:0.9;margin-bottom:4px"></div>
+    <div id="lapup-lap" style="font-size:1.8rem;font-weight:900;margin-bottom:8px"></div>
+    <div style="font-size:0.95rem;opacity:0.9;margin-bottom:20px">ぜんぶの もじを クリアしたよ！</div>
+    <button onclick="closeLapUp()" style="background:white;color:#333;border:none;border-radius:20px;padding:10px 28px;font-size:1rem;font-weight:700;cursor:pointer">やったー！ 🎊</button>
+  </div>
+</div>
+<!-- ランダムクリア -->
+<div class="overlay random-clear" id="random-clear-overlay">
+  <div class="overlay-card">
+    <div style="font-size:2rem;margin-bottom:8px">🎉</div>
+    <div style="font-size:1.3rem;font-weight:900;margin-bottom:4px">テストクリア！</div>
+    <div style="font-size:0.9rem;opacity:0.9;margin-bottom:4px">せいかい！ ボーナス経験値 +10 ゲット！</div>
+    <button class="result-btn" style="background:white;color:#f5576c;margin-top:16px" onclick="handleRandomClearClick()">🏠 ホームへ</button>
+  </div>
+</div>
+<!-- リセット確認 -->
+<div class="overlay" id="reset-confirm">
+  <div class="overlay-card">
+    <div class="reset-title">ほんとうに データを けしますか？</div>
+    <div class="reset-desc">レベルも とっくん・にがての もじも<br>１からに なります。</div>
+    <div class="result-btns">
+      <button class="result-btn btn-danger" onclick="executeReset()">はい、けします</button>
+      <button class="result-btn btn-cancel" onclick="closeResetConfirm()">キャンセル</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// データ定義
+// ============================================================
+const GROUP_DATA = {
+  h1: {
+    label: 'ひらがな あ〜な行',
+    chars: [
+      {char:'あ',reading:'a'},{char:'い',reading:'i'},{char:'う',reading:'u'},{char:'え',reading:'e'},{char:'お',reading:'o'},
+      {char:'か',reading:'ka'},{char:'き',reading:'ki'},{char:'く',reading:'ku'},{char:'け',reading:'ke'},{char:'こ',reading:'ko'},
+      {char:'さ',reading:'sa'},{char:'し',reading:'shi'},{char:'す',reading:'su'},{char:'せ',reading:'se'},{char:'そ',reading:'so'},
+      {char:'た',reading:'ta'},{char:'ち',reading:'chi'},{char:'つ',reading:'tsu'},{char:'て',reading:'te'},{char:'と',reading:'to'},
+      {char:'な',reading:'na'},{char:'に',reading:'ni'},{char:'ぬ',reading:'nu'},{char:'ね',reading:'ne'},{char:'の',reading:'no'},
+    ]
+  },
+  h2: {
+    label: 'ひらがな は〜ん',
+    chars: [
+      {char:'は',reading:'ha'},{char:'ひ',reading:'hi'},{char:'ふ',reading:'fu'},{char:'へ',reading:'he'},{char:'ほ',reading:'ho'},
+      {char:'ま',reading:'ma'},{char:'み',reading:'mi'},{char:'む',reading:'mu'},{char:'め',reading:'me'},{char:'も',reading:'mo'},
+      {char:'や',reading:'ya'},{char:'ゆ',reading:'yu'},{char:'よ',reading:'yo'},
+      {char:'ら',reading:'ra'},{char:'り',reading:'ri'},{char:'る',reading:'ru'},{char:'れ',reading:'re'},{char:'ろ',reading:'ro'},
+      {char:'わ',reading:'wa'},{char:'を',reading:'wo'},{char:'ん',reading:'n'},
+    ]
+  },
+  k1: {
+    label: 'カタカナ ア〜ナ行',
+    chars: [
+      {char:'ア',reading:'a'},{char:'イ',reading:'i'},{char:'ウ',reading:'u'},{char:'エ',reading:'e'},{char:'オ',reading:'o'},
+      {char:'カ',reading:'ka'},{char:'キ',reading:'ki'},{char:'ク',reading:'ku'},{char:'ケ',reading:'ke'},{char:'コ',reading:'ko'},
+      {char:'サ',reading:'sa'},{char:'シ',reading:'shi'},{char:'ス',reading:'su'},{char:'セ',reading:'se'},{char:'ソ',reading:'so'},
+      {char:'タ',reading:'ta'},{char:'チ',reading:'chi'},{char:'ツ',reading:'tsu'},{char:'テ',reading:'te'},{char:'ト',reading:'to'},
+      {char:'ナ',reading:'na'},{char:'ニ',reading:'ni'},{char:'ヌ',reading:'nu'},{char:'ネ',reading:'ne'},{char:'ノ',reading:'no'},
+    ]
+  },
+  k2: {
+    label: 'カタカナ ハ〜ン',
+    chars: [
+      {char:'ハ',reading:'ha'},{char:'ヒ',reading:'hi'},{char:'フ',reading:'fu'},{char:'ヘ',reading:'he'},{char:'ホ',reading:'ho'},
+      {char:'マ',reading:'ma'},{char:'ミ',reading:'mi'},{char:'ム',reading:'mu'},{char:'メ',reading:'me'},{char:'モ',reading:'mo'},
+      {char:'ヤ',reading:'ya'},{char:'ユ',reading:'yu'},{char:'ヨ',reading:'yo'},
+      {char:'ラ',reading:'ra'},{char:'リ',reading:'ri'},{char:'ル',reading:'ru'},{char:'レ',reading:'re'},{char:'ロ',reading:'ro'},
+      {char:'ワ',reading:'wa'},{char:'ヲ',reading:'wo'},{char:'ン',reading:'n'},
+    ]
+  }
+};
+
+// ============================================================
+// 単語データ（テストモード用）★ここを編集で単語・絵文字を変更できます
+// ============================================================
+const KANA_WORDS = {
+  h1: [
+    { char:'あ', emoji:'🌧️', word:'あめ',       pos:0 },
+    { char:'い', emoji:'🐶',  word:'いぬ',       pos:0 },
+    { char:'う', emoji:'🐴',  word:'うま',       pos:0 },
+    { char:'え', emoji:'📖',  word:'えほん',     pos:0 },
+    { char:'お', emoji:'🍙',  word:'おにぎり',   pos:0 },
+    { char:'か', emoji:'🐸',  word:'かえる',     pos:0 },
+    { char:'き', emoji:'🍄',  word:'きのこ',     pos:0 },
+    { char:'く', emoji:'🐻',  word:'くま',       pos:0 },
+    { char:'け', emoji:'🐛',  word:'けむし',     pos:0 },
+    { char:'こ', emoji:'🐨',  word:'こあら',     pos:0 },
+    { char:'さ', emoji:'🐟',  word:'さかな',     pos:0 },
+    { char:'し', emoji:'🦌',  word:'しか',       pos:0 },
+    { char:'す', emoji:'🍉',  word:'すいか',     pos:0 },
+    { char:'せ', emoji:'🐞',  word:'せみ',       pos:0 },
+    { char:'そ', emoji:'🌌',  word:'そら',       pos:0 },
+    { char:'た', emoji:'🥚',  word:'たまご',     pos:0 },
+    { char:'ち', emoji:'🦋',  word:'ちょう',     pos:0 },
+    { char:'つ', emoji:'🌙',  word:'つき',       pos:0 },
+    { char:'て', emoji:'🧤',  word:'てぶくろ',   pos:0 },
+    { char:'と', emoji:'🐯',  word:'とら',       pos:0 },
+    { char:'な', emoji:'🍐',  word:'なし',       pos:0 },
+    { char:'に', emoji:'🌈',  word:'にじ',       pos:0 },
+    { char:'ぬ', emoji:'🧵',  word:'ぬの',       pos:0 },
+    { char:'ね', emoji:'🐈',  word:'ねこ',       pos:0 },
+    { char:'の', emoji:'🍙',  word:'のり',       pos:0 },
+  ],
+  h2: [
+    { char:'は', emoji:'🌸',  word:'はな',       pos:0 },
+    { char:'ひ', emoji:'🐤',  word:'ひよこ',     pos:0 },
+    { char:'ふ', emoji:'🚢',  word:'ふね',       pos:0 },
+    { char:'へ', emoji:'🐍',  word:'へび',       pos:0 },
+    { char:'ほ', emoji:'⭐',  word:'ほし',       pos:0 },
+    { char:'ま', emoji:'🐟',  word:'まぐろ',     pos:0 },
+    { char:'み', emoji:'👂',  word:'みみ',       pos:0 },
+    { char:'む', emoji:'🐛',  word:'むし',       pos:0 },
+    { char:'め', emoji:'👓',  word:'めがね',     pos:0 },
+    { char:'も', emoji:'🍑',  word:'もも',       pos:0 },
+    { char:'や', emoji:'🏔️', word:'やま',       pos:0 },
+    { char:'ゆ', emoji:'⛄️', word:'ゆき',       pos:0 },
+    { char:'よ', emoji:'🌙',  word:'よる',       pos:0 },
+    { char:'ら', emoji:'🦁',  word:'らいおん',   pos:0 },
+    { char:'り', emoji:'🍎',  word:'りんご',     pos:0 },
+    { char:'る', emoji:'🏠',  word:'るすばん',   pos:0 },
+    { char:'れ', emoji:'🍋',  word:'れもん',     pos:0 },
+    { char:'ろ', emoji:'🤖',  word:'ろぼっと',   pos:0 },
+    { char:'わ', emoji:'🐊',  word:'わに',       pos:0 },
+    { char:'を', emoji:'🌌',  word:'そらを',     pos:2 },
+    { char:'ん', emoji:'🍎',  word:'りんご',     pos:1 },
+  ],
+  k1: [
+    { char:'ア', emoji:'🍦',  word:'アイス',       pos:0 },
+    { char:'イ', emoji:'🌭',  word:'インク',       pos:0 },
+    { char:'ウ', emoji:'🌭',  word:'ウインナー',   pos:0 },
+    { char:'エ', emoji:'🏢',  word:'エレベーター', pos:0 },
+    { char:'オ', emoji:'🍳',  word:'オムライス',   pos:0 },
+    { char:'カ', emoji:'📷',  word:'カメラ',       pos:0 },
+    { char:'キ', emoji:'🥝',  word:'キウイ',       pos:0 },
+    { char:'ク', emoji:'🍪',  word:'クッキー',     pos:0 },
+    { char:'ケ', emoji:'🍰',  word:'ケーキ',       pos:0 },
+    { char:'コ', emoji:'☕',  word:'コーヒー',     pos:0 },
+    { char:'サ', emoji:'🥗',  word:'サラダ',       pos:0 },
+    { char:'シ', emoji:'🚿',  word:'シャワー',     pos:0 },
+    { char:'ス', emoji:'📱',  word:'スマホ',       pos:0 },
+    { char:'セ', emoji:'🧴',  word:'セッケン',     pos:0 },
+    { char:'ソ', emoji:'🛋️', word:'ソファ',       pos:0 },
+    { char:'タ', emoji:'🚕',  word:'タクシー',     pos:0 },
+    { char:'チ', emoji:'🧀',  word:'チーズ',       pos:0 },
+    { char:'ツ', emoji:'🎄',  word:'ツリー',       pos:0 },
+    { char:'テ', emoji:'📺',  word:'テレビ',       pos:0 },
+    { char:'ト', emoji:'🍅',  word:'トマト',       pos:0 },
+    { char:'ナ', emoji:'🔪',  word:'ナイフ',       pos:0 },
+    { char:'ニ', emoji:'📰',  word:'ニュース',     pos:0 },
+    { char:'ヌ', emoji:'🐃',  word:'ヌー',         pos:0 },
+    { char:'ネ', emoji:'👔',  word:'ネクタイ',     pos:0 },
+    { char:'ノ', emoji:'📓',  word:'ノート',       pos:0 },
+  ],
+  k2: [
+    { char:'ハ', emoji:'🍽️', word:'ハンバーグ',   pos:0 },
+    { char:'ヒ', emoji:'🦸',  word:'ヒーロー',     pos:0 },
+    { char:'フ', emoji:'🍴',  word:'フォーク',     pos:0 },
+    { char:'ヘ', emoji:'🚁',  word:'ヘリコプター', pos:0 },
+    { char:'ホ', emoji:'⭐',  word:'ホシ',         pos:0 },
+    { char:'マ', emoji:'🎤',  word:'マイク',       pos:0 },
+    { char:'ミ', emoji:'🥛',  word:'ミルク',       pos:0 },
+    { char:'ム', emoji:'🍮',  word:'ムース',       pos:0 },
+    { char:'メ', emoji:'🍈',  word:'メロン',       pos:0 },
+    { char:'モ', emoji:'👾',  word:'モンスター',   pos:0 },
+    { char:'ヤ', emoji:'🌴',  word:'ヤシ',         pos:0 },
+    { char:'ユ', emoji:'👕',  word:'ユニフォーム', pos:0 },
+    { char:'ヨ', emoji:'⛵',  word:'ヨット',       pos:0 },
+    { char:'ラ', emoji:'🦁',  word:'ライオン',     pos:0 },
+    { char:'リ', emoji:'🎀',  word:'リボン',       pos:0 },
+    { char:'ル', emoji:'💎',  word:'ルビー',       pos:0 },
+    { char:'レ', emoji:'🍋',  word:'レモン',       pos:0 },
+    { char:'ロ', emoji:'🤖',  word:'ロボット',     pos:0 },
+    { char:'ワ', emoji:'🧇',  word:'ワッフル',     pos:0 },
+    { char:'ヲ', emoji:'🍰',  word:'ケーキヲ',     pos:3 },
+    { char:'ン', emoji:'🍞',  word:'パン',         pos:1 },
+  ],
+};
+
+// ============================================================
+// 周回テーマ
+// ============================================================
+const LAP_THEMES = [
+  {lap:0, name:'はじめて', primary:'#00D084', secondary:'#00E5A0', cardBg:'#F0FFF8', cardBorder:'#A7F3D0', emoji:'🌱', badgeColor:'#00C07A'},
+  {lap:1, name:'1しゅう目', primary:'#3B82F6', secondary:'#60A5FA', cardBg:'#EFF6FF', cardBorder:'#BFDBFE', emoji:'💧', badgeColor:'#2563EB'},
+  {lap:2, name:'2しゅう目', primary:'#F59E0B', secondary:'#FCD34D', cardBg:'#FFFBEB', cardBorder:'#FDE68A', emoji:'⭐', badgeColor:'#D97706'},
+  {lap:3, name:'3しゅう目', primary:'#EF4444', secondary:'#F87171', cardBg:'#FFF1F1', cardBorder:'#FECACA', emoji:'🔥', badgeColor:'#DC2626'},
+  {lap:4, name:'4しゅう目', primary:'#8B5CF6', secondary:'#A78BFA', cardBg:'#F5F3FF', cardBorder:'#DDD6FE', emoji:'💜', badgeColor:'#7C3AED'},
+  {lap:5, name:'5しゅう目', primary:'#EC4899', secondary:'#F472B6', cardBg:'#FDF2F8', cardBorder:'#FBCFE8', emoji:'🌸', badgeColor:'#DB2777'},
+];
+function getLapTheme(lap){ return LAP_THEMES[Math.min(lap, LAP_THEMES.length-1)]; }
+
+// ============================================================
+// タイトル
+// ============================================================
+const TITLE_DATA = [
+  {level:1, mascot:'🥚', title:'かなタマゴ'},
+  {level:3, mascot:'🐣', title:'かなのひよこ'},
+  {level:5, mascot:'🐥', title:'かなのとり'},
+  {level:8, mascot:'🐦', title:'かなのつばめ'},
+  {level:12, mascot:'🦅', title:'かなのわし'},
+  {level:18, mascot:'🌟', title:'かなのほし'},
+  {level:25, mascot:'👑', title:'かなマスター！'},
+];
+function getTitleData(level){
+  let c = TITLE_DATA[0];
+  for(let i=0;i<TITLE_DATA.length;i++){
+    if(level >= TITLE_DATA[i].level) c = TITLE_DATA[i]; else break;
+  }
+  return c;
+}
+
+// ============================================================
+// 状態
+// ============================================================
+const XP_PER_LEVEL = 5;
+let progressPractice = JSON.parse(localStorage.getItem('kanaMasterPractice')) || {};
+let progressTest     = JSON.parse(localStorage.getItem('kanaMasterTest'))     || {};
+let tokkunChars      = JSON.parse(localStorage.getItem('kanaMasterTokkun'))   || {};
+let nigateChars      = JSON.parse(localStorage.getItem('kanaMasterNigate'))   || {};
+let bonusXP          = parseInt(localStorage.getItem('kanaMasterBonusXP'))    || 0;
+let lapCount         = JSON.parse(localStorage.getItem('kanaMasterLap'))      || {};
+let mistakeCount     = JSON.parse(localStorage.getItem('kanaMasterMistakes')) || {};
+
+let currentGroup     = 'h1';
+let currentMode      = 'practice';
+let currentChar      = null;
+let isRandomTest     = false;
+let randomQueue      = [];
+let randomIndex      = 0;
+let levelBeforeRandom = 1;
+let isUnclearedFilter = false;
+let pendingLevelUp   = false;
+let pendingLapUp     = false;
+let pendingLapGroup  = null;
+let pendingGoHome    = false;
+
+// Canvas
+let bgCtx, fixedCtx, drawCtx;
+const CANVAS_SIZE = 250;
+const KVG_SIZE    = 109;
+const PADDING     = 15;
+const SCALE       = (CANVAS_SIZE - PADDING*2) / KVG_SIZE;
+let currentPaths      = [];
+let currentStrokeIndex = 0;
+let isDrawing         = false;
+let isAnimating       = false;
+let userPoints        = [];
+let hintTimeout       = null;
+
+// ============================================================
+// 周回管理
+// ============================================================
+function getGroupLap(g){ return lapCount[g] || 0; }
+function getLapClearedList(g){
+  const lap = getGroupLap(g);
+  return JSON.parse(localStorage.getItem(`kanaMasterLP_${g}_${lap}`)) || [];
+}
+function addLapCleared(g, char){
+  const lap = getGroupLap(g);
+  const key = `kanaMasterLP_${g}_${lap}`;
+  const list = JSON.parse(localStorage.getItem(key)) || [];
+  if(!list.includes(char)){ list.push(char); localStorage.setItem(key, JSON.stringify(list)); }
+}
+function getGroupProgress(g){
+  const list = GROUP_DATA[g].chars;
+  const cleared = getLapClearedList(g).filter(c => list.some(i=>i.char===c)).length;
+  return { cleared, total: list.length };
+}
+function checkAndIncrementLap(g){
+  const list = GROUP_DATA[g].chars;
+  const lapCleared = getLapClearedList(g);
+  if(lapCleared.filter(c=>list.some(i=>i.char===c)).length >= list.length){
+    lapCount[g] = (lapCount[g]||0) + 1;
+    localStorage.setItem('kanaMasterLap', JSON.stringify(lapCount));
+    return true;
+  }
+  return false;
+}
+
+// ============================================================
+// XP・レベル
+// ============================================================
+function getStats(){
+  let totalXP = bonusXP;
+  for(const g of Object.keys(GROUP_DATA)){
+    const lap = getGroupLap(g);
+    totalXP += lap * GROUP_DATA[g].chars.length * 3;
+    const { cleared } = getGroupProgress(g);
+    totalXP += cleared;
+  }
+  const level = Math.floor(totalXP / XP_PER_LEVEL) + 1;
+  return { level, totalXP, currentLevelXP: totalXP % XP_PER_LEVEL, nextLevelXP: XP_PER_LEVEL - (totalXP % XP_PER_LEVEL) };
+}
+
+// ============================================================
+// UI更新
+// ============================================================
+function updateUI(){
+  const s = getStats(), m = getTitleData(s.level);
+  document.getElementById('title-mascot').innerText = m.mascot;
+  document.getElementById('title-level').innerText  = s.level;
+  document.getElementById('title-name').innerText   = m.title;
+  document.getElementById('list-level').innerText   = s.level;
+  document.getElementById('next-xp').innerText      = s.nextLevelXP;
+  const bar = document.getElementById('list-xp-bar');
+  if(bar) bar.style.width = `${(s.currentLevelXP/XP_PER_LEVEL)*100}%`;
+  updateGroupButtons();
+}
+function updateGroupButtons(){
+  for(const g of Object.keys(GROUP_DATA)){
+    const { cleared, total } = getGroupProgress(g);
+    const lap = getGroupLap(g);
+    const theme = getLapTheme(lap);
+    const pct = total>0 ? Math.round((cleared/total)*100) : 0;
+    const btn = document.getElementById(`g-btn-${g}`);
+    if(!btn) continue;
+    btn.classList.toggle('selected', g === currentGroup);
+    if(g === currentGroup){
+      btn.style.borderColor = theme.primary;
+      btn.style.background  = `linear-gradient(135deg,${theme.primary},${theme.secondary})`;
+      btn.style.color       = 'white';
+    } else {
+      btn.style.borderColor = theme.primary + '66';
+      btn.style.background  = theme.cardBg;
+      btn.style.color       = '';
+    }
+    document.getElementById(`g-prog-${g}`).innerText = `${cleared}/${total}`;
+    const barEl = document.getElementById(`g-bar-${g}`);
+    if(barEl) barEl.style.width = `${pct}%`;
+    const lapEl = document.getElementById(`g-lap-${g}`);
+    if(lapEl){ lapEl.innerText = lap>0 ? `${theme.emoji}×${lap}` : ''; }
+  }
+}
+
+// ============================================================
+// 画面管理
+// ============================================================
+function showScreen(id){
+  window.scrollTo(0,0);
+  isRandomTest = false; isUnclearedFilter = false;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id === 'list-screen') renderList();
+  else if(id === 'title-screen') updateUI();
+}
+
+function setGroup(g){ playSound('click'); currentGroup = g; updateUI(); }
+
+function selectModeAndGo(mode){
+  playSound('click');
+  currentMode = mode;
+  showScreen('list-screen');
+}
+
+// ============================================================
+// フォルダ管理
+// ============================================================
+function toggleFolder(type){
+  playSound('click');
+  if(!currentChar) return;
+  const obj = type==='tokkun' ? tokkunChars : nigateChars;
+  const key = type==='tokkun' ? 'kanaMasterTokkun' : 'kanaMasterNigate';
+  if(obj[currentChar.char]) delete obj[currentChar.char]; else obj[currentChar.char] = true;
+  localStorage.setItem(key, JSON.stringify(obj));
+  updateFolderBtns();
+}
+function updateFolderBtns(){
+  if(!currentChar) return;
+  const tBtn = document.getElementById('tokkun-toggle');
+  const nBtn = document.getElementById('nigate-toggle');
+  tBtn.classList.toggle('active','tokkun');
+  tBtn.classList.toggle('active', !!tokkunChars[currentChar.char]);
+  tBtn.innerText = tokkunChars[currentChar.char] ? '★ とっくん' : '☆ とっくん';
+  nBtn.classList.toggle('active', !!nigateChars[currentChar.char]);
+  nBtn.innerText = nigateChars[currentChar.char] ? '★ にがて' : '☆ にがて';
+  if(tokkunChars[currentChar.char]) tBtn.classList.add('active','tokkun'); else tBtn.classList.remove('active');
+  if(nigateChars[currentChar.char]) nBtn.classList.add('active','nigate'); else nBtn.classList.remove('active');
+}
+function confirmClearFolder(type){
+  const name = type==='tokkun' ? 'とっくん' : 'にがて';
+  if(!confirm(name + 'の もじを ぜんぶ かいじょしますか？')) return;
+  playSound('click');
+  if(type==='tokkun'){ tokkunChars={}; localStorage.setItem('kanaMasterTokkun','{}'); }
+  else { nigateChars={}; localStorage.setItem('kanaMasterNigate','{}'); }
+  renderList();
+}
+
+// ============================================================
+// リスト描画
+// ============================================================
+function toggleUnclearedFilter(){ playSound('click'); isUnclearedFilter=!isUnclearedFilter; renderList(); }
+
+function renderList(){
+  updateUI();
+  const isFolderMode = (currentMode==='tokkun'||currentMode==='nigate');
+  const badge = document.getElementById('mode-badge');
+  const lapTheme = getLapTheme(getGroupLap(currentGroup));
+
+  if(currentMode==='practice'){
+    badge.innerText = GROUP_DATA[currentGroup].label + ' れんしゅう';
+    badge.style.background = `linear-gradient(135deg,${lapTheme.primary},${lapTheme.secondary})`;
+  } else if(currentMode==='test'){
+    badge.innerText = GROUP_DATA[currentGroup].label + ' テスト';
+    badge.style.background = `linear-gradient(135deg,${lapTheme.primary},${lapTheme.secondary})`;
+  } else if(currentMode==='tokkun'){
+    badge.innerText = `🏅 とっくん（${Object.keys(tokkunChars).length}もじ）`;
+    badge.style.background = 'linear-gradient(135deg,#4CAF50,#81C784)';
+  } else if(currentMode==='nigate'){
+    badge.innerText = `🐢 にがて（${Object.keys(nigateChars).length}もじ）`;
+    badge.style.background = 'linear-gradient(135deg,#9C27B0,#BA68C8)';
+  }
+
+  // progress bar
+  const progContainer = document.getElementById('list-prog-container');
+  if(!isFolderMode){
+    const { cleared, total } = getGroupProgress(currentGroup);
+    const lap = getGroupLap(currentGroup);
+    const theme = getLapTheme(lap);
+    const pct = total>0 ? Math.round((cleared/total)*100) : 0;
+    progContainer.innerHTML = `
+      <div style="background:white;border-radius:12px;padding:10px 14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,0.06)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:0.8rem;font-weight:700;color:#555">${theme.emoji} ${lap>0?theme.name:''}</span>
+          <span style="font-size:0.8rem;font-weight:700;color:${theme.primary}">${cleared}/${total}</span>
+        </div>
+        <div style="background:#F0F0F0;border-radius:99px;height:8px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:linear-gradient(90deg,${theme.primary},${theme.secondary});border-radius:99px;transition:width 0.4s"></div>
+        </div>
+      </div>`;
+  } else { progContainer.innerHTML=''; }
+
+  const unclearedBtn = document.getElementById('uncleared-btn');
+  const clearTBtn    = document.getElementById('clear-tokkun-btn');
+  const clearNBtn    = document.getElementById('clear-nigate-btn');
+  if(unclearedBtn){ unclearedBtn.style.display = !isFolderMode ? '' : 'none';
+    unclearedBtn.style.background = isUnclearedFilter ? '#4CAF50' : '';
+    unclearedBtn.style.color      = isUnclearedFilter ? 'white'   : ''; }
+  if(clearTBtn) clearTBtn.style.display = currentMode==='tokkun' ? '' : 'none';
+  if(clearNBtn) clearNBtn.style.display = currentMode==='nigate' ? '' : 'none';
+
+  // build list
+  let filtered = [];
+  if(isFolderMode){
+    const folder = currentMode==='tokkun' ? tokkunChars : nigateChars;
+    for(const g of Object.keys(GROUP_DATA)){
+      GROUP_DATA[g].chars.filter(i=>folder[i.char]).forEach(i=>{ const copy={...i,_foundGroup:g}; filtered.push(copy); });
+    }
+  } else {
+    filtered = GROUP_DATA[currentGroup].chars.map(i=>({...i,_foundGroup:currentGroup}));
+  }
+  if(isUnclearedFilter && !isFolderMode){
+    filtered = filtered.filter(item => !getLapClearedList(item._foundGroup||currentGroup).includes(item.char));
+  }
+
+  const grid = document.getElementById('kana-grid');
+  grid.innerHTML = '';
+  if(!filtered.length){ grid.innerHTML='<div style="grid-column:1/-1;padding:20px;text-align:center;color:#aaa">もじが みつかりません</div>'; return; }
+
+  filtered.forEach(item => {
+    const ig = item._foundGroup || currentGroup;
+    const iLap = getGroupLap(ig);
+    const iTheme = getLapTheme(iLap);
+    const lapCleared = getLapClearedList(ig);
+    const isCleared = lapCleared.includes(item.char);
+    const everPracticed = !!progressPractice[item.char];
+    const everTested    = !!progressTest[item.char];
+
+    const card = document.createElement('div');
+    card.className = 'kana-card';
+    if(isCleared){
+      if(isFolderMode||currentMode==='practice') card.classList.add('cleared-p');
+      else card.classList.add('cleared-t');
+      card.style.borderColor = iTheme.cardBorder;
+    }
+
+    let badges = '';
+    if(everPracticed) badges += `<div class="mark-badge" style="background:${isCleared?iTheme.badgeColor:'#CCC'};top:-6px;left:-6px;">✏</div>`;
+    if(everTested)    badges += `<div class="mark-badge" style="background:${isCleared?iTheme.badgeColor:'#CCC'};top:-6px;right:-6px;">🎯</div>`;
+    if(tokkunChars[item.char]) badges += `<div class="tokkun-mark">🏅</div>`;
+    if(nigateChars[item.char]) badges += `<div class="nigate-mark">🐢</div>`;
+    if(iLap>=1) badges += `<div class="lap-badge-mini">${iTheme.emoji}</div>`;
+
+    card.innerHTML = `${item.char}<span class="reading">${item.reading}</span>${badges}`;
+    card.onclick = () => {
+      playSound('click');
+      currentGroup = ig;
+      startApp(item);
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ============================================================
+// ランダムテスト
+// ============================================================
+function startRandomTest(){
+  playSound('click');
+  const list = GROUP_DATA[currentGroup].chars;
+  if(!list.length) return;
+  randomQueue = [...list].sort(()=>0.5-Math.random()).slice(0,10);
+  randomIndex = 0; isRandomTest = true; currentMode = 'test';
+  levelBeforeRandom = getStats().level;
+  startApp(randomQueue[0]);
+}
+function handleBackFromPractice(){
+  if(hintTimeout){ clearTimeout(hintTimeout); hintTimeout=null; }
+  isAnimating = false;
+  showScreen(isRandomTest ? 'title-screen' : 'list-screen');
+}
+
+// ============================================================
+// SVG取得
+//   ひらがな・カタカナ両方 → kana-svg-data（全文字対応）
+// ============================================================
+function isHiragana(char){
+  const code = char.charCodeAt(0);
+  return code >= 0x3041 && code <= 0x3096;
+}
+
+async function fetchKanaVG(char){
+  const type = isHiragana(char) ? 'hiragana' : 'katakana';
+  const url = `https://cdn.jsdelivr.net/npm/kana-svg-data/dist/${type}/${encodeURIComponent(char)}.json`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('データが みつかりません: ' + char);
+  const data = await res.json();
+  return data.strokes.map(s => s.value);
+}
+
+// ============================================================
+// Canvasエンジン
+// ============================================================
+function initCanvasEngine(){
+  const dc = document.getElementById('draw-canvas');
+  bgCtx    = document.getElementById('bg-canvas').getContext('2d');
+  fixedCtx = document.getElementById('fixed-canvas').getContext('2d');
+  drawCtx  = dc.getContext('2d');
+
+  const setup = (ctx, col, w) => { ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=col; ctx.lineWidth=w; };
+  setup(bgCtx,'#E0E0E0',5); setup(fixedCtx,'#333333',5); setup(drawCtx,'#2196F3',5);
+
+  const pos = e => {
+    const r = dc.getBoundingClientRect();
+    const cx = e.clientX ?? (e.touches?.[0]?.clientX);
+    const cy = e.clientY ?? (e.touches?.[0]?.clientY);
+    return { x: (cx - r.left) * (CANVAS_SIZE/r.width), y: (cy - r.top) * (CANVAS_SIZE/r.height) };
+  };
+  const sd = e => { if(isAnimating||currentStrokeIndex>=currentPaths.length) return; isDrawing=true; userPoints=[pos(e)]; };
+  const dr = e => { if(!isDrawing||isAnimating) return; const p=pos(e); userPoints.push(p); drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE); drawCtx.beginPath(); drawCtx.moveTo(userPoints[0].x,userPoints[0].y); userPoints.forEach(pt=>drawCtx.lineTo(pt.x,pt.y)); drawCtx.stroke(); };
+  const ed = () => { if(!isDrawing||isAnimating) return; isDrawing=false; evaluateStroke(); };
+
+  dc.addEventListener('mousedown',sd); dc.addEventListener('mousemove',dr); dc.addEventListener('mouseup',ed); dc.addEventListener('mouseout',ed);
+  dc.addEventListener('touchstart',e=>{e.preventDefault();sd(e);},{passive:false});
+  dc.addEventListener('touchmove', e=>{e.preventDefault();dr(e);},{passive:false});
+  dc.addEventListener('touchend',  e=>{e.preventDefault();ed();},{passive:false});
+}
+
+function showStrokeHint(index){
+  if(index>=currentPaths.length) return;
+  if(hintTimeout) clearTimeout(hintTimeout);
+  fixedCtx.save();
+  fixedCtx.translate(PADDING,PADDING); fixedCtx.scale(SCALE,SCALE);
+  fixedCtx.strokeStyle='rgba(255,60,60,0.6)'; fixedCtx.lineWidth=5;
+  fixedCtx.lineCap='round'; fixedCtx.lineJoin='round';
+  fixedCtx.stroke(new Path2D(currentPaths[index]));
+  fixedCtx.restore();
+  hintTimeout = setTimeout(()=>{
+    fixedCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+    fixedCtx.save();
+    fixedCtx.translate(PADDING,PADDING); fixedCtx.scale(SCALE,SCALE);
+    fixedCtx.strokeStyle='#333'; fixedCtx.lineWidth=5; fixedCtx.lineCap='round'; fixedCtx.lineJoin='round';
+    for(let i=0;i<currentStrokeIndex;i++) fixedCtx.stroke(new Path2D(currentPaths[i]));
+    fixedCtx.restore(); hintTimeout=null;
+  }, 1000);
+}
+
+function evaluateStroke(){
+  if(userPoints.length<2){ drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE); return; }
+  const pd = currentPaths[currentStrokeIndex];
+  const pe = document.createElementNS('http://www.w3.org/2000/svg','path'); pe.setAttribute('d',pd);
+  const tLen = pe.getTotalLength();
+  const sp = p => ({ x: p.x*SCALE+PADDING, y: p.y*SCALE+PADDING });
+  const checkPoints = [0,0.17,0.33,0.5,0.67,0.83,1.0];
+  const targets = checkPoints.map(t=>sp(pe.getPointAtLength(tLen*t)));
+  let uLen=0, uD=[0];
+  for(let i=1;i<userPoints.length;i++){ uLen+=Math.hypot(userPoints[i].x-userPoints[i-1].x,userPoints[i].y-userPoints[i-1].y); uD.push(uLen); }
+  const uAt = d => {
+    if(d<=0) return userPoints[0]; if(d>=uLen) return userPoints[userPoints.length-1];
+    for(let i=1;i<userPoints.length;i++){ if(uD[i]>=d){ const seg=uD[i]-uD[i-1],r=seg===0?0:(d-uD[i-1])/seg; return {x:userPoints[i-1].x+r*(userPoints[i].x-userPoints[i-1].x),y:userPoints[i-1].y+r*(userPoints[i].y-userPoints[i-1].y)}; } }
+    return userPoints[userPoints.length-1];
+  };
+  const userSamples = checkPoints.map(t=>uAt(uLen*t));
+  const THR = 38;
+  const ok = targets.every((t,i)=>Math.hypot(userSamples[i].x-t.x,userSamples[i].y-t.y)<THR) && uLen>(tLen*SCALE)*0.4;
+
+  if(ok){
+    playSound('stroke');
+    document.getElementById('message-area').innerText = 'いいぞ！ その調子！';
+    if(hintTimeout){ clearTimeout(hintTimeout); hintTimeout=null; }
+    currentStrokeIndex++;
+    drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+    fixedCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+    fixedCtx.save(); fixedCtx.translate(PADDING,PADDING); fixedCtx.scale(SCALE,SCALE);
+    fixedCtx.strokeStyle='#333'; fixedCtx.lineWidth=5; fixedCtx.lineCap='round'; fixedCtx.lineJoin='round';
+    for(let i=0;i<currentStrokeIndex;i++) fixedCtx.stroke(new Path2D(currentPaths[i]));
+    fixedCtx.restore();
+    if(currentStrokeIndex>=currentPaths.length) handleComplete();
+  } else {
+    playSound('error');
+    const ch = currentChar.char;
+    mistakeCount[ch] = (mistakeCount[ch]||0)+1;
+    localStorage.setItem('kanaMasterMistakes', JSON.stringify(mistakeCount));
+    if(mistakeCount[ch]>=3 && !nigateChars[ch]){
+      nigateChars[ch]=true; localStorage.setItem('kanaMasterNigate',JSON.stringify(nigateChars));
+      updateFolderBtns();
+      document.getElementById('message-area').innerText = 'おしい！ にがてに とうろくしたよ 🐢';
+    } else {
+      document.getElementById('message-area').innerText = 'おしい！ ここを みて！';
+    }
+    drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+    showStrokeHint(currentStrokeIndex);
+  }
+}
+
+async function playAnimation(){
+  if(isAnimating||!currentPaths.length) return;
+  if(hintTimeout){ clearTimeout(hintTimeout); hintTimeout=null; }
+  isAnimating=true; currentStrokeIndex=0;
+  drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+  fixedCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+  fixedCtx.save(); fixedCtx.translate(PADDING,PADDING); fixedCtx.scale(SCALE,SCALE);
+  fixedCtx.strokeStyle='#00BFFF';
+  for(let i=0;i<currentPaths.length;i++){
+    if(!isAnimating) break;
+    const pd=currentPaths[i], p=new Path2D(pd);
+    const pe=document.createElementNS('http://www.w3.org/2000/svg','path'); pe.setAttribute('d',pd);
+    const len=pe.getTotalLength();
+    await new Promise(res=>{
+      let t=null;
+      const step=ts=>{
+        if(!isAnimating){res();return;} if(!t)t=ts;
+        const prog=Math.min((ts-t)/250,1);
+        fixedCtx.clearRect(-100,-100,(CANVAS_SIZE*2)/SCALE,(CANVAS_SIZE*2)/SCALE);
+        for(let j=0;j<i;j++){fixedCtx.setLineDash([]);fixedCtx.stroke(new Path2D(currentPaths[j]));}
+        fixedCtx.setLineDash([len,len]); fixedCtx.lineDashOffset=len*(1-prog); fixedCtx.stroke(p);
+        if(prog<1) requestAnimationFrame(step); else{fixedCtx.setLineDash([]);res();}
+      };
+      requestAnimationFrame(step);
+    });
+    if(!isAnimating) break;
+    await new Promise(r=>setTimeout(r,60));
+  }
+  fixedCtx.restore();
+  if(isAnimating) setTimeout(()=>{ if(!isAnimating)return; fixedCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE); isAnimating=false; retry(); },800);
+}
+
+// ============================================================
+// アプリ制御
+// ============================================================
+async function startApp(item){
+  if(hintTimeout){ clearTimeout(hintTimeout); hintTimeout=null; }
+  isAnimating=false; currentChar=item; window.scrollTo(0,0);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('practice-screen').classList.add('active');
+  updateFolderBtns();
+
+  const msg = document.getElementById('message-area');
+  const isTestMode = (currentMode==='test') || isRandomTest;
+
+  if(isRandomTest) msg.innerText = `🎯 テスト: ${randomIndex+1}/${randomQueue.length}もん目`;
+  else if(isTestMode) msg.innerText = 'ぬけてるもじをかいてね。';
+  else msg.innerText = 'うすいせんを なぞろう！';
+  msg.style.color = isTestMode ? '#FF1493' : '#00D084';
+
+  // テストモード：絵文字＋穴あき単語ヒント
+  let hintHTML = '';
+  if(isTestMode){
+    // KANA_WORDSからこの文字のデータを探す
+    const g = item._foundGroup || currentGroup;
+    const wordData = (typeof KANA_WORDS !== 'undefined' && KANA_WORDS[g])
+      ? KANA_WORDS[g].find(w => w.char === item.char)
+      : null;
+
+    if(wordData){
+      // 単語を1文字ずつ分解し、pos番目を「＿」に
+      const chars = [...wordData.word];
+      const wordDisplay = chars.map((c, i) =>
+        i === wordData.pos
+          ? `<span style="color:#FF1493;font-weight:900;font-size:2rem;border-bottom:3px solid #FF1493;min-width:1.5rem;display:inline-block;text-align:center">＿</span>`
+          : `<span style="font-size:2rem;font-weight:700;color:#333">${c}</span>`
+      ).join('');
+
+      hintHTML = `
+        <div style="text-align:center;margin:8px 0 4px">
+          <div style="font-size:3.5rem;line-height:1;margin-bottom:6px">${wordData.emoji}</div>
+          <div style="display:inline-flex;align-items:flex-end;gap:2px;background:white;border-radius:16px;padding:10px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+            ${wordDisplay}
+          </div>
+        </div>`;
+    }
+  }
+
+  document.getElementById('character-target').innerHTML = `
+    ${hintHTML}
+    <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin:6px 0">
+      <div style="width:70px"></div>
+      <div style="position:relative;width:${CANVAS_SIZE}px;height:${CANVAS_SIZE}px">
+        <canvas id="bg-canvas"    width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" style="position:absolute;top:0;left:0"></canvas>
+        <canvas id="fixed-canvas" width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" style="position:absolute;top:0;left:0"></canvas>
+        <canvas id="draw-canvas"  width="${CANVAS_SIZE}" height="${CANVAS_SIZE}" style="position:absolute;top:0;left:0;touch-action:none"></canvas>
+      </div>
+      <div style="width:70px"></div>
+    </div>`;
+
+  initCanvasEngine(); currentStrokeIndex=0;
+  // grid lines
+  bgCtx.save();
+  bgCtx.strokeStyle='#D6EAF8'; bgCtx.lineWidth=2; bgCtx.setLineDash([6,6]);
+  bgCtx.beginPath();
+  bgCtx.moveTo(CANVAS_SIZE/2,0); bgCtx.lineTo(CANVAS_SIZE/2,CANVAS_SIZE);
+  bgCtx.moveTo(0,CANVAS_SIZE/2); bgCtx.lineTo(CANVAS_SIZE,CANVAS_SIZE/2);
+  bgCtx.stroke(); bgCtx.restore();
+
+  try {
+    currentPaths = await fetchKanaVG(item.char);
+    if(currentMode==='practice'||currentMode==='tokkun'||currentMode==='nigate'){
+      bgCtx.save(); bgCtx.translate(PADDING,PADDING); bgCtx.scale(SCALE,SCALE);
+      currentPaths.forEach(pd=>bgCtx.stroke(new Path2D(pd)));
+      bgCtx.restore();
+    }
+  } catch(e){
+    msg.innerText = 'エラー: データをよみこめません'; console.error(e);
+  }
+}
+
+function retry(){
+  if(hintTimeout){ clearTimeout(hintTimeout); hintTimeout=null; }
+  isAnimating=false; currentStrokeIndex=0; isDrawing=false; userPoints=[];
+  if(!bgCtx) return;
+  drawCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+  fixedCtx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+  document.getElementById('message-area').innerText = currentMode==='test' ? 'この もじを かこう！' : 'うすいせんを なぞろう！';
+}
+
+// ============================================================
+// 完了処理
+// ============================================================
+function handleComplete(){
+  playSound('complete');
+  const isPractice = (currentMode==='practice'||currentMode==='tokkun'||currentMode==='nigate');
+  const store = isPractice ? progressPractice : progressTest;
+  const sKey  = isPractice ? 'kanaMasterPractice' : 'kanaMasterTest';
+  const oldLv = getStats().level;
+  store[currentChar.char] = true;
+  localStorage.setItem(sKey, JSON.stringify(store));
+
+  const g = currentChar._foundGroup || currentGroup;
+  addLapCleared(g, currentChar.char);
+  const newLv = getStats().level;
+
+  if(!isRandomTest){
+    if(checkAndIncrementLap(g)){ pendingLapUp=true; pendingLapGroup=g; }
+  }
+  if(!isRandomTest && newLv > oldLv) pendingLevelUp=true;
+
+  const icon = document.getElementById('result-icon');
+  const msg  = document.getElementById('result-msg');
+  icon.innerText = isPractice ? '⭐' : '🎊';
+  msg.innerText  = isPractice ? 'できたー！' : 'だいせいかい！';
+  msg.style.color= isPractice ? '#00D084'   : '#FF1493';
+  setTimeout(()=>document.getElementById('result-overlay').classList.add('active'), 600);
+}
+
+function closeResultAndRetry(){
+  document.getElementById('result-overlay').classList.remove('active');
+  retry();
+}
+function handleNextClick(){
+  document.getElementById('result-overlay').classList.remove('active');
+  if(pendingLapUp){ pendingLapUp=false; showLapUpDisplay(pendingLapGroup); return; }
+  if(pendingLevelUp){ pendingLevelUp=false; showLevelUpDisplay(getStats().level); return; }
+  moveToNext();
+}
+function moveToNext(){
+  if(isRandomTest){
+    randomIndex++;
+    if(randomIndex < randomQueue.length){ startApp(randomQueue[randomIndex]); return; }
+    isRandomTest=false; bonusXP+=10; localStorage.setItem('kanaMasterBonusXP',bonusXP);
+    const g = currentChar._foundGroup||currentGroup;
+    if(checkAndIncrementLap(g)){ pendingLapUp=true; pendingLapGroup=g; }
+    document.getElementById('random-clear-overlay').classList.add('active');
+    playSound('levelup'); updateUI();
+  } else {
+    const isFolderMode = (currentMode==='tokkun'||currentMode==='nigate');
+    let list = [];
+    if(isFolderMode){
+      const folder = currentMode==='tokkun'?tokkunChars:nigateChars;
+      for(const gk of Object.keys(GROUP_DATA)) GROUP_DATA[gk].chars.filter(i=>folder[i.char]).forEach(i=>list.push({...i,_foundGroup:gk}));
+    } else {
+      list = GROUP_DATA[currentChar._foundGroup||currentGroup].chars.map(i=>({...i,_foundGroup:currentChar._foundGroup||currentGroup}));
+    }
+    if(!list.length){ showScreen('list-screen'); return; }
+    const idx = list.findIndex(k=>k.char===currentChar.char);
+    if(idx>=0 && idx<list.length-1) startApp(list[idx+1]); else showScreen('list-screen');
+  }
+}
+
+function showLevelUpDisplay(level){
+  playSound('levelup');
+  document.getElementById('levelup-overlay').classList.add('active');
+  document.getElementById('new-level-num').innerText  = level;
+  document.getElementById('levelup-mascot').innerText = getTitleData(level).mascot;
+}
+function closeLevelUp(){
+  document.getElementById('levelup-overlay').classList.remove('active');
+  if(pendingGoHome){ pendingGoHome=false; showScreen('title-screen'); } else moveToNext();
+}
+function showLapUpDisplay(g){
+  playSound('lapup');
+  const lap = getGroupLap(g), theme = getLapTheme(lap);
+  document.getElementById('lapup-overlay').classList.add('active');
+  document.getElementById('lapup-group').innerText = GROUP_DATA[g].label;
+  document.getElementById('lapup-lap').innerText   = `${lap}しゅう目`;
+  document.getElementById('lapup-emoji').innerText = theme.emoji;
+  const inner = document.getElementById('lapup-inner');
+  inner.style.background = `linear-gradient(135deg,${theme.primary},${theme.secondary})`;
+}
+function closeLapUp(){
+  document.getElementById('lapup-overlay').classList.remove('active');
+  if(pendingLevelUp){ pendingLevelUp=false; showLevelUpDisplay(getStats().level); }
+  else if(pendingGoHome){ pendingGoHome=false; showScreen('title-screen'); }
+  else moveToNext();
+}
+function handleRandomClearClick(){
+  document.getElementById('random-clear-overlay').classList.remove('active');
+  if(pendingLapUp){ pendingLapUp=false; showLapUpDisplay(pendingLapGroup); return; }
+  const lv = getStats().level;
+  if(lv > levelBeforeRandom){ pendingGoHome=true; showLevelUpDisplay(lv); }
+  else showScreen('title-screen');
+}
+
+// ============================================================
+// リセット
+// ============================================================
+function showResetConfirm(){ playSound('click'); document.getElementById('reset-confirm').classList.add('active'); }
+function closeResetConfirm(){ playSound('click'); document.getElementById('reset-confirm').classList.remove('active'); }
+function executeReset(){
+  playSound('click'); localStorage.clear();
+  progressPractice={}; progressTest={}; tokkunChars={}; nigateChars={}; bonusXP=0; lapCount={}; mistakeCount={};
+  document.getElementById('reset-confirm').classList.remove('active');
+  location.reload();
+}
+
+// ============================================================
+// 効果音
+// ============================================================
+let audioContext;
+function playSound(type){
+  try {
+    if(!audioContext) audioContext = new (window.AudioContext||window.webkitAudioContext)();
+    if(audioContext.state==='suspended') audioContext.resume();
+    const now = audioContext.currentTime;
+    const osc = (freq,wv,dur,vol=0.1,startT=now) => {
+      const o=audioContext.createOscillator(),g=audioContext.createGain();
+      o.type=wv; o.frequency.setValueAtTime(freq,startT);
+      g.gain.setValueAtTime(vol,startT); g.gain.exponentialRampToValueAtTime(0.01,startT+dur);
+      o.connect(g); g.connect(audioContext.destination); o.start(startT); o.stop(startT+dur);
+    };
+    switch(type){
+      case 'stroke': {
+        const baseFreq=680+Math.random()*120,o=audioContext.createOscillator(),g=audioContext.createGain();
+        o.connect(g); g.connect(audioContext.destination); o.type='sine';
+        o.frequency.setValueAtTime(baseFreq,now); o.frequency.linearRampToValueAtTime(baseFreq*1.2,now+0.015); o.frequency.exponentialRampToValueAtTime(baseFreq*0.75,now+0.12);
+        g.gain.setValueAtTime(0,now); g.gain.linearRampToValueAtTime(0.25,now+0.012); g.gain.exponentialRampToValueAtTime(0.001,now+0.15);
+        o.start(now); o.stop(now+0.18); break;
+      }
+      case 'success': [523,659,784,1047].forEach((f,i)=>{ const t=now+i*0.1,o=audioContext.createOscillator(),g=audioContext.createGain(); o.connect(g);g.connect(audioContext.destination);o.type='triangle';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.3,t+0.03);g.gain.exponentialRampToValueAtTime(0.001,t+0.25);o.start(t);o.stop(t+0.28);}); break;
+      case 'error': { const o=audioContext.createOscillator(),gn=audioContext.createGain(),f=audioContext.createBiquadFilter(); f.type='lowpass';f.frequency.value=600;o.connect(f);f.connect(gn);gn.connect(audioContext.destination);o.type='sawtooth';o.frequency.setValueAtTime(277,now);gn.gain.setValueAtTime(0,now);gn.gain.linearRampToValueAtTime(0.2,now+0.04);gn.gain.exponentialRampToValueAtTime(0.001,now+0.3);o.start(now);o.stop(now+0.35);break; }
+      case 'click': osc(500,'triangle',0.1,0.08); break;
+      case 'complete': osc(600,'sine',0.15,0.15); setTimeout(()=>osc(900,'sine',0.25,0.15),120); break;
+      case 'levelup': [[0,523,0.12],[0.1,659,0.12],[0.2,784,0.12],[0.3,523,0.08],[0.38,784,0.08],[0.46,1047,0.35]].forEach(([off,f,dur])=>{ const t=now+off,o=audioContext.createOscillator(),g=audioContext.createGain();o.connect(g);g.connect(audioContext.destination);o.type='triangle';o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.3,t+0.03);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.start(t);o.stop(t+dur+0.05);}); break;
+      case 'lapup': [523,659,783,659,783,1046,1046,1318].forEach((f,i)=>{ const o=audioContext.createOscillator(),g=audioContext.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(0.15,now+i*0.12);g.gain.exponentialRampToValueAtTime(0.01,now+i*0.12+0.4);o.connect(g);g.connect(audioContext.destination);o.start(now+i*0.12);o.stop(now+i*0.12+0.4);}); break;
+    }
+  } catch(e){}
+}
+
+// ============================================================
+// 初期化
+// ============================================================
+updateUI();
+</script>
+</body>
+</html>
