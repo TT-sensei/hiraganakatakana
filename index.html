@@ -16,6 +16,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 .screen { display:none; padding:16px; max-width:480px; margin:0 auto; }
 .screen.active { display:block; }
 
+/* ===== タイトル ===== */
 .title-logo { text-align:center; padding:28px 0 8px; font-size:2.2rem; font-weight:900; color:var(--primary); }
 .title-sub  { text-align:center; color:#aaa; font-size:.9rem; margin-bottom:20px; }
 
@@ -28,18 +29,14 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 }
 .daily-banner::before {
   content:''; position:absolute; right:-20px; top:-20px;
-  width:90px; height:90px; border-radius:50%;
-  background:rgba(255,255,255,.15);
+  width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,.15);
 }
 .daily-banner.done { background:linear-gradient(135deg,#6EE7B7,#34D399); box-shadow:0 4px 14px rgba(52,211,153,.35); }
 .daily-icon { font-size:2.2rem; }
 .daily-info { flex:1 }
 .daily-title { font-size:1rem; font-weight:900; color:white; }
 .daily-sub   { font-size:.72rem; color:rgba(255,255,255,.85); margin-top:2px; }
-.streak-pill {
-  background:rgba(255,255,255,.25); color:white;
-  border-radius:99px; padding:3px 10px; font-size:.75rem; font-weight:900;
-}
+.streak-pill { background:rgba(255,255,255,.25); color:white; border-radius:99px; padding:3px 10px; font-size:.75rem; font-weight:900; }
 
 /* ===== SRS復習バナー ===== */
 .srs-banner {
@@ -48,14 +45,14 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
   display:flex; align-items:center; gap:12px; cursor:pointer;
   box-shadow:0 4px 14px rgba(139,92,246,.3);
 }
-.srs-count {
-  background:rgba(255,255,255,.25); color:white;
-  border-radius:99px; padding:2px 10px; font-size:.8rem; font-weight:900; min-width:36px; text-align:center;
-}
+.srs-count { background:rgba(255,255,255,.25); color:white; border-radius:99px; padding:2px 10px; font-size:.8rem; font-weight:900; min-width:36px; text-align:center; }
 
+/* ===== レベルバッジ ===== */
 .lv-badge { display:flex; align-items:center; gap:10px; background:white; border-radius:20px; padding:8px 16px; margin:0 auto 16px; width:fit-content; box-shadow:0 2px 10px rgba(0,0,0,.08); }
 .xp-wrap { background:#F0F0F0; border-radius:99px; height:7px; width:120px; overflow:hidden; margin-top:3px; }
 .xp-bar  { height:100%; background:linear-gradient(90deg,var(--primary),var(--secondary)); border-radius:99px; transition:width .4s; }
+
+/* ===== メニュー ===== */
 .sec-label { font-size:.75rem; font-weight:700; color:#aaa; margin:12px 0 6px 4px; }
 .menu-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
 .btn-group { background:white; border:2px solid #E5E7EB; border-radius:14px; padding:14px 8px; cursor:pointer; text-align:center; transition:all .15s; }
@@ -67,26 +64,25 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 .btn-group.sel .prog-mini { background:rgba(255,255,255,.3); }
 .prog-fill { height:100%; background:var(--green); border-radius:99px; }
 .btn-group.sel .prog-fill { background:white; }
+
 .mode-row { display:flex; gap:8px; margin:10px 0; }
 .m-btn { flex:1; background:white; border:2px solid #E5E7EB; border-radius:12px; padding:10px 4px; cursor:pointer; font-size:.82rem; font-weight:700; color:#555; transition:all .15s; }
 .m-btn:active { transform:scale(.95); }
 .m-btn.purple { border-color:#8B5CF6; color:#8B5CF6; }
 .m-btn.orange { border-color:#F59E0B; color:#F59E0B; }
+
 .parent-note { background:#FFFBEB; border:1px solid #FCD34D; border-radius:12px; padding:10px 12px; font-size:.7rem; color:#777; margin-top:14px; line-height:1.7; }
-.btn-sound {
-  background: white; border: 2px solid #E5E7EB; border-radius: 99px;
-  font-size: 1.3rem; padding: 4px 10px; cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,.08); transition: all .15s;
-  vertical-align: middle; margin-left: 6px;
-}
-.btn-sound:active { transform: scale(.9); background: #FFF0F6; }
-
-#guideLayer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
-#guideLayer path { fill:none; stroke:#E2E8F0; stroke-width:14; }
-
 .reset-btn { display:block; background:none; border:none; color:#ccc; font-size:.72rem; cursor:pointer; margin:10px auto 0; text-align:center; }
 
-/* カード一覧 */
+/* ===== デイリー種類選択 ===== */
+.daily-kind-row { display:flex; gap:6px; margin:-6px 0 12px; }
+.dk-btn { flex:1; padding:7px 4px; border-radius:99px; border:2px solid #E5E7EB; background:white; font-size:.78rem; font-weight:900; color:#aaa; cursor:pointer; transition:all .15s; }
+.dk-btn:active { transform:scale(.95); }
+.dk-btn.sel-hira { border-color:#FF6B9D; background:#FFF0F6; color:#FF6B9D; }
+.dk-btn.sel-kata { border-color:#3B82F6; background:#EFF6FF; color:#3B82F6; }
+.dk-btn.sel-both { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
+
+/* ===== カード一覧 ===== */
 .kana-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
 .k-card {
   background:white; border:2px solid #E5E7EB; border-radius:12px;
@@ -99,26 +95,14 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 .k-card.done-test { border-color:#3B82F6; background:#EFF6FF; color:#3B82F6; }
 .k-card.done-both { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
 .k-card.due-review { border-color:#F59E0B !important; background:#FFFBEB !important; color:#F59E0B !important; }
-.k-badge {
-  position:absolute; top:-5px; right:-5px;
-  font-size:.55rem; background:#FF6B9D; color:white;
-  border-radius:99px; padding:1px 4px; font-weight:700;
-}
-.srs-badge {
-  position:absolute; bottom:-5px; left:50%; transform:translateX(-50%);
-  font-size:.5rem; background:#F59E0B; color:white;
-  border-radius:99px; padding:1px 5px; font-weight:700; white-space:nowrap;
-}
+.k-badge { position:absolute; top:-5px; right:-5px; font-size:.55rem; background:#FF6B9D; color:white; border-radius:99px; padding:1px 4px; font-weight:700; }
+.srs-badge { position:absolute; bottom:-5px; left:50%; transform:translateX(-50%); font-size:.5rem; background:#F59E0B; color:white; border-radius:99px; padding:1px 5px; font-weight:700; white-space:nowrap; }
 
+/* ===== ゲーム画面 ===== */
 .game-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 .btn-back { background:#eee; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:.85rem; }
 .progress-text { font-weight:bold; color:#888; font-size:.9rem; }
-
-/* ゲームモードタグ */
-.mode-tag {
-  font-size:.65rem; font-weight:900; padding:3px 8px; border-radius:99px; color:white;
-  background:var(--primary);
-}
+.mode-tag { font-size:.65rem; font-weight:900; padding:3px 8px; border-radius:99px; color:white; background:var(--primary); }
 .mode-tag.daily { background:var(--daily); }
 .mode-tag.srs   { background:var(--srs); }
 .mode-tag.test  { background:#3B82F6; }
@@ -128,197 +112,90 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 .hint-word { display:inline-flex; align-items:flex-end; gap:3px; background:white; border-radius:14px; padding:8px 18px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
 .hint-char  { font-size:2rem; font-weight:700; color:#333; }
 .hint-blank { font-size:2rem; font-weight:900; color:var(--primary); border-bottom:3px solid var(--primary); min-width:1.8rem; display:inline-block; text-align:center; }
-.msg { text-align:center; font-size:1rem; font-weight:700; min-height:30px; padding:4px; color:var(--green); }
 
+.msg { text-align:center; font-size:1rem; font-weight:700; min-height:30px; padding:4px; color:var(--green); }
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.msg.shake { animation:shake .4s ease; }
+
+/* ===== キャンバス ===== */
 .canvas-container { width:100%; aspect-ratio:1/1; background:white; border:3px dashed #ddd; border-radius:16px; position:relative; touch-action:none; overscroll-behavior:none; }
 .canvas-container canvas { width:100%; height:100%; position:absolute; top:0; left:0; cursor:crosshair; }
+#guideLayer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
+#guideLayer path { fill:none; stroke:#E2E8F0; stroke-width:14; }
+#hanamaru-layer { position:absolute; inset:0; pointer-events:none; z-index:9; }
+#hanamaru-layer svg { width:100%; height:100%; }
+@keyframes hanamaru { 0%{stroke-dashoffset:251;opacity:0} 20%{opacity:1} 100%{stroke-dashoffset:0;opacity:1} }
 
+/* ===== 1画OKトースト ===== */
+#stroke-toast { display:block; width:100%; text-align:center; font-size:1.3rem; font-weight:900; min-height:2.2rem; line-height:2.2rem; pointer-events:none; opacity:0; }
+@keyframes toastIn  { 0%{opacity:0;transform:scale(.7)} 40%{opacity:1;transform:scale(1.1)} 100%{opacity:1;transform:scale(1)} }
+@keyframes toastOut { 0%{opacity:1;transform:scale(1)} 100%{opacity:0;transform:translateY(-6px) scale(.95)} }
+
+/* ===== 結果バナー（キャンバス外） ===== */
+#result-banner { display:none; text-align:center; padding:4px 0 6px; min-height:48px; }
+@keyframes pop { 0%{transform:scale(.8);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+.pop { animation:pop .35s ease forwards; }
+
+/* ===== ボタン群 ===== */
 .btn-row { display:flex; gap:10px; margin-top:12px; }
 .btn-next  { flex:2; padding:14px; background:var(--green); color:white; border:none; border-radius:12px; font-size:1.1rem; font-weight:bold; cursor:pointer; box-shadow:0 4px 0 #00A368; }
 .btn-next:active  { transform:translateY(4px); box-shadow:none; }
 .btn-retry { flex:1; padding:14px; background:white; color:#888; border:2px solid #ddd; border-radius:12px; font-size:.9rem; font-weight:bold; cursor:pointer; }
 .btn-anime { flex:1; padding:14px; background:white; color:#3B82F6; border:2px solid #3B82F6; border-radius:12px; font-size:.82rem; font-weight:bold; cursor:pointer; }
-.btn-reg {
-  flex:1; padding:9px 4px; background:white; border:2px solid #E5E7EB;
-  border-radius:10px; font-size:.78rem; font-weight:700; color:#aaa; cursor:pointer;
-  transition:all .15s;
-}
+.btn-reg { flex:1; padding:9px 4px; background:white; border:2px solid #E5E7EB; border-radius:10px; font-size:.78rem; font-weight:700; color:#aaa; cursor:pointer; transition:all .15s; }
 .btn-reg:active { transform:scale(.95); }
 .btn-reg.on-tokk { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
 .btn-reg.on-niga { border-color:#00D084; background:#F0FDF4; color:#16A34A; }
+.btn-sound { background:white; border:2px solid #E5E7EB; border-radius:99px; font-size:1.3rem; padding:4px 10px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.08); transition:all .15s; vertical-align:middle; margin-left:6px; }
+.btn-sound:active { transform:scale(.9); background:#FFF0F6; }
 
-/* SRS評価ボタン（正解後） */
-.srs-rating {
-  display:none; gap:8px; margin-top:10px;
-}
-.srs-rating.show { display:flex; }
-.sr-btn {
-  flex:1; padding:10px 4px; border:none; border-radius:10px; font-size:.78rem; font-weight:900; cursor:pointer;
-  transition:all .15s;
-}
+/* ===== SRS評価ボタン ===== */
+.srs-rating { display:none; gap:8px; margin-top:10px; }
+.srs-rating.show { display:flex; flex-wrap:wrap; }
+.srs-rating-label { font-size:.72rem; font-weight:700; color:#aaa; text-align:center; width:100%; margin-bottom:-4px; }
+.sr-btn { flex:1; padding:10px 4px; border:none; border-radius:10px; font-size:.78rem; font-weight:900; cursor:pointer; transition:all .15s; }
 .sr-btn:active { transform:scale(.95); }
-.sr-btn.hard  { background:#FEE2E2; color:#EF4444; }
-.sr-btn.ok    { background:#FEF9C3; color:#CA8A04; }
-.sr-btn.easy  { background:#DCFCE7; color:#16A34A; }
+.sr-btn.hard { background:#FEE2E2; color:#EF4444; }
+.sr-btn.ok   { background:#FEF9C3; color:#CA8A04; }
+.sr-btn.easy { background:#DCFCE7; color:#16A34A; }
 
-/* デイリー完了アニメ */
-@keyframes pop { 0%{transform:scale(.8);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
-.pop { animation:pop .35s ease forwards; }
-
-/* ========== 書き終わり：キャンバス上演出 ========== */
-#clear-burst {
-  position:absolute; inset:0; pointer-events:none; z-index:20;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  opacity:0;
-}
-#clear-burst.show { animation:burstIn .35s cubic-bezier(.2,1.4,.4,1) forwards; }
-#clear-burst.hide { animation:burstOut .4s ease forwards; }
-@keyframes burstIn {
-  0%  { opacity:0; transform:scale(.4); }
-  60% { opacity:1; transform:scale(1.12); }
-  100%{ opacity:1; transform:scale(1); }
-}
-@keyframes burstOut {
-  0%  { opacity:1; transform:scale(1); }
-  100%{ opacity:0; transform:scale(1.3); }
-}
-#burst-char {
-  font-size:5.5rem; font-weight:900; line-height:1;
-  filter:drop-shadow(0 4px 18px rgba(0,0,0,.18));
-}
-#burst-stars {
-  font-size:2rem; letter-spacing:6px; margin-top:4px;
-  filter:drop-shadow(0 2px 6px rgba(0,0,0,.15));
-}
-#burst-label {
-  font-size:1.2rem; font-weight:900; margin-top:2px;
-  text-shadow:0 2px 8px rgba(0,0,0,.15);
-}
-
-/* はなまる評価表示 */
-.star-result {
-  display:none; position:absolute; inset:0; pointer-events:none;
-  align-items:center; justify-content:center; z-index:10;
-  flex-direction:column; gap:4px;
-}
-.star-result.show { display:flex; }
-@keyframes starPop {
-  0%   { transform:scale(0) rotate(-20deg); opacity:0; }
-  50%  { transform:scale(1.3) rotate(5deg); opacity:1; }
-  70%  { transform:scale(0.95) rotate(-2deg); }
-  100% { transform:scale(1) rotate(0deg); opacity:1; }
-}
-@keyframes hanamaru {
-  0%   { stroke-dashoffset:600; opacity:0; }
-  20%  { opacity:1; }
-  100% { stroke-dashoffset:0; opacity:1; }
-}
-.star-row { display:flex; gap:6px; }
-.star-item {
-  font-size:2rem; opacity:0;
-  animation:starPop .4s cubic-bezier(.36,.07,.19,.97) forwards;
-}
-.result-label {
-  font-size:1.1rem; font-weight:900; opacity:0;
-  animation:starPop .4s .3s cubic-bezier(.36,.07,.19,.97) forwards;
-}
-/* はなまるSVGオーバーレイ */
-#hanamaru-layer {
-  position:absolute; inset:0; pointer-events:none; z-index:9;
-}
-#hanamaru-layer svg { width:100%; height:100%; }
-/* 逆走警告アニメ */
-@keyframes shake {
-  0%,100%{ transform:translateX(0); }
-  20%    { transform:translateX(-6px); }
-  40%    { transform:translateX(6px); }
-  60%    { transform:translateX(-4px); }
-  80%    { transform:translateX(4px); }
-}
-.msg.shake { animation:shake .4s ease; }
-
-/* ===== 紙吹雪コンフェッティ ===== */
-.confetti-piece {
-  position:fixed; top:-20px; width:10px; height:10px;
-  z-index:9999; pointer-events:none; border-radius:2px;
-  animation:confettiFall linear forwards;
-}
-@keyframes confettiFall {
-  0%   { transform:translateY(0) rotate(0deg) scaleX(1);   opacity:1; }
-  50%  { transform:translateY(50vh) rotate(360deg) scaleX(-1); opacity:1; }
-  100% { transform:translateY(105vh) rotate(720deg) scaleX(1); opacity:0; }
-}
-
-/* ===== 1画OK トースト ===== */
-#stroke-toast {
-  display:block; width:100%; text-align:center;
-  font-size:1.3rem; font-weight:900;
-  min-height:2.2rem; line-height:2.2rem;
-  pointer-events:none; opacity:0;
-  transition:none;
-}
-@keyframes toastIn {
-  0%  { opacity:0; transform:scale(.7); }
-  40% { opacity:1; transform:scale(1.1); }
-  100%{ opacity:1; transform:scale(1); }
-}
-@keyframes toastOut {
-  0%  { opacity:1; transform:scale(1); }
-  100%{ opacity:0; transform:translateY(-6px) scale(.95); }
-}
-
+/* ===== オーバーレイ ===== */
 .ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; align-items:center; justify-content:center; padding:20px; }
 .ov.show { display:flex; }
-.ov-card { background:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
-.ov-msg  { font-size:1.3rem; font-weight:900; margin-bottom:16px; }
-.ov-btns { display:flex; gap:10px; justify-content:center; }
+.ov-card  { background:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+.lv-card  { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+.rc-card  { background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+.daily-card { background:linear-gradient(135deg,#F59E0B,#F97316); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
 .ob { padding:10px 20px; border-radius:20px; border:none; font-size:.9rem; font-weight:700; cursor:pointer; }
 .ob.grn { background:var(--green); color:white; }
 .ob.gry { background:#F3F4F6; color:#555; }
-.lv-card { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
-.rc-card { background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
-.daily-card { background:linear-gradient(135deg,#F59E0B,#F97316); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
 
-/* デイリー種類選択 */
-.daily-kind-row { display:flex; gap:6px; margin:-6px 0 12px; }
-.dk-btn {
-  flex:1; padding:7px 4px; border-radius:99px; border:2px solid #E5E7EB;
-  background:white; font-size:.78rem; font-weight:900; color:#aaa; cursor:pointer;
-  transition:all .15s;
-}
-.dk-btn:active { transform:scale(.95); }
-.dk-btn.sel-hira { border-color:#FF6B9D; background:#FFF0F6; color:#FF6B9D; }
-.dk-btn.sel-kata { border-color:#3B82F6; background:#EFF6FF; color:#3B82F6; }
-.dk-btn.sel-both { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
-
-/* デイリー完了画面パーティクル */
-.confetti-wrap { font-size:2rem; letter-spacing:4px; margin:8px 0; }
+/* ===== 紙吹雪 ===== */
+.confetti-piece { position:fixed; top:-20px; width:10px; height:10px; z-index:9999; pointer-events:none; border-radius:2px; animation:confettiFall linear forwards; }
+@keyframes confettiFall { 0%{transform:translateY(0) rotate(0deg) scaleX(1);opacity:1} 50%{transform:translateY(50vh) rotate(360deg) scaleX(-1);opacity:1} 100%{transform:translateY(105vh) rotate(720deg) scaleX(1);opacity:0} }
 </style>
 </head>
 <body>
 
-<!-- タイトル -->
+<!-- ===== タイトル ===== -->
 <div id="scr-title" class="screen active">
   <div class="title-logo">✏️ かなマスター</div>
   <div class="title-sub">ひらがな・カタカナ れんしゅう</div>
 
-  <!-- デイリーチャレンジバナー -->
   <div class="daily-banner" id="daily-banner" onclick="startDaily()">
     <div class="daily-icon" id="daily-icon">🌅</div>
     <div class="daily-info">
       <div class="daily-title" id="daily-title">きょうの5もじ</div>
       <div class="daily-sub"  id="daily-sub">まいにちれんしゅうしよう！</div>
     </div>
-    <div class="streak-pill" id="streak-pill">🔥 <span id="streak-num">0</span>にち</div>
+    <div class="streak-pill">🔥 <span id="streak-num">0</span>にち</div>
   </div>
-  <!-- デイリー種類選択 -->
   <div class="daily-kind-row">
     <button class="dk-btn" id="dk-hira" onclick="setDailyKind('hira',event)">🌸 ひらがな</button>
     <button class="dk-btn" id="dk-kata" onclick="setDailyKind('kata',event)">🔷 カタカナ</button>
     <button class="dk-btn" id="dk-both" onclick="setDailyKind('both',event)">✨ どちらも</button>
   </div>
 
-  <!-- SRS復習バナー（復習がある日だけ表示） -->
   <div class="srs-banner" id="srs-banner" onclick="startSRS()" style="display:none">
     <div style="font-size:1.8rem">🧠</div>
     <div style="flex:1">
@@ -336,6 +213,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
       <div style="font-size:.65rem;color:#bbb;margin-top:2px">つぎまであと<span id="t-nxp">5</span>こ</div>
     </div>
   </div>
+
   <div class="sec-label">🌸 ひらがな</div>
   <div class="menu-grid">
     <button class="btn-group" id="gb-h1" onclick="openList('h1')">
@@ -367,7 +245,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
   <button class="reset-btn" onclick="if(confirm('データをリセットしますか？'))doReset()">🗑 データをリセット</button>
 </div>
 
-<!-- カード一覧画面 -->
+<!-- ===== カード一覧 ===== -->
 <div id="scr-list" class="screen">
   <div class="game-header">
     <button class="btn-back" onclick="showScreen('scr-title')">← もどる</button>
@@ -383,7 +261,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
   </div>
 </div>
 
-<!-- ゲーム画面 -->
+<!-- ===== ゲーム画面 ===== -->
 <div id="scr-game" class="screen">
   <div class="game-header">
     <button class="btn-back" onclick="goBack()">← もどる</button>
@@ -393,10 +271,8 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
     </div>
   </div>
   <div class="hint-box" id="hint-box"></div>
-  <!-- 1画OKトースト（キャンバス外） -->
   <div id="stroke-toast"></div>
-  <!-- キャンバス外の結果表示（星・はなまる） -->
-  <div id="result-banner" style="display:none;text-align:center;padding:4px 0 6px;min-height:48px">
+  <div id="result-banner">
     <div id="rb-stars" style="font-size:2rem;letter-spacing:4px"></div>
     <div id="rb-label" style="font-size:1rem;font-weight:900;margin-top:1px"></div>
   </div>
@@ -408,16 +284,6 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
     <canvas id="canvas-ov" style="pointer-events:none;opacity:0;transition:opacity .4s"></canvas>
     <div id="guideLayer"></div>
     <div id="hanamaru-layer"></div>
-    <div class="star-result" id="star-result">
-      <div class="star-row" id="star-row"></div>
-      <div class="result-label" id="result-label"></div>
-    </div>
-    <!-- 書き終わり演出（パーティクルのみ） -->
-    <div id="clear-burst">
-      <div id="burst-char"></div>
-      <div id="burst-stars"></div>
-      <div id="burst-label"></div>
-    </div>
   </div>
   <div class="btn-row">
     <button class="btn-anime" onclick="doAnime()">▶ じゅん</button>
@@ -430,36 +296,14 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
   </div>
   <!-- SRS評価ボタン（正解後に表示） -->
   <div class="srs-rating" id="srs-rating">
-    <div style="font-size:.72rem;font-weight:700;color:#aaa;text-align:center;width:100%;margin-bottom:-4px">どのくらい かんたんだった？</div>
+    <div class="srs-rating-label">どのくらい かんたんだった？</div>
     <button class="sr-btn hard" onclick="rateSRS(1)">😓 むずかしい<br><span style="font-size:.62rem">1にち後</span></button>
     <button class="sr-btn ok"   onclick="rateSRS(3)">🙂 ふつう<br><span style="font-size:.62rem">3にち後</span></button>
     <button class="sr-btn easy" onclick="rateSRS(5)">😄 かんたん<br><span style="font-size:.62rem">7にち後</span></button>
   </div>
 </div>
 
-<!-- 正解 -->
-<div class="ov" id="ov-ok">
-  <div class="ov-card" id="ov-ok-card">
-    <!-- 星エリア -->
-    <div id="ov-stars" style="font-size:2.6rem;letter-spacing:4px;margin-bottom:4px;min-height:2.8rem"></div>
-    <!-- はなまるSVG -->
-    <div id="ov-hanamaru" style="display:none;margin:-8px auto -4px">
-      <svg viewBox="0 0 80 80" width="80" height="80">
-        <circle cx="40" cy="40" r="32" fill="none" stroke="#EC4899" stroke-width="5"
-          stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201"
-          style="transform-origin:50% 50%;transform:rotate(-90deg);
-                 animation:hanamaru 0.7s cubic-bezier(.4,0,.2,1) forwards"/>
-      </svg>
-    </div>
-    <div class="ov-msg" id="ov-msg" style="font-size:1.5rem">できたー！</div>
-    <div id="ov-submsg" style="font-size:.8rem;color:#aaa;margin:-8px 0 10px"></div>
-    <div class="ov-btns">
-      <button class="ob grn" onclick="closeOvNext()">つぎへ →</button>
-      <button class="ob gry" onclick="closeOvRetry()">もういっかい</button>
-    </div>
-  </div>
-</div>
-<!-- レベルアップ -->
+<!-- ===== オーバーレイ：レベルアップ ===== -->
 <div class="ov" id="ov-lv">
   <div class="lv-card">
     <div style="font-size:1.2rem;font-weight:900;margin-bottom:4px">✨ レベルアップ！</div>
@@ -469,7 +313,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
     <button class="ob" style="background:white;color:#764ba2;margin-top:8px" onclick="closeLv()">やったー！🎉</button>
   </div>
 </div>
-<!-- ランダム完了 -->
+<!-- ===== オーバーレイ：ランダム完了 ===== -->
 <div class="ov" id="ov-rc">
   <div class="rc-card">
     <div style="font-size:2rem;margin-bottom:6px">🎉</div>
@@ -478,12 +322,12 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
     <button class="ob" style="background:white;color:#f5576c" onclick="closeRc()">🏠 ホームへ</button>
   </div>
 </div>
-<!-- デイリーチャレンジ完了 -->
+<!-- ===== オーバーレイ：デイリー完了 ===== -->
 <div class="ov" id="ov-daily">
   <div class="daily-card">
-    <div class="confetti-wrap">🎊✨🎊</div>
+    <div style="font-size:2rem;margin-bottom:6px">🎊✨🎊</div>
     <div style="font-size:1.4rem;font-weight:900;margin:6px 0">きょうのれんしゅう<br>おわり！</div>
-    <div style="font-size:.9rem;opacity:.9;margin:8px 0" id="daily-done-streak">🔥 <span id="ov-streak">1</span>にちれんぞく！</div>
+    <div style="font-size:.9rem;opacity:.9;margin:8px 0">🔥 <span id="ov-streak">1</span>にちれんぞく！</div>
     <div style="font-size:.8rem;opacity:.8;margin-bottom:14px">ボーナス +5XP ゲット！</div>
     <button class="ob" style="background:white;color:#F97316" onclick="closeDailyOv()">やったー！🌟</button>
   </div>
@@ -493,7 +337,7 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 'use strict';
 
 // ============================================================
-// 単語データ
+// データ定義
 // ============================================================
 const KANA_WORDS = {
   h1:[
@@ -554,7 +398,6 @@ const KANA_WORDS = {
   ],
 };
 const ALL_WORDS = Object.values(KANA_WORDS).flat();
-
 const GROUPS = {h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
 const TITLES = [
   {lv:1,m:'🥚',t:'かなタマゴ'},{lv:3,m:'🐣',t:'かなのひよこ'},
@@ -562,27 +405,21 @@ const TITLES = [
   {lv:12,m:'🦅',t:'かなのわし'},{lv:18,m:'🌟',t:'かなのほし'},
   {lv:25,m:'👑',t:'かなマスター！'},
 ];
-function getTitle(lv){let r=TITLES[0];for(const t of TITLES){if(lv>=t.lv)r=t;else break;}return r;}
+function getTitle(lv){ let r=TITLES[0]; for(const t of TITLES){ if(lv>=t.lv) r=t; else break; } return r; }
 
 // ============================================================
-// 状態・保存
+// 状態管理
 // ============================================================
-let cleared  = JSON.parse(localStorage.getItem('km_cleared'))||{};
-let tokk     = JSON.parse(localStorage.getItem('km_tokk'))   ||{};
-let niga     = JSON.parse(localStorage.getItem('km_niga'))   ||{};
-let bonXP    = parseInt(localStorage.getItem('km_bonxp'))    ||0;
-let mistCnt  = JSON.parse(localStorage.getItem('km_mist'))   ||{};
-
-// ===== SRS データ構造 =====
-// srsData[char] = { interval:1, ef:2.5, due:dateStr, reps:0 }
-let srsData  = JSON.parse(localStorage.getItem('km_srs'))    ||{};
-
-// ===== デイリーチャレンジ =====
-// dailyState = { date:'YYYY-MM-DD', chars:[], done:[], completed:false }
-let dailyState = JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],done:[],completed:false};
-let streak     = parseInt(localStorage.getItem('km_streak')) ||0;
-let lastStreakDate = localStorage.getItem('km_streakdate')   ||'';
-let dailyKind  = localStorage.getItem('km_dailykind')       ||'hira'; // 'hira'|'kata'|'both'
+let cleared   = JSON.parse(localStorage.getItem('km_cleared')) || {};
+let tokk      = JSON.parse(localStorage.getItem('km_tokk'))    || {};
+let niga      = JSON.parse(localStorage.getItem('km_niga'))    || {};
+let bonXP     = parseInt(localStorage.getItem('km_bonxp'))     || 0;
+let mistCnt   = JSON.parse(localStorage.getItem('km_mist'))    || {};
+let srsData   = JSON.parse(localStorage.getItem('km_srs'))     || {};
+let dailyState= JSON.parse(localStorage.getItem('km_daily'))   || {date:'',chars:[],done:[],completed:false};
+let streak    = parseInt(localStorage.getItem('km_streak'))    || 0;
+let lastStreakDate = localStorage.getItem('km_streakdate')     || '';
+let dailyKind = localStorage.getItem('km_dailykind')          || 'hira';
 
 function save(){
   localStorage.setItem('km_cleared', JSON.stringify(cleared));
@@ -598,93 +435,68 @@ function save(){
 }
 
 // ============================================================
-// ユーティリティ：日付
+// ユーティリティ
 // ============================================================
 function todayStr(){ return new Date().toISOString().slice(0,10); }
-function addDays(dateStr,n){
-  const d=new Date(dateStr); d.setDate(d.getDate()+n);
-  return d.toISOString().slice(0,10);
-}
+function addDays(dateStr,n){ const d=new Date(dateStr); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); }
 
 // ============================================================
-// ★ SRS（SM-2ベース簡略版）
+// SRS（SM-2ベース）
 // ============================================================
 function srsInit(char){
   if(!srsData[char]) srsData[char]={interval:1,ef:2.5,due:todayStr(),reps:0};
 }
-
-// rating: 1=難しい 3=普通 5=簡単
 function srsUpdate(char,rating){
   srsInit(char);
   const s=srsData[char];
-  if(rating<3){
-    s.interval=1; s.reps=0;
-  } else {
-    if(s.reps===0)      s.interval=1;
+  if(rating<3){ s.interval=1; s.reps=0; }
+  else{
+    if(s.reps===0) s.interval=1;
     else if(s.reps===1) s.interval=3;
-    else                s.interval=Math.round(s.interval*s.ef);
+    else s.interval=Math.round(s.interval*s.ef);
     s.reps++;
-    // EFの更新（2.5 + (0.1 - (5-rating)*(0.08+(5-rating)*0.02))）
     s.ef=Math.max(1.3, s.ef+0.1-(5-rating)*(0.08+(5-rating)*0.02));
   }
   s.due=addDays(todayStr(), s.interval);
   save();
 }
-
 function getDueChars(){
   const today=todayStr();
-  return ALL_WORDS.filter(w=>{
-    const s=srsData[w.char];
-    return s && s.due<=today;
-  });
+  return ALL_WORDS.filter(w=>{ const s=srsData[w.char]; return s&&s.due<=today; });
 }
 
 // ============================================================
-// ★ デイリーチャレンジ
+// デイリーチャレンジ
 // ============================================================
 const DAILY_COUNT=5;
 
 function initDaily(){
   const today=todayStr();
-  if(dailyState.date===today) return; // 今日分は作成済み
+  if(dailyState.date===today) return;
 
-  // ストリーク更新
-  if(dailyState.date && dailyState.completed){
-    const yesterday=addDays(today,-1);
-    if(lastStreakDate===yesterday){ streak++; }
-    else if(lastStreakDate!==today){ streak=1; }
-  } else if(dailyState.date && dailyState.date!==today){
-    // 昨日完了していなければリセット
-    const yesterday=addDays(today,-1);
-    if(lastStreakDate!==yesterday) streak=0;
-  }
+  // 前日完了でストリーク継続
+  const yesterday=addDays(today,-1);
+  if(dailyState.completed && lastStreakDate===yesterday){ streak++; }
+  else if(lastStreakDate!==today){ streak=0; }
 
-  // kindに応じた対象単語を絞り込む
-  const kindGroups={
-    hira:['h1','h2'],
-    kata:['k1','k2'],
-    both:['h1','h2','k1','k2'],
-  };
-  const targetGroups=kindGroups[dailyKind]||kindGroups.hira;
-  const TARGET_WORDS=targetGroups.flatMap(g=>KANA_WORDS[g]);
+  const kindGroups={hira:['h1','h2'],kata:['k1','k2'],both:['h1','h2','k1','k2']};
+  const TARGET_WORDS=(kindGroups[dailyKind]||kindGroups.hira).flatMap(g=>KANA_WORDS[g]);
 
-  // 今日の5問を選出：SRS期限切れ優先 → 未習得 → ランダム
+  // SRS期限切れ優先 → 未習得 → ランダム
   const due=getDueChars().filter(w=>TARGET_WORDS.find(t=>t.char===w.char));
   let pool=[];
   if(due.length>=DAILY_COUNT){
     pool=due.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT);
-  } else {
+  }else{
     pool=[...due];
     const unlearned=TARGET_WORDS.filter(w=>!cleared[w.char]&&!pool.find(p=>p.char===w.char));
-    const needed=DAILY_COUNT-pool.length;
-    pool=[...pool, ...unlearned.sort(()=>Math.random()-.5).slice(0,needed)];
+    pool=[...pool,...unlearned.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];
     if(pool.length<DAILY_COUNT){
       const rest=TARGET_WORDS.filter(w=>!pool.find(p=>p.char===w.char));
       pool=[...pool,...rest.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];
     }
   }
-
-  dailyState={date:today, chars:pool.map(w=>w.char), done:[], completed:false};
+  dailyState={date:today,chars:pool.map(w=>w.char),done:[],completed:false};
   save();
 }
 
@@ -695,70 +507,54 @@ function getDailyWords(){
     .filter(Boolean);
 }
 
-function setDailyKind(kind, e){
-  e.stopPropagation(); // バナーのonclickを止める
+function setDailyKind(kind,e){
+  e.stopPropagation();
   if(dailyKind===kind) return;
   dailyKind=kind;
-  // 種類が変わったら今日分をリセット（再選出）
   dailyState={date:'',chars:[],done:[],completed:false};
-  save();
-  updateTitle(); // バナー・ピル両方更新
+  save(); updateTitle();
 }
 
 function updateDailyKindBtns(){
-  const map={hira:'sel-hira', kata:'sel-kata', both:'sel-both'};
+  const map={hira:'sel-hira',kata:'sel-kata',both:'sel-both'};
   ['hira','kata','both'].forEach(k=>{
     const btn=document.getElementById('dk-'+k);
-    if(!btn) return;
-    btn.className='dk-btn'+(dailyKind===k?' '+map[k]:'');
+    if(btn) btn.className='dk-btn'+(dailyKind===k?' '+map[k]:'');
   });
 }
 
 function updateDailyBanner(){
-  const today=todayStr();
   initDaily();
   const done=dailyState.done.length;
-  const total=DAILY_COUNT;
   const completed=dailyState.completed;
-
   const banner=document.getElementById('daily-banner');
-  const icon=document.getElementById('daily-icon');
-  const title=document.getElementById('daily-title');
-  const sub=document.getElementById('daily-sub');
-  const streakEl=document.getElementById('streak-num');
-
-  streakEl.textContent=streak;
+  document.getElementById('streak-num').textContent=streak;
   if(completed){
     banner.classList.add('done');
-    icon.textContent='✅';
-    title.textContent='きょうのれんしゅう かんりょう！';
-    sub.textContent='もう一度タップ → くりかえし練習！';
-  } else {
+    document.getElementById('daily-icon').textContent='✅';
+    document.getElementById('daily-title').textContent='きょうのれんしゅう かんりょう！';
+    document.getElementById('daily-sub').textContent='もう一度タップ → くりかえし練習！';
+  }else{
     banner.classList.remove('done');
-    icon.textContent='🌅';
-    title.textContent='きょうの5もじ';
-    sub.textContent=done>0?`あと ${total-done} もじ！がんばろう！`:'まいにちれんしゅうしよう！';
+    document.getElementById('daily-icon').textContent='🌅';
+    document.getElementById('daily-title').textContent='きょうの5もじ';
+    document.getElementById('daily-sub').textContent=done>0?`あと ${DAILY_COUNT-done} もじ！がんばろう！`:'まいにちれんしゅうしよう！';
   }
-
-  // SRS復習バナー
   updateDailyKindBtns();
   const dueList=getDueChars();
   const srsBanner=document.getElementById('srs-banner');
-  if(dueList.length>0 && !completed){
+  if(dueList.length>0&&!completed){
     srsBanner.style.display='flex';
     document.getElementById('srs-count').textContent=dueList.length+'こ';
-  } else {
+  }else{
     srsBanner.style.display='none';
   }
 }
 
 // ============================================================
-// XP・タイトル更新
+// XP・レベル
 // ============================================================
-function getXP(){
-  const x=Object.keys(cleared).length+bonXP;
-  return{lv:Math.floor(x/5)+1, cur:x%5, next:5-(x%5)};
-}
+function getXP(){ const x=Object.keys(cleared).length+bonXP; return{lv:Math.floor(x/5)+1,cur:x%5,next:5-(x%5)}; }
 
 function updateTitle(){
   const{lv,cur,next}=getXP();
@@ -780,66 +576,54 @@ function updateTitle(){
 
 let curGroup='h1';
 function updateGroupSel(){
-  for(const g of Object.keys(GROUPS))
-    document.getElementById(`gb-${g}`).classList.toggle('sel',g===curGroup);
+  for(const g of Object.keys(GROUPS)) document.getElementById(`gb-${g}`).classList.toggle('sel',g===curGroup);
 }
 
 // ============================================================
-// デイリー・SRS 起動
+// ゲーム起動
 // ============================================================
+let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false;
+
 function startDaily(){
   initDaily();
-  // 完了済みならもう一周（doneをリセット）
-  if(dailyState.completed){
-    dailyState.done=[];
-    dailyState.completed=false;
-    save();
-  }
+  if(dailyState.completed){ dailyState.done=[]; dailyState.completed=false; save(); }
   snd('click');
   const words=getDailyWords();
-  if(!words.length){ return; }
-  curMode='daily'; isRandom=false;
-  queue=[...words]; qIdx=0;
-  setModeTag('daily');
-  showScreen('scr-game'); loadQ();
+  if(!words.length) return;
+  curMode='daily'; isRandom=false; queue=[...words]; qIdx=0;
+  setModeTag('daily'); showScreen('scr-game'); loadQ();
 }
 
 function startSRS(){
   snd('click');
   const due=getDueChars();
-  if(!due.length){alert('ふくしゅうはありません');return;}
+  if(!due.length){ alert('ふくしゅうはありません'); return; }
   curMode='srs'; isRandom=false;
   queue=due.sort(()=>Math.random()-.5).slice(0,10); qIdx=0;
-  setModeTag('srs');
-  showScreen('scr-game'); loadQ();
+  setModeTag('srs'); showScreen('scr-game'); loadQ();
 }
 
 function setModeTag(mode){
   const tag=document.getElementById('mode-tag');
   const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};
   tag.textContent=labels[mode]||mode;
-  tag.className='mode-tag';
-  if(mode==='daily') tag.classList.add('daily');
-  else if(mode==='srs') tag.classList.add('srs');
-  else if(mode==='test') tag.classList.add('test');
+  tag.className='mode-tag'+(mode==='daily'?' daily':mode==='srs'?' srs':mode==='test'?' test':'');
 }
 
+// ============================================================
 // カード一覧
+// ============================================================
 let listMode='practice';
 
 function openList(g){
   snd('click'); curGroup=g;
   const labels={h1:'あ〜な行',h2:'は〜ん',k1:'ア〜ナ行',k2:'ハ〜ン'};
   document.getElementById('list-title').textContent=labels[g];
-  listMode='practice'; updateListModeBtns();
-  renderKanaGrid();
+  listMode='practice'; updateListModeBtns(); renderKanaGrid();
   showScreen('scr-list');
 }
 
-function listSetMode(m){
-  snd('click'); listMode=m;
-  updateListModeBtns(); renderKanaGrid();
-}
+function listSetMode(m){ snd('click'); listMode=m; updateListModeBtns(); renderKanaGrid(); }
 
 function updateListModeBtns(){
   document.getElementById('lb-prac').style.borderColor=listMode==='practice'?'var(--primary)':'#E5E7EB';
@@ -859,67 +643,49 @@ function renderKanaGrid(){
     const isDue=srs&&srs.due<=today;
     const card=document.createElement('div');
     card.className='k-card';
-    if(isDue)            card.classList.add('due-review');
-    else if(hasPrac&&hasTest) card.classList.add('done-both');
-    else if(hasPrac)     card.classList.add('done-prac');
-    else if(hasTest)     card.classList.add('done-test');
-
+    if(isDue)                  card.classList.add('due-review');
+    else if(hasPrac&&hasTest)  card.classList.add('done-both');
+    else if(hasPrac)           card.classList.add('done-prac');
+    else if(hasTest)           card.classList.add('done-test');
     if(cleared[w.char]){
       const b=document.createElement('div');
       b.className='k-badge'; b.textContent='✓'; card.appendChild(b);
     }
-    // SRS次回日表示
     if(srs&&!isDue){
       const b=document.createElement('div');
       b.className='srs-badge';
-      const days=Math.round((new Date(srs.due)-new Date(today))/(86400000));
+      const days=Math.round((new Date(srs.due)-new Date(today))/86400000);
       b.textContent=days<=0?'きょう':days+'にち後';
       card.appendChild(b);
     }
-
-    const t=document.createTextNode(w.char);
-    card.appendChild(t);
+    card.appendChild(document.createTextNode(w.char));
     card.onclick=()=>{
       snd('click'); curMode=listMode;
-      const startIdx=KANA_WORDS[curGroup].indexOf(w);
-      queue=KANA_WORDS[curGroup].slice(startIdx);
+      queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));
       qIdx=0; isRandom=false;
-      setModeTag(curMode);
-      showScreen('scr-game'); loadQ();
+      setModeTag(curMode); showScreen('scr-game'); loadQ();
     };
     grid.appendChild(card);
   });
 }
 
 function startAll(){
-  snd('click'); curMode=listMode;
-  queue=[...KANA_WORDS[curGroup]]; qIdx=0; isRandom=false;
-  setModeTag(curMode);
-  showScreen('scr-game'); loadQ();
+  snd('click'); curMode=listMode; queue=[...KANA_WORDS[curGroup]]; qIdx=0; isRandom=false;
+  setModeTag(curMode); showScreen('scr-game'); loadQ();
 }
 
 function startSpecial(m){
   snd('click'); curMode=m;
-  let list=[];
-  if(m==='tokkun') list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>tokk[w.char]));
-  if(m==='nigate') list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>niga[w.char]));
-  if(!list.length){alert('もじが ありません');return;}
+  const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));
+  if(!list.length){ alert('もじが ありません'); return; }
   queue=list; qIdx=0; isRandom=false;
-  setModeTag(curMode);
-  showScreen('scr-game'); loadQ();
+  setModeTag(curMode); showScreen('scr-game'); loadQ();
 }
 
-// ============================================================
-// ゲーム管理
-// ============================================================
-let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,rLvBefore=1;
-let pendingSRSRating=false; // SRS評価待ち
-
 function startRandom(){
-  snd('click'); curMode='test'; isRandom=true; rLvBefore=getXP().lv;
+  snd('click'); curMode='test'; isRandom=true;
   queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);
-  qIdx=0; setModeTag('test');
-  showScreen('scr-game'); loadQ();
+  qIdx=0; setModeTag('test'); showScreen('scr-game'); loadQ();
 }
 
 function showScreen(id){
@@ -928,10 +694,10 @@ function showScreen(id){
   document.getElementById(id).classList.add('active');
   if(id==='scr-title') updateTitle();
 }
-function goTitle(){animating=false; showScreen('scr-title');}
+
 function goBack(){
   animating=false;
-  if(isRandom||curMode==='tokkun'||curMode==='nigate'||curMode==='daily'||curMode==='srs') showScreen('scr-title');
+  if(isRandom||['tokkun','nigate','daily','srs'].includes(curMode)) showScreen('scr-title');
   else{ renderKanaGrid(); showScreen('scr-list'); }
 }
 
@@ -940,27 +706,23 @@ function goBack(){
 // ============================================================
 async function loadQ(){
   curQ=queue[qIdx];
-  pendingSRSRating=false;
   resetStrokeScores();
   userDrawRecord=[]; currentStrokePts=[];
   hideResultBanner();
   document.getElementById('srs-rating').classList.remove('show');
-  document.getElementById('star-result').classList.remove('show');
   document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('prog-text').textContent=`${qIdx+1} / ${queue.length}`;
   const isTest=(curMode==='test');
   const hintEl=document.getElementById('hint-box');
   if(isTest){
     const wHTML=[...curQ.word].map((c,i)=>
-      i===curQ.pos ? `<span class="hint-blank">＿</span>` : `<span class="hint-char">${c}</span>`
+      i===curQ.pos?`<span class="hint-blank">＿</span>`:`<span class="hint-char">${c}</span>`
     ).join('');
     hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div><div class="hint-word">${wHTML}<button class="btn-sound" onclick="speak('${curQ.word}')">🔊</button></div>`;
   }else{
     hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div>
-      <div class="hint-word">
-        <span class="hint-char" style="font-size:2.4rem;color:var(--primary)">${curQ.char}</span>
-        <button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button>
-      </div>`;
+      <div class="hint-word"><span class="hint-char" style="font-size:2.4rem;color:var(--primary)">${curQ.char}</span>
+      <button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button></div>`;
   }
   const msg=document.getElementById('msg');
   msg.textContent=isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！';
@@ -968,36 +730,28 @@ async function loadQ(){
   updateRegBtns();
   initCanvas();
   await loadKanjiVG(curQ.char);
-  // 次の文字をバックグラウンドでプリフェッチ
-  if(qIdx+1 < queue.length){
-    const nextChar=queue[qIdx+1].char;
-    const nextHex=nextChar.codePointAt(0).toString(16).padStart(5,'0');
-    if(!svgCache[nextHex]){
-      fetch(`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${nextHex}.svg`)
-        .then(r=>r.ok?r.text():null)
-        .then(t=>{ if(t) svgCache[nextHex]=t; })
-        .catch(()=>{});
-    }
+  // プリフェッチ
+  if(qIdx+1<queue.length){
+    const nc=queue[qIdx+1].char;
+    const nh=nc.codePointAt(0).toString(16).padStart(5,'0');
+    if(!svgCache[nh]) fetch(`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${nh}.svg`).then(r=>r.ok?r.text():null).then(t=>{if(t)svgCache[nh]=t;}).catch(()=>{});
   }
 }
 
 // ============================================================
-// Canvas初期化
+// Canvas
 // ============================================================
 let ctxBg,ctxFx,ctxDr,ctxOv,cW=0;
 let strokes=[],currentStroke=0;
 let drawing=false,animating=false;
-let drawLength=0,lastX=null,lastY=null;
-let userPts=[];
-const TOLERANCE_RATIO=0.28; // 始点の許容範囲（キャンバス幅の28%）
+let drawLength=0,lastX=null,lastY=null,userPts=[];
+const TOLERANCE_RATIO=0.28;
 
 function initCanvas(){
   const cont=document.getElementById('canvas-container');
-  const size=cont.offsetWidth;
-  cW=size;
+  cW=cont.offsetWidth;
   ['canvas-bg','canvas-fx','canvas-dr','canvas-ov'].forEach(id=>{
-    const c=document.getElementById(id);
-    c.width=size; c.height=size;
+    const c=document.getElementById(id); c.width=cW; c.height=cW;
   });
   ctxBg=document.getElementById('canvas-bg').getContext('2d');
   ctxFx=document.getElementById('canvas-fx').getContext('2d');
@@ -1005,46 +759,28 @@ function initCanvas(){
   ctxOv=document.getElementById('canvas-ov').getContext('2d');
   document.getElementById('canvas-ov').style.opacity='0';
   drawGrid();
-  strokes=[]; currentStroke=0;
-  drawing=false; animating=false;
+  strokes=[]; currentStroke=0; drawing=false; animating=false;
   drawLength=0; lastX=null; lastY=null;
-  stopStartDot(); // 既存のアニメを止める
-
+  stopStartDot();
   const drC=document.getElementById('canvas-dr');
   drC.onpointerdown=e=>{
     if(animating)return;
     const{x,y}=getXY(e,drC);
-    if(strokes.length && currentStroke<strokes.length){
-      if(!checkStart(x,y))return;
-    }
-    drawing=true; drawLength=0; lastX=x; lastY=y; userPts=[{x,y}];
-    currentStrokePts=[{x,y}]; // 比較用記録開始
-    stopStartDot(); // 書き始めたら●を消す
-    document.getElementById('guideLayer').innerHTML='';
+    if(strokes.length&&currentStroke<strokes.length&&!checkStart(x,y))return;
+    drawing=true; drawLength=0; lastX=x; lastY=y; userPts=[{x,y}]; currentStrokePts=[{x,y}];
+    stopStartDot(); document.getElementById('guideLayer').innerHTML='';
     ctxDr.beginPath(); ctxDr.moveTo(x,y);
   };
   drC.onpointermove=e=>{
     if(!drawing)return; e.preventDefault();
     const{x,y}=getXY(e,drC);
-    trackDraw(x,y);
-    userPts.push({x,y});
-    currentStrokePts.push({x,y}); // 比較用記録
-    ctxDr.lineTo(x,y);
-    ctxDr.lineCap='round'; ctxDr.lineJoin='round';
-    ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
-    ctxDr.stroke();
+    trackDraw(x,y); userPts.push({x,y}); currentStrokePts.push({x,y});
+    ctxDr.lineTo(x,y); ctxDr.lineCap='round'; ctxDr.lineJoin='round';
+    ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)'; ctxDr.stroke();
     if(userPts.length%4===0){ addSparkle(x,y); if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();} }
   };
-  drC.onpointerup=e=>{
-    if(!drawing)return; drawing=false;
-    const{x,y}=getXY(e,drC);
-    trackDraw(x,y);
-    evalEnd(x,y);
-  };
-  drC.onpointerleave=e=>{
-    if(!drawing)return; drawing=false;
-    evalEnd(lastX??0,lastY??0);
-  };
+  drC.onpointerup=e=>{ if(!drawing)return; drawing=false; const{x,y}=getXY(e,drC); trackDraw(x,y); evalEnd(x,y); };
+  drC.onpointerleave=e=>{ if(!drawing)return; drawing=false; evalEnd(lastX??0,lastY??0); };
 }
 
 function drawGrid(){
@@ -1059,11 +795,11 @@ function getXY(e,canvas){
   const r=canvas.getBoundingClientRect();
   const cx=e.touches?e.touches[0].clientX:e.clientX;
   const cy=e.touches?e.touches[0].clientY:e.clientY;
-  return{x:(cx-r.left)*(cW/r.width), y:(cy-r.top)*(cW/r.height)};
+  return{x:(cx-r.left)*(cW/r.width),y:(cy-r.top)*(cW/r.height)};
 }
 
 // ============================================================
-// SVGアニメーション
+// SVGアニメ（筆順ガイド）
 // ============================================================
 async function animateGuide(svgText){
   const layer=document.getElementById('guideLayer');
@@ -1073,15 +809,12 @@ async function animateGuide(svgText){
   const strokeGroup=doc.querySelector('[id^="kvg:StrokePaths"]');
   if(!strokeGroup) return;
   const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svgEl.setAttribute('viewBox','0 0 109 109');
-  svgEl.style.width='100%'; svgEl.style.height='100%';
+  svgEl.setAttribute('viewBox','0 0 109 109'); svgEl.style.width='100%'; svgEl.style.height='100%';
   const paths=[...strokeGroup.querySelectorAll('path')];
-  paths.forEach(p=>svgEl.appendChild(p));
-  layer.appendChild(svgEl);
+  paths.forEach(p=>svgEl.appendChild(p)); layer.appendChild(svgEl);
   for(const p of paths){
     const len=p.getTotalLength();
-    p.style.strokeDasharray=len;
-    p.style.strokeDashoffset=len;
+    p.style.strokeDasharray=len; p.style.strokeDashoffset=len;
     p.style.transition='stroke-dashoffset 0.9s linear';
     await new Promise(r=>requestAnimationFrame(r));
     p.style.strokeDashoffset=0;
@@ -1090,52 +823,33 @@ async function animateGuide(svgText){
 }
 
 // ============================================================
-// KanjiVG読み込み
+// KanjiVG
 // ============================================================
 const svgCache={};
+let strokeRefCache={};
 
 async function loadKanjiVG(char){
-  const isPrac=(curMode==='practice'||curMode==='tokkun'||curMode==='nigate'||curMode==='daily'||curMode==='srs');
+  const isPrac=!['test'].includes(curMode);
   try{
     const hex=char.codePointAt(0).toString(16).padStart(5,'0');
     const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;
-    let svgText=svgCache[hex];
-    if(!svgText){
-      const res=await fetch(url);
-      if(!res.ok) throw new Error('not found');
-      svgText=await res.text();
-      svgCache[hex]=svgText;
-    }
+    if(!svgCache[hex]){ const res=await fetch(url); if(!res.ok) throw new Error('not found'); svgCache[hex]=await res.text(); }
+    const svgText=svgCache[hex];
     if(isPrac) await animateGuide(svgText);
     const parser=new DOMParser();
     const doc=parser.parseFromString(svgText,'image/svg+xml');
     const strokeGroup=doc.querySelector('[id^="kvg:StrokePaths"]');
     strokes=strokeGroup?[...strokeGroup.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];
-    currentStroke=0; drawLength=0; lastX=null; lastY=null;
-
-    // ストローク参照点をキャッシュ（DTW用）
-    strokeRefCache={};
-
-    // ② 書き始めガイド：最初のストロークの始点に●を表示
+    currentStroke=0; drawLength=0; lastX=null; lastY=null; strokeRefCache={};
     if(strokes.length) startStartDot();
-
     if(isPrac){
-      let styled=svgText.replace('</svg>',`<style>
-        path { stroke:#E2E8F0 !important; stroke-width:10 !important; fill:none !important; }
-        text { fill:#94A3B8 !important; font-size:8px !important; font-family:sans-serif; }
-      </style></svg>`);
+      let styled=svgText.replace('</svg>',`<style>path{stroke:#E2E8F0!important;stroke-width:10!important;fill:none!important}text{fill:#94A3B8!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);
       const blob=new Blob([styled],{type:'image/svg+xml;charset=utf-8'});
       const blobUrl=URL.createObjectURL(blob);
       await new Promise(resolve=>{
         const img=new Image();
-        img.onload=()=>{
-          ctxBg.clearRect(0,0,cW,cW);
-          drawGrid();
-          ctxBg.drawImage(img,0,0,cW,cW);
-          URL.revokeObjectURL(blobUrl);
-          resolve();
-        };
-        img.onerror=()=>{URL.revokeObjectURL(blobUrl); resolve();};
+        img.onload=()=>{ ctxBg.clearRect(0,0,cW,cW); drawGrid(); ctxBg.drawImage(img,0,0,cW,cW); URL.revokeObjectURL(blobUrl); resolve(); };
+        img.onerror=()=>{ URL.revokeObjectURL(blobUrl); resolve(); };
         img.src=blobUrl;
       });
     }
@@ -1146,206 +860,118 @@ async function loadKanjiVG(char){
 }
 
 // ============================================================
-// ★ 判定精度向上：DTW（動的時間伸縮法）ベースの筆跡評価
+// DTW筆跡評価
 // ============================================================
-const _svgMeasure=(()=>{
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.style.cssText='position:absolute;visibility:hidden;width:0;height:0';
-  document.body.appendChild(svg);
-  return svg;
-})();
+const _svgMeasure=(()=>{ const s=document.createElementNS('http://www.w3.org/2000/svg','svg'); s.style.cssText='position:absolute;visibility:hidden;width:0;height:0'; document.body.appendChild(s); return s; })();
 
-let strokeRefCache={};
-
-// パスをN点にリサンプリング
-function resamplePath(pathStr, N=20){
+function resamplePath(pathStr,N=20){
   if(strokeRefCache[pathStr]) return strokeRefCache[pathStr];
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',pathStr);
-  _svgMeasure.appendChild(path);
-  const len=path.getTotalLength();
-  const sc=cW/109;
-  const pts=[];
-  for(let i=0;i<N;i++){
-    const p=path.getPointAtLength(len*i/(N-1));
-    pts.push({x:p.x*sc, y:p.y*sc});
-  }
-  _svgMeasure.removeChild(path);
-  strokeRefCache[pathStr]=pts;
-  return pts;
+  path.setAttribute('d',pathStr); _svgMeasure.appendChild(path);
+  const len=path.getTotalLength(); const sc=cW/109; const pts=[];
+  for(let i=0;i<N;i++){ const p=path.getPointAtLength(len*i/(N-1)); pts.push({x:p.x*sc,y:p.y*sc}); }
+  _svgMeasure.removeChild(path); strokeRefCache[pathStr]=pts; return pts;
 }
 
-// DTW距離計算（O(N^2)だがN=20なので高速）
-function dtwDistance(seq1, seq2){
-  const n=seq1.length, m=seq2.length;
+function dtwDistance(seq1,seq2){
+  const n=seq1.length,m=seq2.length;
   const dtw=Array.from({length:n+1},()=>new Float32Array(m+1).fill(Infinity));
   dtw[0][0]=0;
-  for(let i=1;i<=n;i++){
-    for(let j=1;j<=m;j++){
-      const d=Math.hypot(seq1[i-1].x-seq2[j-1].x, seq1[i-1].y-seq2[j-1].y);
-      dtw[i][j]=d+Math.min(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1]);
-    }
+  for(let i=1;i<=n;i++) for(let j=1;j<=m;j++){
+    const d=Math.hypot(seq1[i-1].x-seq2[j-1].x,seq1[i-1].y-seq2[j-1].y);
+    dtw[i][j]=d+Math.min(dtw[i-1][j],dtw[i][j-1],dtw[i-1][j-1]);
   }
   return dtw[n][m]/Math.max(n,m);
 }
 
-// ユーザーの描画点列をN点にリサンプリング
 function resampleUserPts(N=20){
   if(userPts.length<2) return userPts;
-  // 累積長を計算
   const dists=[0];
-  for(let i=1;i<userPts.length;i++)
-    dists.push(dists[i-1]+Math.hypot(userPts[i].x-userPts[i-1].x, userPts[i].y-userPts[i-1].y));
+  for(let i=1;i<userPts.length;i++) dists.push(dists[i-1]+Math.hypot(userPts[i].x-userPts[i-1].x,userPts[i].y-userPts[i-1].y));
   const total=dists[dists.length-1];
   if(total<1) return userPts;
   const result=[];
   for(let i=0;i<N;i++){
     const target=total*i/(N-1);
-    // 二分探索
     let lo=0,hi=dists.length-1;
-    while(lo<hi-1){const mid=(lo+hi)>>1; if(dists[mid]<=target)lo=mid;else hi=mid;}
+    while(lo<hi-1){ const mid=(lo+hi)>>1; if(dists[mid]<=target)lo=mid;else hi=mid; }
     const t=(dists[lo]===dists[hi])?0:(target-dists[lo])/(dists[hi]-dists[lo]);
-    result.push({
-      x:userPts[lo].x+(userPts[hi].x-userPts[lo].x)*t,
-      y:userPts[lo].y+(userPts[hi].y-userPts[lo].y)*t,
-    });
+    result.push({x:userPts[lo].x+(userPts[hi].x-userPts[lo].x)*t,y:userPts[lo].y+(userPts[hi].y-userPts[lo].y)*t});
   }
   return result;
 }
 
-// 始点チェック（変更なし）
-function getStrokeStart(pathStr){
+function getSVGPoint(pathStr,t_ratio){
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',pathStr);
-  _svgMeasure.appendChild(path);
-  const p=path.getPointAtLength(0);
-  const sc=cW/109;
-  const result={x:p.x*sc, y:p.y*sc};
-  _svgMeasure.removeChild(path);
-  return result;
-}
-
-function getStrokeEnd(pathStr){
-  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d',pathStr);
-  _svgMeasure.appendChild(path);
-  const len=path.getTotalLength();
-  const p=path.getPointAtLength(len);
-  const sc=cW/109;
-  const result={x:p.x*sc, y:p.y*sc};
-  _svgMeasure.removeChild(path);
-  return result;
+  path.setAttribute('d',pathStr); _svgMeasure.appendChild(path);
+  const len=path.getTotalLength(); const p=path.getPointAtLength(len*t_ratio);
+  const sc=cW/109; const result={x:p.x*sc,y:p.y*sc}; _svgMeasure.removeChild(path); return result;
 }
 
 function checkStart(x,y){
-  if(!strokes.length||currentStroke>=strokes.length)return false;
-  const st=getStrokeStart(strokes[currentStroke]);
-  return Math.hypot(x-st.x, y-st.y)<cW*TOLERANCE_RATIO;
+  if(!strokes.length||currentStroke>=strokes.length) return false;
+  const st=getSVGPoint(strokes[currentStroke],0);
+  return Math.hypot(x-st.x,y-st.y)<cW*TOLERANCE_RATIO;
 }
 
-function trackDraw(x,y){
-  if(lastX!==null) drawLength+=Math.hypot(x-lastX, y-lastY);
-  lastX=x; lastY=y;
-}
-
-// ============================================================
-// ★ 方向チェック：進行ベクトルの内積で逆走を検出
-// ============================================================
-function checkDirection(userResampled, refPts){
-  // 全体の進行方向を前半・後半に分けて内積チェック
-  // 内積の符号が負なら逆走と判定
-  const N=userResampled.length;
-  if(N<4) return true; // 点が少なすぎる場合はスルー
-  // ユーザーの全体ベクトル
-  const uVx=userResampled[N-1].x-userResampled[0].x;
-  const uVy=userResampled[N-1].y-userResampled[0].y;
-  // 参照パスの全体ベクトル
-  const M=refPts.length;
-  const rVx=refPts[M-1].x-refPts[0].x;
-  const rVy=refPts[M-1].y-refPts[0].y;
+function checkDirection(userResampled,refPts){
+  const N=userResampled.length; if(N<4) return true;
+  const uVx=userResampled[N-1].x-userResampled[0].x, uVy=userResampled[N-1].y-userResampled[0].y;
+  const M=refPts.length, rVx=refPts[M-1].x-refPts[0].x, rVy=refPts[M-1].y-refPts[0].y;
   const dot=uVx*rVx+uVy*rVy;
-  const uLen=Math.hypot(uVx,uVy);
-  const rLen=Math.hypot(rVx,rVy);
-  if(uLen<1||rLen<1) return true; // ほぼ点の場合はスルー
-  const cos=dot/(uLen*rLen);
-  return cos>-0.3; // cos<-0.3（120度以上逆）なら逆走とみなす
+  const uLen=Math.hypot(uVx,uVy), rLen=Math.hypot(rVx,rVy);
+  if(uLen<1||rLen<1) return true;
+  return (dot/(uLen*rLen))>-0.3;
 }
 
 // ============================================================
-// ★ はなまるスコア管理
+// スコア管理
 // ============================================================
-let strokeScores=[]; // 各ストロークのDTWスコアを蓄積
-
+let strokeScores=[];
 function resetStrokeScores(){ strokeScores=[]; }
-
-// DTW距離をスコア(0〜1)に変換：距離が小さいほど高スコア
 function dtwToScore(dtw){
-  const perfect=cW*0.08;  // ★★★
-  const good   =cW*0.16;  // ★★
-  const ok     =cW*0.26;  // ★
-  if(dtw<=perfect) return 1.0;
-  if(dtw<=good)    return 0.67;
-  if(dtw<=ok)      return 0.33;
+  if(dtw<=cW*0.08) return 1.0;
+  if(dtw<=cW*0.16) return 0.67;
+  if(dtw<=cW*0.26) return 0.33;
   return 0;
 }
-
-// 全ストロークの平均スコアから★数を決定
 function calcStars(){
   if(!strokeScores.length) return 1;
   const avg=strokeScores.reduce((a,b)=>a+b,0)/strokeScores.length;
-  if(avg>=0.85) return 3;
-  if(avg>=0.55) return 2;
-  return 1;
+  if(avg>=0.85) return 3; if(avg>=0.55) return 2; return 1;
 }
 
 // ============================================================
-// ★ DTWベース評価（方向チェック追加版）
+// 評価
 // ============================================================
 function evalEnd(x,y){
   ctxDr.clearRect(0,0,cW,cW);
-  if(!strokes.length){
-    snd('stroke'); setMsg('かけたね！','#00D084'); speak(curQ.char); onComplete(); return;
-  }
-  if(currentStroke>=strokes.length)return;
+  if(!strokes.length){ snd('stroke'); setMsg('かけたね！','#00D084'); speak(curQ.char); onComplete(); return; }
+  if(currentStroke>=strokes.length) return;
 
   const pathStr=strokes[currentStroke];
   const refPts=resamplePath(pathStr,20);
   const refLen=refPts.reduce((acc,p,i)=>i===0?0:acc+Math.hypot(p.x-refPts[i-1].x,p.y-refPts[i-1].y),0);
 
-  // 最小描画距離チェック
-  if(drawLength < refLen*0.2){
-    snd('error');
-    setMsg('もうすこし ながく かいてね！','#EF4444');
-    showHint(currentStroke);
-    drawLength=0; lastX=null; lastY=null; userPts=[];
-    return;
+  if(drawLength<refLen*0.2){
+    snd('error'); setMsg('もうすこし ながく かいてね！','#EF4444');
+    showHint(currentStroke); drawLength=0; lastX=null; lastY=null; userPts=[]; return;
   }
 
   const userResampled=resampleUserPts(20);
-
-  // ★ 方向チェック
-  if(!checkDirection(userResampled, refPts)){
+  if(!checkDirection(userResampled,refPts)){
     snd('error');
     const msgEl=document.getElementById('msg');
-    msgEl.textContent='かくむきに きをつけてね！↕️';
-    msgEl.style.color='#F59E0B';
-    msgEl.classList.remove('shake');
-    void msgEl.offsetWidth; // reflow
-    msgEl.classList.add('shake');
-    showHint(currentStroke);
-    drawLength=0; lastX=null; lastY=null; userPts=[];
-    return;
+    msgEl.textContent='かくむきに きをつけてね！↕️'; msgEl.style.color='#F59E0B';
+    msgEl.classList.remove('shake'); void msgEl.offsetWidth; msgEl.classList.add('shake');
+    showHint(currentStroke); drawLength=0; lastX=null; lastY=null; userPts=[]; return;
   }
 
-  // DTW距離で評価
-  const dtw=dtwDistance(userResampled, refPts);
-  const endRef=getStrokeEnd(pathStr);
-  const endDist=Math.hypot(x-endRef.x, y-endRef.y);
-
-  // 子ども向けに広めの閾値。終点は参考程度（ORで判定）
-  const DTW_THR=cW*0.26;
-  const END_THR=cW*TOLERANCE_RATIO*1.8;
-  const ok=dtw<DTW_THR && (endDist<END_THR || dtw<DTW_THR*0.65);
+  const dtw=dtwDistance(userResampled,refPts);
+  const endRef=getSVGPoint(pathStr,1);
+  const endDist=Math.hypot(x-endRef.x,y-endRef.y);
+  const DTW_THR=cW*0.26, END_THR=cW*TOLERANCE_RATIO*1.8;
+  const ok=dtw<DTW_THR&&(endDist<END_THR||dtw<DTW_THR*0.65);
 
   drawLength=0; lastX=null; lastY=null; userPts=[];
 
@@ -1353,14 +979,11 @@ function evalEnd(x,y){
     strokeScores.push(dtwToScore(dtw));
     userDrawRecord.push({pts:[...currentStrokePts]});
     snd('stroke'); currentStroke++; redrawFx();
-
-    // ストロークごとのフィードバック
     const score=dtwToScore(dtw);
     showStrokeToast(score);
-    if(score>=1.0)      setMsg('✨ かんぺき！','#8B5CF6');
+    if(score>=1.0) setMsg('✨ かんぺき！','#8B5CF6');
     else if(score>=0.67) setMsg('👍 いいぞ！','#00D084');
-    else                 setMsg('🙆 まあまあ！','#F59E0B');
-
+    else setMsg('🙆 まあまあ！','#F59E0B');
     if(currentStroke>=strokes.length){ speak(curQ.char); onComplete(); }
   }else{
     snd('error');
@@ -1372,53 +995,42 @@ function evalEnd(x,y){
   }
 }
 
+function setMsg(text,color){
+  const el=document.getElementById('msg');
+  el.textContent=text; el.style.color=color;
+}
+
 // ============================================================
-// 1画OKトースト
+// ストロークトースト
 // ============================================================
 let toastTimer=null;
 function showStrokeToast(score){
-  const toast=document.getElementById('stroke-toast');
-  if(!toast) return;
-  const items=[
-    {min:1.0, text:'✨ かんぺき！', color:'#8B5CF6'},
-    {min:0.67,text:'👍 いいぞ！',  color:'#00D084'},
-    {min:0,   text:'🙆 できたよ！',color:'#F59E0B'},
-  ];
-  const {text,color}=items.find(i=>score>=i.min);
-  toast.textContent=text;
-  toast.style.color=color;
-  toast.style.animation='none';
-  void toast.offsetWidth;
+  const toast=document.getElementById('stroke-toast'); if(!toast) return;
+  const items=[{min:1.0,text:'✨ かんぺき！',color:'#8B5CF6'},{min:0.67,text:'👍 いいぞ！',color:'#00D084'},{min:0,text:'🙆 できたよ！',color:'#F59E0B'}];
+  const{text,color}=items.find(i=>score>=i.min);
+  toast.textContent=text; toast.style.color=color;
+  toast.style.animation='none'; void toast.offsetWidth;
   toast.style.animation='toastIn .25s cubic-bezier(.2,1.4,.4,1) forwards';
   if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>{
-    toast.style.animation='toastOut .3s ease forwards';
-  }, 650);
+  toastTimer=setTimeout(()=>{ toast.style.animation='toastOut .3s ease forwards'; },650);
 }
 
 // ============================================================
 // 読み上げ
 // ============================================================
 function speak(text){
-  if(!window.speechSynthesis)return;
+  if(!window.speechSynthesis) return;
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='ja-JP'; u.rate=0.85; u.pitch=1.2;
+  const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=0.85; u.pitch=1.2;
   speechSynthesis.speak(u);
 }
 
 // ============================================================
 // キラキラパーティクル
 // ============================================================
-let sparkles=[], isSparkling=false;
+let sparkles=[],isSparkling=false;
 function addSparkle(x,y){
-  for(let i=0;i<2;i++){
-    sparkles.push({
-      x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,
-      life:1,r:Math.random()*4+2,
-      color:`hsl(${Math.random()*60+30},100%,60%)`
-    });
-  }
+  for(let i=0;i<2;i++) sparkles.push({x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:1,r:Math.random()*4+2,color:`hsl(${Math.random()*60+30},100%,60%)`});
 }
 function drawSparkles(){
   if(!sparkles.length){ isSparkling=false; return; }
@@ -1426,179 +1038,94 @@ function drawSparkles(){
   ctxDr.clearRect(0,0,cW,cW);
   if(drawing&&userPts.length>1){
     ctxDr.beginPath(); ctxDr.moveTo(userPts[0].x,userPts[0].y);
-    ctxDr.lineCap='round'; ctxDr.lineJoin='round';
-    ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
+    ctxDr.lineCap='round'; ctxDr.lineJoin='round'; ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
     userPts.forEach(p=>ctxDr.lineTo(p.x,p.y)); ctxDr.stroke();
   }
   sparkles.forEach(s=>{
     ctxDr.save(); ctxDr.globalAlpha=s.life; ctxDr.fillStyle=s.color;
-    ctxDr.beginPath(); ctxDr.arc(s.x,s.y,s.r,0,Math.PI*2); ctxDr.fill();
-    ctxDr.restore();
+    ctxDr.beginPath(); ctxDr.arc(s.x,s.y,s.r,0,Math.PI*2); ctxDr.fill(); ctxDr.restore();
     s.x+=s.vx; s.y+=s.vy; s.life-=0.06;
   });
   requestAnimationFrame(drawSparkles);
 }
 
 // ============================================================
-// ② 書き始めガイド：脈打つ●をctxFxレイヤーに描画
+// 書き始めガイド（脈打つ●）
 // ============================================================
-let startDotRaf=null;
-let startDotPhase=0;
-
+let startDotRaf=null,startDotPhase=0;
 function startStartDot(){
   stopStartDot();
   if(!strokes.length||currentStroke>=strokes.length) return;
-  const st=getStrokeStart(strokes[currentStroke]);
+  const st=getSVGPoint(strokes[currentStroke],0);
   startDotPhase=0;
-
   function tick(){
     startDotPhase+=0.07;
-    // すでに書き終わったストロークを再描画した上に●を重ねる
     ctxFx.clearRect(0,0,cW,cW);
     const sc=cW/109;
-    // 完了済みストロークを黒で
     ctxFx.save(); ctxFx.scale(sc,sc);
-    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
-    ctxFx.lineCap='round'; ctxFx.lineJoin='round';
-    for(let i=0;i<currentStroke;i++){
-      ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
-    }
+    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc; ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+    for(let i=0;i<currentStroke;i++){ ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i])); }
     ctxFx.restore();
-
-    // 脈打つ●（pulse: sin波で大きさ変化）
     const pulse=0.5+0.5*Math.sin(startDotPhase);
-    const r=cW*0.045 + cW*0.018*pulse;
-    const alpha=0.55+0.35*pulse;
-
-    // 外輪（波紋）
+    const r=cW*0.045+cW*0.018*pulse, alpha=0.55+0.35*pulse;
     ctxFx.save();
-    ctxFx.beginPath();
-    ctxFx.arc(st.x, st.y, r*1.6, 0, Math.PI*2);
-    ctxFx.strokeStyle=`rgba(255,107,157,${alpha*0.4})`;
-    ctxFx.lineWidth=2;
-    ctxFx.stroke();
-    // 内●
-    ctxFx.beginPath();
-    ctxFx.arc(st.x, st.y, r, 0, Math.PI*2);
-    ctxFx.fillStyle=`rgba(255,107,157,${alpha})`;
-    ctxFx.fill();
-    // 白い数字（何画目か）
-    const num=currentStroke+1;
-    ctxFx.fillStyle='white';
-    ctxFx.font=`bold ${r*1.1}px sans-serif`;
-    ctxFx.textAlign='center';
-    ctxFx.textBaseline='middle';
-    ctxFx.fillText(num, st.x, st.y+1);
+    ctxFx.beginPath(); ctxFx.arc(st.x,st.y,r*1.6,0,Math.PI*2);
+    ctxFx.strokeStyle=`rgba(255,107,157,${alpha*0.4})`; ctxFx.lineWidth=2; ctxFx.stroke();
+    ctxFx.beginPath(); ctxFx.arc(st.x,st.y,r,0,Math.PI*2);
+    ctxFx.fillStyle=`rgba(255,107,157,${alpha})`; ctxFx.fill();
+    ctxFx.fillStyle='white'; ctxFx.font=`bold ${r*1.1}px sans-serif`;
+    ctxFx.textAlign='center'; ctxFx.textBaseline='middle'; ctxFx.fillText(currentStroke+1,st.x,st.y+1);
     ctxFx.restore();
-
     startDotRaf=requestAnimationFrame(tick);
   }
   startDotRaf=requestAnimationFrame(tick);
 }
-
 function stopStartDot(){
   if(startDotRaf){ cancelAnimationFrame(startDotRaf); startDotRaf=null; }
 }
 
 // ============================================================
-// ③ 書き終わり透明比較：お手本（ピンク半透明）＋ユーザー線（青）を重ねて表示
+// キャンバス補助
 // ============================================================
-// userDrawRecord: 各ストロークで書いた点列の記録
-let userDrawRecord=[]; // [{pts:[{x,y},...]}]
-let currentStrokePts=[]; // 現在書き中の点列
-
-// evalEndのpointerdown/moveでcurrentStrokePtsにも追記（initCanvas内のハンドラ修正で対応）
-
-async function showOverlayComparison(){
-  const ovC=document.getElementById('canvas-ov');
-  ctxOv.clearRect(0,0,cW,cW);
-
-  // お手本：SVGキャッシュから描画（ピンク半透明）
-  const hex=curQ.char.codePointAt(0).toString(16).padStart(5,'0');
-  const svgText=svgCache[hex];
-  if(svgText){
-    let styled=svgText.replace('</svg>',`<style>
-      path { stroke:rgba(255,107,157,0.55) !important; stroke-width:9 !important; fill:none !important; }
-      text { display:none !important; }
-    </style></svg>`);
-    const blob=new Blob([styled],{type:'image/svg+xml;charset=utf-8'});
-    const blobUrl=URL.createObjectURL(blob);
-    await new Promise(r=>{
-      const img=new Image();
-      img.onload=()=>{ ctxOv.drawImage(img,0,0,cW,cW); URL.revokeObjectURL(blobUrl); r(); };
-      img.onerror=()=>{ URL.revokeObjectURL(blobUrl); r(); };
-      img.src=blobUrl;
-    });
-  }
-
-  // ユーザーの線：全ストロークの記録を青で描画
-  ctxOv.save();
-  ctxOv.lineCap='round'; ctxOv.lineJoin='round';
-  ctxOv.lineWidth=cW*0.035;
-  ctxOv.strokeStyle='rgba(56,189,248,0.85)';
-  for(const rec of userDrawRecord){
-    if(rec.pts.length<2) continue;
-    ctxOv.beginPath(); ctxOv.moveTo(rec.pts[0].x, rec.pts[0].y);
-    for(const p of rec.pts) ctxOv.lineTo(p.x, p.y);
-    ctxOv.stroke();
-  }
-  ctxOv.restore();
-
-  // フェードイン
-  ovC.style.transition='opacity .4s';
-  ovC.style.opacity='1';
-  // fxレイヤーを一時的に隠す（比較をクリアに見せる）
-  document.getElementById('canvas-fx').style.opacity='0.15';
-
-  // 3秒後にフェードアウト
-  await new Promise(r=>setTimeout(r,3000));
-  ovC.style.opacity='0';
-  document.getElementById('canvas-fx').style.opacity='1';
-  ctxOv.clearRect(0,0,cW,cW);
-}
+let userDrawRecord=[],currentStrokePts=[];
 
 function redrawFx(){
   ctxFx.clearRect(0,0,cW,cW);
-  if(!strokes.length)return;
+  if(!strokes.length) return;
   const sc=cW/109;
   ctxFx.save(); ctxFx.scale(sc,sc);
-  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
-  ctxFx.lineCap='round'; ctxFx.lineJoin='round';
-  for(let i=0;i<currentStroke;i++){
-    ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
-  }
+  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc; ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+  for(let i=0;i<currentStroke;i++){ ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i])); }
   ctxFx.restore();
-  // 次のストロークの書き始めガイドを更新
-  if(currentStroke<strokes.length) startStartDot();
-  else stopStartDot();
+  if(currentStroke<strokes.length) startStartDot(); else stopStartDot();
 }
 
 function showHint(idx){
-  if(idx>=strokes.length)return;
+  if(idx>=strokes.length) return;
   const sc=cW/109;
   ctxFx.save(); ctxFx.scale(sc,sc);
-  ctxFx.strokeStyle='rgba(255,80,80,0.55)'; ctxFx.lineWidth=4/sc;
-  ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+  ctxFx.strokeStyle='rgba(255,80,80,0.55)'; ctxFx.lineWidth=4/sc; ctxFx.lineCap='round'; ctxFx.lineJoin='round';
   ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[idx]));
   ctxFx.restore();
   setTimeout(()=>redrawFx(),1000);
 }
 
+function trackDraw(x,y){ if(lastX!==null) drawLength+=Math.hypot(x-lastX,y-lastY); lastX=x; lastY=y; }
+
 // ============================================================
-// アニメーション
+// アニメーション（じゅんボタン）
 // ============================================================
 async function doAnime(){
-  if(animating||!strokes.length)return;
+  if(animating||!strokes.length) return;
   animating=true; currentStroke=0;
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const sc=cW/109;
   for(let i=0;i<strokes.length;i++){
-    if(!animating)break;
+    if(!animating) break;
     ctxFx.clearRect(0,0,cW,cW);
     ctxFx.save(); ctxFx.scale(sc,sc);
-    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
-    ctxFx.lineCap='round'; ctxFx.lineJoin='round';
-    for(let j=0;j<i;j++){ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[j]));}
+    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc; ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+    for(let j=0;j<i;j++){ ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[j])); }
     ctxFx.strokeStyle='#38BDF8'; ctxFx.lineWidth=4/sc;
     ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
     ctxFx.restore();
@@ -1606,213 +1133,101 @@ async function doAnime(){
   }
   ctxFx.clearRect(0,0,cW,cW);
   ctxFx.save(); ctxFx.scale(sc,sc);
-  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
-  ctxFx.lineCap='round'; ctxFx.lineJoin='round';
-  strokes.forEach(d=>{ctxFx.beginPath(); ctxFx.stroke(new Path2D(d));});
+  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc; ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+  strokes.forEach(d=>{ ctxFx.beginPath(); ctxFx.stroke(new Path2D(d)); });
   ctxFx.restore();
   animating=false; doRetry();
 }
 
 // ============================================================
-// とっくん・にがて 登録トグル
+// とっくん・にがて
 // ============================================================
-function toggleTokk(){
-  if(!curQ) return;
-  snd('click');
-  const ch=curQ.char;
-  if(tokk[ch]) delete tokk[ch]; else tokk[ch]=true;
-  save(); updateRegBtns();
-}
-function toggleNiga(){
-  if(!curQ) return;
-  snd('click');
-  const ch=curQ.char;
-  if(niga[ch]) delete niga[ch]; else niga[ch]=true;
-  save(); updateRegBtns();
-}
+function toggleTokk(){ if(!curQ) return; snd('click'); if(tokk[curQ.char]) delete tokk[curQ.char]; else tokk[curQ.char]=true; save(); updateRegBtns(); }
+function toggleNiga(){ if(!curQ) return; snd('click'); if(niga[curQ.char]) delete niga[curQ.char]; else niga[curQ.char]=true; save(); updateRegBtns(); }
 function updateRegBtns(){
-  if(!curQ) return;
-  const ch=curQ.char;
-  const bt=document.getElementById('btn-tokk');
-  const bn=document.getElementById('btn-niga');
+  if(!curQ) return; const ch=curQ.char;
+  const bt=document.getElementById('btn-tokk'), bn=document.getElementById('btn-niga');
   if(!bt||!bn) return;
-  bt.className='btn-reg'+(tokk[ch]?' on-tokk':'');
-  bt.textContent=tokk[ch]?'🏅 とっくん ✓':'🏅 とっくん';
-  bn.className='btn-reg'+(niga[ch]?' on-niga':'');
-  bn.textContent=niga[ch]?'🐢 にがて ✓':'🐢 にがて';
+  bt.className='btn-reg'+(tokk[ch]?' on-tokk':''); bt.textContent=tokk[ch]?'🏅 とっくん ✓':'🏅 とっくん';
+  bn.className='btn-reg'+(niga[ch]?' on-niga':''); bn.textContent=niga[ch]?'🐢 にがて ✓':'🐢 にがて';
 }
 
 // ============================================================
-// ★ SRS評価
+// SRS評価
 // ============================================================
 function rateSRS(rating){
   if(!curQ) return;
-  srsInit(curQ.char);
-  srsUpdate(curQ.char, rating);
+  srsInit(curQ.char); srsUpdate(curQ.char,rating);
   document.getElementById('srs-rating').classList.remove('show');
-  pendingSRSRating=false;
   doNext();
 }
 
 // ============================================================
-// ★ はなまる表示アニメーション
+// はなまる
 // ============================================================
-function showStarResult(stars){
-  const container=document.getElementById('star-result');
-  const row=document.getElementById('star-row');
-  const label=document.getElementById('result-label');
-
-  const configs=[
-    {stars:1, icons:'⭐',         text:'クリア！',    color:'#F59E0B'},
-    {stars:2, icons:'⭐⭐',       text:'すごい！',    color:'#3B82F6'},
-    {stars:3, icons:'⭐⭐⭐',     text:'はなまる！',  color:'#EC4899'},
-  ];
-  const cfg=configs[stars-1];
-
-  row.innerHTML='';
-  [...cfg.icons].forEach((c,i)=>{
-    const span=document.createElement('span');
-    span.className='star-item';
-    span.textContent=c;
-    span.style.animationDelay=`${i*0.12}s`;
-    row.appendChild(span);
-  });
-  label.textContent=cfg.text;
-  label.style.color=cfg.color;
-
-  container.classList.add('show');
-
-  // ★3（はなまる）の場合はSVGでぐるっと丸を描く
-  if(stars===3){
-    drawHanamaru();
-    // 特別エフェクト：虹色パーティクル爆発
-    for(let i=0;i<20;i++){
-      setTimeout(()=>{
-        const px=cW*(0.2+Math.random()*0.6);
-        const py=cW*(0.2+Math.random()*0.6);
-        for(let j=0;j<3;j++) addSparkle(px,py);
-        if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}
-      },i*60);
-    }
-  }
-}
-
 function drawHanamaru(){
-  const layer=document.getElementById('hanamaru-layer');
-  layer.innerHTML='';
+  const layer=document.getElementById('hanamaru-layer'); layer.innerHTML='';
   const svgNS='http://www.w3.org/2000/svg';
   const svg=document.createElementNS(svgNS,'svg');
-  svg.setAttribute('viewBox','0 0 100 100');
-  svg.style.cssText='width:100%;height:100%;overflow:visible';
-
-  // はなまる円（CSSアニメーションで描画）
+  svg.setAttribute('viewBox','0 0 100 100'); svg.style.cssText='width:100%;height:100%;overflow:visible';
   const circle=document.createElementNS(svgNS,'circle');
-  circle.setAttribute('cx','50'); circle.setAttribute('cy','50');
-  circle.setAttribute('r','40');
-  circle.setAttribute('fill','none');
-  circle.setAttribute('stroke','#EC4899');
-  circle.setAttribute('stroke-width','5');
-  circle.setAttribute('stroke-linecap','round');
-  circle.setAttribute('stroke-dasharray','251');
-  circle.setAttribute('stroke-dashoffset','251');
-  circle.style.transformOrigin='50% 50%';
-  circle.style.transform='rotate(-90deg)';
+  circle.setAttribute('cx','50'); circle.setAttribute('cy','50'); circle.setAttribute('r','40');
+  circle.setAttribute('fill','none'); circle.setAttribute('stroke','#EC4899');
+  circle.setAttribute('stroke-width','5'); circle.setAttribute('stroke-linecap','round');
+  circle.setAttribute('stroke-dasharray','251'); circle.setAttribute('stroke-dashoffset','251');
+  circle.style.transformOrigin='50% 50%'; circle.style.transform='rotate(-90deg)';
   circle.style.animation='hanamaru 0.8s cubic-bezier(.4,0,.2,1) forwards';
-
-  svg.appendChild(circle);
-  layer.appendChild(svg);
-
-  // 1秒後にフェードアウト
-  setTimeout(()=>{
-    svg.style.transition='opacity 0.5s';
-    svg.style.opacity='0';
-    setTimeout(()=>{ layer.innerHTML=''; },500);
-  },1800);
+  svg.appendChild(circle); layer.appendChild(svg);
+  setTimeout(()=>{ svg.style.transition='opacity 0.5s'; svg.style.opacity='0'; setTimeout(()=>{layer.innerHTML='';},500); },1800);
 }
 
 // ============================================================
-// 完了・次へ
+// 完了処理
 // ============================================================
-// ============================================================
-// ★ 書き終わり演出：キャンバス上にドカン
-// ============================================================
-function showClearBurst(stars){
-  // パーティクルのみ（キャンバス内に大文字を出さない）
-  const cx=cW/2, cy=cW/2;
-  const count=stars===3?28:stars===2?16:8;
-  for(let i=0;i<count;i++){
-    setTimeout(()=>{
-      const angle=Math.random()*Math.PI*2;
-      const r=cW*(0.05+Math.random()*0.32);
-      addSparkle(cx+Math.cos(angle)*r, cy+Math.sin(angle)*r);
-      if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}
-    },i*25);
-  }
-}
-
-// キャンバス外（上部）に星とはなまるを表示
 function showResultBanner(stars){
   const rb=document.getElementById('result-banner');
-  const rs=document.getElementById('rb-stars');
-  const rl=document.getElementById('rb-label');
-  const msgs  =['','クリア！','すごい！','はなまる！🌸'];
+  const msgs=['','クリア！','すごい！','はなまる！🌸'];
   const colors=['','#F59E0B','#3B82F6','#EC4899'];
-
-  rs.textContent='⭐'.repeat(stars);
-  rl.textContent=msgs[stars];
-  rl.style.color=colors[stars];
-
-  rb.style.display='block';
-  rb.style.animation='none';
-  void rb.offsetWidth;
+  document.getElementById('rb-stars').textContent='⭐'.repeat(stars);
+  const rl=document.getElementById('rb-label'); rl.textContent=msgs[stars]; rl.style.color=colors[stars];
+  rb.style.display='block'; rb.style.animation='none'; void rb.offsetWidth;
   rb.style.animation='pop .35s cubic-bezier(.2,1.4,.4,1) forwards';
 }
 
-function hideResultBanner(){
-  const rb=document.getElementById('result-banner');
-  rb.style.display='none';
-}
+function hideResultBanner(){ document.getElementById('result-banner').style.display='none'; }
 
 function showConfetti(count=45){
   const colors=['#FF6B9D','#00D084','#F59E0B','#8B5CF6','#3B82F6','#EC4899','#FFD700'];
-  for(let i=0;i<count;i++){
-    setTimeout(()=>{
-      const el=document.createElement('div');
-      el.className='confetti-piece';
-      el.style.left=Math.random()*100+'vw';
-      el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
-      const dur=(Math.random()*1.5+1.2).toFixed(2);
-      el.style.animationDuration=dur+'s';
-      el.style.animationDelay='0s';
-      if(Math.random()>.5) el.style.borderRadius='50%';
-      el.style.width=el.style.height=(Math.random()*8+6)+'px';
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(), (parseFloat(dur)+0.5)*1000);
-    }, Math.random()*300);
-  }
+  for(let i=0;i<count;i++) setTimeout(()=>{
+    const el=document.createElement('div'); el.className='confetti-piece';
+    el.style.left=Math.random()*100+'vw';
+    el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+    const dur=(Math.random()*1.5+1.2).toFixed(2); el.style.animationDuration=dur+'s';
+    if(Math.random()>.5) el.style.borderRadius='50%';
+    el.style.width=el.style.height=(Math.random()*8+6)+'px';
+    document.body.appendChild(el); setTimeout(()=>el.remove(),(parseFloat(dur)+0.5)*1000);
+  },Math.random()*300);
 }
 
 function onComplete(){
-  snd('complete');
-  stopStartDot();
+  snd('complete'); stopStartDot();
   const oldLv=getXP().lv;
-  cleared[curQ.char]=true;
-  srsInit(curQ.char);
-  save();
+  cleared[curQ.char]=true; srsInit(curQ.char); save();
   const newLv=getXP().lv;
-
   const stars=calcStars();
 
-  // 星3→派手に、星2→普通、星1→少なめ
   showConfetti(stars===3?60:stars===2?35:15);
-  if(stars===3) setTimeout(()=>snd('levelup'),100);
-
-  // キャンバスパーティクル
-  showClearBurst(stars);
-  // キャンバス外に星表示
+  if(stars===3){ setTimeout(()=>snd('levelup'),100); drawHanamaru(); }
   showResultBanner(stars);
 
-  // レベルアップがあればポップアップ
+  // キャンバスパーティクル
+  const cx=cW/2,cy=cW/2,cnt=stars===3?28:stars===2?16:8;
+  for(let i=0;i<cnt;i++) setTimeout(()=>{
+    const angle=Math.random()*Math.PI*2,r=cW*(0.05+Math.random()*0.32);
+    addSparkle(cx+Math.cos(angle)*r,cy+Math.sin(angle)*r);
+    if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}
+  },i*25);
+
   if(newLv>oldLv){
     setTimeout(()=>{
       document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
@@ -1822,86 +1237,61 @@ function onComplete(){
     return;
   }
 
-  // 1秒後に自動で次へ
-  setTimeout(()=>doNext(), 1000);
+  // SRSモードは評価ボタンを表示してから次へ
+  if(curMode==='srs'){
+    document.getElementById('srs-rating').classList.add('show');
+    return; // rateSRS()で doNext() が呼ばれる
+  }
+
+  setTimeout(()=>doNext(),1000);
 }
 
 function doNext(){
   qIdx++;
-  if(qIdx<queue.length) loadQ();
-  else{
-    // デイリー完了処理
-    if(curMode==='daily'){
-      dailyState.done=[...dailyState.chars]; // 全完了
-      dailyState.completed=true;
-      const today=todayStr();
-      // ストリーク更新
-      if(lastStreakDate===addDays(today,-1)||lastStreakDate===today){
-        if(lastStreakDate!==today) streak++;
-      } else {
-        streak=1;
-      }
-      lastStreakDate=today;
-      bonXP+=5; save();
-      document.getElementById('ov-streak').textContent=streak;
-      showOv('ov-daily');
-      return;
-    }
-    if(isRandom){bonXP+=10; save(); showOv('ov-rc');}
-    else{
-      snd('levelup');
-      if(curMode==='tokkun'||curMode==='nigate'||curMode==='srs') goTitle();
-      else{ renderKanaGrid(); showScreen('scr-list'); }
-    }
+  if(qIdx<queue.length){ loadQ(); return; }
+  // 全問完了
+  if(curMode==='daily'){
+    dailyState.done=[...dailyState.chars]; dailyState.completed=true;
+    const today=todayStr();
+    const yesterday=addDays(today,-1);
+    if(lastStreakDate===yesterday||lastStreakDate===today){
+      if(lastStreakDate!==today) streak++;
+    }else{ streak=1; }
+    lastStreakDate=today; bonXP+=5; save();
+    document.getElementById('ov-streak').textContent=streak;
+    showOv('ov-daily'); return;
   }
+  if(isRandom){ bonXP+=10; save(); showOv('ov-rc'); return; }
+  snd('levelup');
+  if(['tokkun','nigate','srs'].includes(curMode)) showScreen('scr-title');
+  else{ renderKanaGrid(); showScreen('scr-list'); }
 }
 
 function doRetry(){
-  currentStroke=0; drawing=false;
-  drawLength=0; lastX=null; lastY=null; userPts=[]; sparkles=[]; isSparkling=false;
-  pendingSRSRating=false;
-  resetStrokeScores();
-  userDrawRecord=[]; currentStrokePts=[];
+  currentStroke=0; drawing=false; drawLength=0; lastX=null; lastY=null;
+  userPts=[]; sparkles=[]; isSparkling=false;
+  resetStrokeScores(); userDrawRecord=[]; currentStrokePts=[];
   stopStartDot();
   document.getElementById('srs-rating').classList.remove('show');
-  document.getElementById('star-result').classList.remove('show');
   document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('canvas-ov').style.opacity='0';
-  document.getElementById('canvas-fx').style.opacity='1';
   hideResultBanner();
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const isTest=(curMode==='test');
-  setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！', isTest?'#FF6B9D':'#00D084');
-  // ●を再表示
+  setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！',isTest?'#FF6B9D':'#00D084');
   if(strokes.length) startStartDot();
 }
 
-function closeOvNext()  {
-  // srs-ratingを元の場所（scr-game）に戻す
-  const srsRating=document.getElementById('srs-rating');
-  const gameScreen=document.getElementById('scr-game');
-  if(!gameScreen.contains(srsRating)) gameScreen.appendChild(srsRating);
-  closeOv('ov-ok');
-  if(!pendingSRSRating)doNext();
-}
-function closeOvRetry() {
-  const srsRating=document.getElementById('srs-rating');
-  const gameScreen=document.getElementById('scr-game');
-  if(!gameScreen.contains(srsRating)) gameScreen.appendChild(srsRating);
-  closeOv('ov-ok');
-  doRetry();
-}
-function closeLv()      {closeOv('ov-lv'); if(!pendingSRSRating)doNext();}
-function closeRc()      {closeOv('ov-rc'); goTitle();}
-function closeDailyOv() {closeOv('ov-daily'); goTitle();}
-function showOv(id){document.getElementById(id).classList.add('show');}
-function closeOv(id){document.getElementById(id).classList.remove('show');}
+function closeLv(){ closeOv('ov-lv'); doNext(); }
+function closeRc(){ closeOv('ov-rc'); showScreen('scr-title'); }
+function closeDailyOv(){ closeOv('ov-daily'); showScreen('scr-title'); }
+function showOv(id){ document.getElementById(id).classList.add('show'); }
+function closeOv(id){ document.getElementById(id).classList.remove('show'); }
 
 function doReset(){
   localStorage.clear();
-  cleared={}; tokk={}; niga={}; bonXP=0; mistCnt={};
-  srsData={}; dailyState={date:'',chars:[],done:[],completed:false};
-  streak=0; lastStreakDate='';
+  cleared={}; tokk={}; niga={}; bonXP=0; mistCnt={}; srsData={};
+  dailyState={date:'',chars:[],done:[],completed:false}; streak=0; lastStreakDate='';
   updateTitle();
 }
 
@@ -1923,11 +1313,7 @@ function snd(t){
     if(t==='stroke') o(700,'sine',.12,.2);
     else if(t==='error') o(200,'sawtooth',.25,.15);
     else if(t==='click') o(500,'triangle',.1,.08);
-    else if(t==='complete'){
-      // キラリーン：高音が上がってキラキラ散る
-      [[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]]
-        .forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));
-    }
+    else if(t==='complete') [[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));
     else if(t==='levelup') [[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));
   }catch(e){}
 }
