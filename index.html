@@ -33,6 +33,13 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .m-btn.purple { border-color:#8B5CF6; color:#8B5CF6; }
 .m-btn.orange { border-color:#F59E0B; color:#F59E0B; }
 .parent-note { background:#FFFBEB; border:1px solid #FCD34D; border-radius:12px; padding:10px 12px; font-size:.7rem; color:#777; margin-top:14px; line-height:1.7; }
+.btn-sound {
+  background: white; border: 2px solid #E5E7EB; border-radius: 99px;
+  font-size: 1.3rem; padding: 4px 10px; cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08); transition: all .15s;
+  vertical-align: middle; margin-left: 6px;
+}
+.btn-sound:active { transform: scale(.9); background: #FFF0F6; }
 .reset-btn { display:block; background:none; border:none; color:#ccc; font-size:.72rem; cursor:pointer; margin:10px auto 0; text-align:center; }
 
 /* カード一覧 */
@@ -423,9 +430,13 @@ async function loadQ(){
     const wHTML=[...curQ.word].map((c,i)=>
       i===curQ.pos ? `<span class="hint-blank">＿</span>` : `<span class="hint-char">${c}</span>`
     ).join('');
-    hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div><div class="hint-word">${wHTML}</div>`;
+    hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div><div class="hint-word">${wHTML}<button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button></div>`;
   }else{
-    hintEl.innerHTML='';
+    hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div>
+      <div class="hint-word">
+        <span class="hint-char" style="font-size:2.4rem;color:var(--primary)">${curQ.char}</span>
+        <button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button>
+      </div>`;
   }
   const msg=document.getElementById('msg');
   msg.textContent=isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！';
@@ -444,7 +455,8 @@ let ctxBg,ctxFx,ctxDr,cW=0;
 let strokes=[],currentStroke=0;         // KanjiVGのpathd文字列配列
 let drawing=false,animating=false;
 let drawLength=0,lastX=null,lastY=null; // 描画距離管理
-const TOLERANCE_RATIO=0.18;             // canvas幅に対する割合（固定px→比率に）
+let userPts=[];                          // 通過点チェック用
+const TOLERANCE_RATIO=0.18;
 
 function initCanvas(){
   const cont=document.getElementById('canvas-container');
@@ -477,17 +489,21 @@ function initCanvas(){
     if(strokes.length && currentStroke<strokes.length){
       if(!checkStart(x,y))return;
     }
-    drawing=true; drawLength=0; lastX=x; lastY=y;
+    drawing=true; drawLength=0; lastX=x; lastY=y; userPts=[{x,y}];
     ctxDr.beginPath(); ctxDr.moveTo(x,y);
   };
   drC.onpointermove=e=>{
     if(!drawing)return; e.preventDefault();
     const{x,y}=getXY(e,drC);
     trackDraw(x,y);
+    userPts.push({x,y});
     ctxDr.lineTo(x,y);
     ctxDr.lineCap='round'; ctxDr.lineJoin='round';
-    ctxDr.lineWidth=cW*0.07; ctxDr.strokeStyle='rgba(56,189,248,0.8)';
+    ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
     ctxDr.stroke();
+    // キラキラ（間引きで処理軽く）
+    if(userPts.length%4===0) addSparkle(x,y);
+    drawSparkles();
   };
   drC.onpointerup=e=>{
     if(!drawing)return; drawing=false;
@@ -580,27 +596,27 @@ const _svgMeasure=(()=>{
   return svg;
 })();
 
-function getScaledEndPoints(pathStr){
+// パスの5点通過チェック用データ取得
+function getStrokeData(pathStr){
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
   path.setAttribute('d',pathStr);
-  _svgMeasure.appendChild(path);          // ← DOMに追加してから計測
+  _svgMeasure.appendChild(path);
   const len=path.getTotalLength();
-  const s=path.getPointAtLength(0);
-  const e=path.getPointAtLength(len);
-  _svgMeasure.removeChild(path);          // ← 計測後に削除
   const sc=cW/109;
-  return{
-    start:{x:s.x*sc, y:s.y*sc},
-    end:  {x:e.x*sc, y:e.y*sc},
-    len:  len*sc
-  };
+  // 始点・1/4・中間・3/4・終点の5点
+  const points=[0,0.25,0.5,0.75,1].map(t=>({
+    x:path.getPointAtLength(len*t).x*sc,
+    y:path.getPointAtLength(len*t).y*sc,
+  }));
+  _svgMeasure.removeChild(path);
+  return{points, len:len*sc};
 }
 
 function checkStart(x,y){
   if(!strokes.length||currentStroke>=strokes.length)return false;
-  const{start}=getScaledEndPoints(strokes[currentStroke]);
+  const{points}=getStrokeData(strokes[currentStroke]);
   const THR=cW*TOLERANCE_RATIO;
-  return Math.hypot(x-start.x, y-start.y)<THR;
+  return Math.hypot(x-points[0].x, y-points[0].y)<THR;
 }
 
 function trackDraw(x,y){
@@ -608,43 +624,99 @@ function trackDraw(x,y){
   lastX=x; lastY=y;
 }
 
+// ユーザーが描いた点列から、指定座標に一番近い点の距離を返す
+function minDistToPath(tx,ty){
+  if(!userPts.length)return Infinity;
+  let min=Infinity;
+  for(const p of userPts) min=Math.min(min,Math.hypot(p.x-tx,p.y-ty));
+  return min;
+}
+
 function evalEnd(x,y){
   ctxDr.clearRect(0,0,cW,cW);
-  // strokesがない（KanjiVGデータなし）→ 判定スキップして次へ
   if(!strokes.length){
-    snd('stroke');
-    setMsg('かけたね！','#00D084');
-    onComplete();
-    return;
+    snd('stroke'); setMsg('かけたね！','#00D084'); speak(curQ.char); onComplete(); return;
   }
   if(currentStroke>=strokes.length)return;
-  const{end,len}=getScaledEndPoints(strokes[currentStroke]);
-  const THR=cW*TOLERANCE_RATIO;
-  const dE=Math.hypot(x-end.x, y-end.y);
-  ctxDr.clearRect(0,0,cW,cW);
 
-  if(dE<THR && drawLength>len*0.25){
-    // 正解
-    snd('stroke');
-    currentStroke++;
-    drawLength=0; lastX=null; lastY=null;
-    redrawFx();
+  const{points,len}=getStrokeData(strokes[currentStroke]);
+  const THR=cW*TOLERANCE_RATIO;
+
+  // 5点通過チェック：始点はpointerdown時チェック済み
+  // 残り4点（1/4・中間・3/4・終点）のうち3点以上通過 → 合計4/5点以上
+  const remaining=points.slice(1); // [1/4, 中間, 3/4, 終点]
+  const passCount=remaining.filter(p=>minDistToPath(p.x,p.y)<THR*1.4).length;
+  const ok=passCount>=3 && drawLength>len*0.25;
+
+  drawLength=0; lastX=null; lastY=null; userPts=[];
+
+  if(ok){
+    snd('stroke'); currentStroke++; redrawFx();
     setMsg('いいぞ！ その調子！','#00D084');
-    if(currentStroke>=strokes.length) onComplete();
+    if(currentStroke>=strokes.length){ speak(curQ.char); onComplete(); }
   }else{
-    // 不正解
     snd('error');
-    drawLength=0; lastX=null; lastY=null;
     const ch=curQ.char;
     mistCnt[ch]=(mistCnt[ch]||0)+1; save();
-    if(mistCnt[ch]>=3&&!niga[ch]){
-      niga[ch]=true; save();
-      setMsg('おしい！ にがてに とうろくしたよ🐢','#EF4444');
-    }else{
-      setMsg('おしい！ ここを みてね！','#EF4444');
-    }
+    if(mistCnt[ch]>=3&&!niga[ch]){ niga[ch]=true; save(); setMsg('おしい！ にがてに とうろくしたよ🐢','#EF4444'); }
+    else setMsg('おしい！ ここを みてね！','#EF4444');
     showHint(currentStroke);
   }
+}
+
+// ============================================================
+// 読み上げ（speechSynthesis）
+// ============================================================
+function speak(text){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ja-JP'; u.rate=0.85; u.pitch=1.2;
+  speechSynthesis.speak(u);
+}
+
+// ============================================================
+// キラキラパーティクル
+// ============================================================
+let sparkles=[];
+function addSparkle(x,y){
+  for(let i=0;i<2;i++){
+    sparkles.push({
+      x,y,
+      vx:(Math.random()-0.5)*4,
+      vy:(Math.random()-0.5)*4,
+      life:1,
+      r:Math.random()*4+2,
+      color:`hsl(${Math.random()*60+30},100%,60%)`
+    });
+  }
+}
+function drawSparkles(){
+  if(!sparkles.length)return;
+  sparkles=sparkles.filter(s=>s.life>0);
+  sparkles.forEach(s=>{
+    ctxDr.save();
+    ctxDr.globalAlpha=s.life;
+    ctxDr.fillStyle=s.color;
+    ctxDr.beginPath();
+    ctxDr.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctxDr.fill();
+    ctxDr.restore();
+    s.x+=s.vx; s.y+=s.vy; s.life-=0.06;
+  });
+  if(sparkles.length) requestAnimationFrame(()=>{
+    if(drawing||sparkles.length){
+      ctxDr.clearRect(0,0,cW,cW);
+      // 現在の書き途中の線を再描画
+      if(userPts.length>1){
+        ctxDr.beginPath(); ctxDr.moveTo(userPts[0].x,userPts[0].y);
+        ctxDr.lineCap='round'; ctxDr.lineJoin='round';
+        ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
+        userPts.forEach(p=>ctxDr.lineTo(p.x,p.y)); ctxDr.stroke();
+      }
+      drawSparkles();
+    }
+  });
 }
 
 function setMsg(t,c){
@@ -658,7 +730,7 @@ function redrawFx(){
   if(!strokes.length)return;
   const sc=cW/109;
   ctxFx.save(); ctxFx.scale(sc,sc);
-  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=3/sc;
+  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
   ctxFx.lineCap='round'; ctxFx.lineJoin='round';
   for(let i=0;i<currentStroke;i++){
     ctxFx.beginPath();
@@ -692,7 +764,7 @@ async function doAnime(){
     ctxFx.clearRect(0,0,cW,cW);
     ctxFx.save(); ctxFx.scale(sc,sc);
     // 描き終わった画を黒で
-    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=3/sc;
+    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
     ctxFx.lineCap='round'; ctxFx.lineJoin='round';
     for(let j=0;j<i;j++){ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[j]));}
     // 今の画をハイライト
@@ -704,7 +776,7 @@ async function doAnime(){
   // 全部黒で仕上げ
   ctxFx.clearRect(0,0,cW,cW);
   ctxFx.save(); ctxFx.scale(sc,sc);
-  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=3/sc;
+  ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
   ctxFx.lineCap='round'; ctxFx.lineJoin='round';
   strokes.forEach(d=>{ctxFx.beginPath(); ctxFx.stroke(new Path2D(d));});
   ctxFx.restore();
@@ -750,7 +822,7 @@ function doNext(){
 
 function doRetry(){
   currentStroke=0; drawing=false;
-  drawLength=0; lastX=null; lastY=null;
+  drawLength=0; lastX=null; lastY=null; userPts=[]; sparkles=[];
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const isTest=(curMode==='test');
   setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！', isTest?'#FF6B9D':'#00D084');
