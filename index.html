@@ -6,13 +6,51 @@
 <title>かなマスター</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-:root { --primary:#FF6B9D; --secondary:#FF9DC6; --green:#00D084; --bg:#FFF5F9; }
+:root {
+  --primary:#FF6B9D; --secondary:#FF9DC6; --green:#00D084; --bg:#FFF5F9;
+  --daily:#F59E0B; --srs:#8B5CF6;
+}
 body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ UDPGothic',sans-serif; background:var(--bg); min-height:100vh; color:#333; }
 .screen { display:none; padding:16px; max-width:480px; margin:0 auto; }
 .screen.active { display:block; }
 
 .title-logo { text-align:center; padding:28px 0 8px; font-size:2.2rem; font-weight:900; color:var(--primary); }
 .title-sub  { text-align:center; color:#aaa; font-size:.9rem; margin-bottom:20px; }
+
+/* ===== デイリーバナー ===== */
+.daily-banner {
+  background:linear-gradient(135deg,#F59E0B,#FBBF24);
+  border-radius:18px; padding:14px 16px; margin-bottom:16px;
+  display:flex; align-items:center; gap:12px; cursor:pointer;
+  box-shadow:0 4px 14px rgba(245,158,11,.35); position:relative; overflow:hidden;
+}
+.daily-banner::before {
+  content:''; position:absolute; right:-20px; top:-20px;
+  width:90px; height:90px; border-radius:50%;
+  background:rgba(255,255,255,.15);
+}
+.daily-banner.done { background:linear-gradient(135deg,#6EE7B7,#34D399); box-shadow:0 4px 14px rgba(52,211,153,.35); }
+.daily-icon { font-size:2.2rem; }
+.daily-info { flex:1 }
+.daily-title { font-size:1rem; font-weight:900; color:white; }
+.daily-sub   { font-size:.72rem; color:rgba(255,255,255,.85); margin-top:2px; }
+.streak-pill {
+  background:rgba(255,255,255,.25); color:white;
+  border-radius:99px; padding:3px 10px; font-size:.75rem; font-weight:900;
+}
+
+/* ===== SRS復習バナー ===== */
+.srs-banner {
+  background:linear-gradient(135deg,#8B5CF6,#A78BFA);
+  border-radius:18px; padding:12px 16px; margin-bottom:14px;
+  display:flex; align-items:center; gap:12px; cursor:pointer;
+  box-shadow:0 4px 14px rgba(139,92,246,.3);
+}
+.srs-count {
+  background:rgba(255,255,255,.25); color:white;
+  border-radius:99px; padding:2px 10px; font-size:.8rem; font-weight:900; min-width:36px; text-align:center;
+}
+
 .lv-badge { display:flex; align-items:center; gap:10px; background:white; border-radius:20px; padding:8px 16px; margin:0 auto 16px; width:fit-content; box-shadow:0 2px 10px rgba(0,0,0,.08); }
 .xp-wrap { background:#F0F0F0; border-radius:99px; height:7px; width:120px; overflow:hidden; margin-top:3px; }
 .xp-bar  { height:100%; background:linear-gradient(90deg,var(--primary),var(--secondary)); border-radius:99px; transition:width .4s; }
@@ -41,13 +79,8 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 }
 .btn-sound:active { transform: scale(.9); background: #FFF0F6; }
 
-#guideLayer {
-  position:absolute; left:0; top:0; width:100%; height:100%;
-  pointer-events:none;
-}
-#guideLayer path {
-  fill:none; stroke:#E2E8F0; stroke-width:14;
-}
+#guideLayer { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
+#guideLayer path { fill:none; stroke:#E2E8F0; stroke-width:14; }
 
 .reset-btn { display:block; background:none; border:none; color:#ccc; font-size:.72rem; cursor:pointer; margin:10px auto 0; text-align:center; }
 
@@ -63,15 +96,31 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .k-card.done-prac { border-color:#FF6B9D; background:#FFF0F6; color:#FF6B9D; }
 .k-card.done-test { border-color:#3B82F6; background:#EFF6FF; color:#3B82F6; }
 .k-card.done-both { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
+.k-card.due-review { border-color:#F59E0B !important; background:#FFFBEB !important; color:#F59E0B !important; }
 .k-badge {
   position:absolute; top:-5px; right:-5px;
   font-size:.55rem; background:#FF6B9D; color:white;
   border-radius:99px; padding:1px 4px; font-weight:700;
 }
+.srs-badge {
+  position:absolute; bottom:-5px; left:50%; transform:translateX(-50%);
+  font-size:.5rem; background:#F59E0B; color:white;
+  border-radius:99px; padding:1px 5px; font-weight:700; white-space:nowrap;
+}
 
 .game-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
 .btn-back { background:#eee; border:none; padding:8px 14px; border-radius:8px; font-weight:bold; cursor:pointer; font-size:.85rem; }
 .progress-text { font-weight:bold; color:#888; font-size:.9rem; }
+
+/* ゲームモードタグ */
+.mode-tag {
+  font-size:.65rem; font-weight:900; padding:3px 8px; border-radius:99px; color:white;
+  background:var(--primary);
+}
+.mode-tag.daily { background:var(--daily); }
+.mode-tag.srs   { background:var(--srs); }
+.mode-tag.test  { background:#3B82F6; }
+
 .hint-box { text-align:center; margin:6px 0 10px; }
 .hint-emoji { font-size:3rem; line-height:1; margin-bottom:6px; }
 .hint-word { display:inline-flex; align-items:flex-end; gap:3px; background:white; border-radius:14px; padding:8px 18px; box-shadow:0 2px 8px rgba(0,0,0,.08); }
@@ -88,6 +137,66 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .btn-retry { flex:1; padding:14px; background:white; color:#888; border:2px solid #ddd; border-radius:12px; font-size:.9rem; font-weight:bold; cursor:pointer; }
 .btn-anime { flex:1; padding:14px; background:white; color:#3B82F6; border:2px solid #3B82F6; border-radius:12px; font-size:.82rem; font-weight:bold; cursor:pointer; }
 
+/* SRS評価ボタン（正解後） */
+.srs-rating {
+  display:none; gap:8px; margin-top:10px;
+}
+.srs-rating.show { display:flex; }
+.sr-btn {
+  flex:1; padding:10px 4px; border:none; border-radius:10px; font-size:.78rem; font-weight:900; cursor:pointer;
+  transition:all .15s;
+}
+.sr-btn:active { transform:scale(.95); }
+.sr-btn.hard  { background:#FEE2E2; color:#EF4444; }
+.sr-btn.ok    { background:#FEF9C3; color:#CA8A04; }
+.sr-btn.easy  { background:#DCFCE7; color:#16A34A; }
+
+/* デイリー完了アニメ */
+@keyframes pop { 0%{transform:scale(.8);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+.pop { animation:pop .35s ease forwards; }
+
+/* はなまる評価表示 */
+.star-result {
+  display:none; position:absolute; inset:0; pointer-events:none;
+  align-items:center; justify-content:center; z-index:10;
+  flex-direction:column; gap:4px;
+}
+.star-result.show { display:flex; }
+@keyframes starPop {
+  0%   { transform:scale(0) rotate(-20deg); opacity:0; }
+  50%  { transform:scale(1.3) rotate(5deg); opacity:1; }
+  70%  { transform:scale(0.95) rotate(-2deg); }
+  100% { transform:scale(1) rotate(0deg); opacity:1; }
+}
+@keyframes hanamaru {
+  0%   { stroke-dashoffset:600; opacity:0; }
+  20%  { opacity:1; }
+  100% { stroke-dashoffset:0; opacity:1; }
+}
+.star-row { display:flex; gap:6px; }
+.star-item {
+  font-size:2rem; opacity:0;
+  animation:starPop .4s cubic-bezier(.36,.07,.19,.97) forwards;
+}
+.result-label {
+  font-size:1.1rem; font-weight:900; opacity:0;
+  animation:starPop .4s .3s cubic-bezier(.36,.07,.19,.97) forwards;
+}
+/* はなまるSVGオーバーレイ */
+#hanamaru-layer {
+  position:absolute; inset:0; pointer-events:none; z-index:9;
+}
+#hanamaru-layer svg { width:100%; height:100%; }
+/* 逆走警告アニメ */
+@keyframes shake {
+  0%,100%{ transform:translateX(0); }
+  20%    { transform:translateX(-6px); }
+  40%    { transform:translateX(6px); }
+  60%    { transform:translateX(-4px); }
+  80%    { transform:translateX(4px); }
+}
+.msg.shake { animation:shake .4s ease; }
+
 .ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; align-items:center; justify-content:center; padding:20px; }
 .ov.show { display:flex; }
 .ov-card { background:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
@@ -98,6 +207,10 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .ob.gry { background:#F3F4F6; color:#555; }
 .lv-card { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
 .rc-card { background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+.daily-card { background:linear-gradient(135deg,#F59E0B,#F97316); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+
+/* デイリー完了画面パーティクル */
+.confetti-wrap { font-size:2rem; letter-spacing:4px; margin:8px 0; }
 </style>
 </head>
 <body>
@@ -106,6 +219,27 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 <div id="scr-title" class="screen active">
   <div class="title-logo">✏️ かなマスター</div>
   <div class="title-sub">ひらがな・カタカナ れんしゅう</div>
+
+  <!-- デイリーチャレンジバナー -->
+  <div class="daily-banner" id="daily-banner" onclick="startDaily()">
+    <div class="daily-icon" id="daily-icon">🌅</div>
+    <div class="daily-info">
+      <div class="daily-title" id="daily-title">きょうの5もじ</div>
+      <div class="daily-sub"  id="daily-sub">まいにちれんしゅうしよう！</div>
+    </div>
+    <div class="streak-pill" id="streak-pill">🔥 <span id="streak-num">0</span>にち</div>
+  </div>
+
+  <!-- SRS復習バナー（復習がある日だけ表示） -->
+  <div class="srs-banner" id="srs-banner" onclick="startSRS()" style="display:none">
+    <div style="font-size:1.8rem">🧠</div>
+    <div style="flex:1">
+      <div style="font-size:1rem;font-weight:900;color:white">ふくしゅうタイム</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.85)">わすれないうちに！</div>
+    </div>
+    <div class="srs-count" id="srs-count">0</div>
+  </div>
+
   <div class="lv-badge">
     <div id="t-mascot" style="font-size:1.8rem">🥚</div>
     <div>
@@ -165,7 +299,10 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 <div id="scr-game" class="screen">
   <div class="game-header">
     <button class="btn-back" onclick="goBack()">← もどる</button>
-    <div class="progress-text" id="prog-text">1 / 25</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="mode-tag" id="mode-tag">れんしゅう</span>
+      <span class="progress-text" id="prog-text">1 / 25</span>
+    </div>
   </div>
   <div class="hint-box" id="hint-box"></div>
   <div class="msg" id="msg">うすいせんを なぞろう！</div>
@@ -173,12 +310,25 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     <canvas id="canvas-bg"></canvas>
     <canvas id="canvas-fx"></canvas>
     <canvas id="canvas-dr"></canvas>
+    <canvas id="canvas-ov" style="pointer-events:none;opacity:0;transition:opacity .4s"></canvas>
     <div id="guideLayer"></div>
+    <div id="hanamaru-layer"></div>
+    <div class="star-result" id="star-result">
+      <div class="star-row" id="star-row"></div>
+      <div class="result-label" id="result-label"></div>
+    </div>
   </div>
   <div class="btn-row">
     <button class="btn-anime" onclick="doAnime()">▶ じゅん</button>
     <button class="btn-retry" onclick="doRetry()">↺ やりなおし</button>
     <button class="btn-next"  onclick="doNext()">つぎへ →</button>
+  </div>
+  <!-- SRS評価ボタン（正解後に表示） -->
+  <div class="srs-rating" id="srs-rating">
+    <div style="font-size:.72rem;font-weight:700;color:#aaa;text-align:center;width:100%;margin-bottom:-4px">どのくらい かんたんだった？</div>
+    <button class="sr-btn hard" onclick="rateSRS(1)">😓 むずかしい<br><span style="font-size:.62rem">1にち後</span></button>
+    <button class="sr-btn ok"   onclick="rateSRS(3)">🙂 ふつう<br><span style="font-size:.62rem">3にち後</span></button>
+    <button class="sr-btn easy" onclick="rateSRS(5)">😄 かんたん<br><span style="font-size:.62rem">7にち後</span></button>
   </div>
 </div>
 
@@ -210,6 +360,16 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     <div style="font-size:1.3rem;font-weight:900;margin-bottom:4px">テストクリア！</div>
     <div style="font-size:.85rem;opacity:.9;margin-bottom:14px">ボーナス +10XP ゲット！</div>
     <button class="ob" style="background:white;color:#f5576c" onclick="closeRc()">🏠 ホームへ</button>
+  </div>
+</div>
+<!-- デイリーチャレンジ完了 -->
+<div class="ov" id="ov-daily">
+  <div class="daily-card">
+    <div class="confetti-wrap">🎊✨🎊</div>
+    <div style="font-size:1.4rem;font-weight:900;margin:6px 0">きょうのれんしゅう<br>おわり！</div>
+    <div style="font-size:.9rem;opacity:.9;margin:8px 0" id="daily-done-streak">🔥 <span id="ov-streak">1</span>にちれんぞく！</div>
+    <div style="font-size:.8rem;opacity:.8;margin-bottom:14px">ボーナス +5XP ゲット！</div>
+    <button class="ob" style="background:white;color:#F97316" onclick="closeDailyOv()">やったー！🌟</button>
   </div>
 </div>
 
@@ -277,6 +437,7 @@ const KANA_WORDS = {
     {char:'ン',emoji:'🍞',word:'パン',pos:1},
   ],
 };
+const ALL_WORDS = Object.values(KANA_WORDS).flat();
 
 const GROUPS = {h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
 const TITLES = [
@@ -290,20 +451,163 @@ function getTitle(lv){let r=TITLES[0];for(const t of TITLES){if(lv>=t.lv)r=t;els
 // ============================================================
 // 状態・保存
 // ============================================================
-let cleared = JSON.parse(localStorage.getItem('km_cleared'))||{};
-let tokk    = JSON.parse(localStorage.getItem('km_tokk'))   ||{};
-let niga    = JSON.parse(localStorage.getItem('km_niga'))   ||{};
-let bonXP   = parseInt(localStorage.getItem('km_bonxp'))    ||0;
-let mistCnt = JSON.parse(localStorage.getItem('km_mist'))   ||{};
+let cleared  = JSON.parse(localStorage.getItem('km_cleared'))||{};
+let tokk     = JSON.parse(localStorage.getItem('km_tokk'))   ||{};
+let niga     = JSON.parse(localStorage.getItem('km_niga'))   ||{};
+let bonXP    = parseInt(localStorage.getItem('km_bonxp'))    ||0;
+let mistCnt  = JSON.parse(localStorage.getItem('km_mist'))   ||{};
+
+// ===== SRS データ構造 =====
+// srsData[char] = { interval:1, ef:2.5, due:dateStr, reps:0 }
+let srsData  = JSON.parse(localStorage.getItem('km_srs'))    ||{};
+
+// ===== デイリーチャレンジ =====
+// dailyState = { date:'YYYY-MM-DD', chars:[], done:[], completed:false }
+let dailyState = JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],done:[],completed:false};
+let streak     = parseInt(localStorage.getItem('km_streak')) ||0;
+let lastStreakDate = localStorage.getItem('km_streakdate')   ||'';
 
 function save(){
-  localStorage.setItem('km_cleared',JSON.stringify(cleared));
-  localStorage.setItem('km_tokk',   JSON.stringify(tokk));
-  localStorage.setItem('km_niga',   JSON.stringify(niga));
-  localStorage.setItem('km_bonxp',  bonXP);
-  localStorage.setItem('km_mist',   JSON.stringify(mistCnt));
+  localStorage.setItem('km_cleared', JSON.stringify(cleared));
+  localStorage.setItem('km_tokk',    JSON.stringify(tokk));
+  localStorage.setItem('km_niga',    JSON.stringify(niga));
+  localStorage.setItem('km_bonxp',   bonXP);
+  localStorage.setItem('km_mist',    JSON.stringify(mistCnt));
+  localStorage.setItem('km_srs',     JSON.stringify(srsData));
+  localStorage.setItem('km_daily',   JSON.stringify(dailyState));
+  localStorage.setItem('km_streak',  streak);
+  localStorage.setItem('km_streakdate', lastStreakDate);
 }
 
+// ============================================================
+// ユーティリティ：日付
+// ============================================================
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function addDays(dateStr,n){
+  const d=new Date(dateStr); d.setDate(d.getDate()+n);
+  return d.toISOString().slice(0,10);
+}
+
+// ============================================================
+// ★ SRS（SM-2ベース簡略版）
+// ============================================================
+function srsInit(char){
+  if(!srsData[char]) srsData[char]={interval:1,ef:2.5,due:todayStr(),reps:0};
+}
+
+// rating: 1=難しい 3=普通 5=簡単
+function srsUpdate(char,rating){
+  srsInit(char);
+  const s=srsData[char];
+  if(rating<3){
+    s.interval=1; s.reps=0;
+  } else {
+    if(s.reps===0)      s.interval=1;
+    else if(s.reps===1) s.interval=3;
+    else                s.interval=Math.round(s.interval*s.ef);
+    s.reps++;
+    // EFの更新（2.5 + (0.1 - (5-rating)*(0.08+(5-rating)*0.02))）
+    s.ef=Math.max(1.3, s.ef+0.1-(5-rating)*(0.08+(5-rating)*0.02));
+  }
+  s.due=addDays(todayStr(), s.interval);
+  save();
+}
+
+function getDueChars(){
+  const today=todayStr();
+  return ALL_WORDS.filter(w=>{
+    const s=srsData[w.char];
+    return s && s.due<=today;
+  });
+}
+
+// ============================================================
+// ★ デイリーチャレンジ
+// ============================================================
+const DAILY_COUNT=5;
+
+function initDaily(){
+  const today=todayStr();
+  if(dailyState.date===today) return; // 今日分は作成済み
+
+  // ストリーク更新
+  if(dailyState.date && dailyState.completed){
+    const yesterday=addDays(today,-1);
+    if(lastStreakDate===yesterday){ streak++; }
+    else if(lastStreakDate!==today){ streak=1; }
+  } else if(dailyState.date && dailyState.date!==today){
+    // 昨日完了していなければリセット
+    const yesterday=addDays(today,-1);
+    if(lastStreakDate!==yesterday) streak=0;
+  }
+
+  // 今日の5問を選出：SRS期限切れ優先 → 未習得 → ランダム
+  const due=getDueChars();
+  let pool=[];
+  if(due.length>=DAILY_COUNT){
+    pool=due.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT);
+  } else {
+    pool=[...due];
+    const unlearned=ALL_WORDS.filter(w=>!cleared[w.char]&&!pool.find(p=>p.char===w.char));
+    const needed=DAILY_COUNT-pool.length;
+    pool=[...pool, ...unlearned.sort(()=>Math.random()-.5).slice(0,needed)];
+    if(pool.length<DAILY_COUNT){
+      const rest=ALL_WORDS.filter(w=>!pool.find(p=>p.char===w.char));
+      pool=[...pool,...rest.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];
+    }
+  }
+
+  dailyState={date:today, chars:pool.map(w=>w.char), done:[], completed:false};
+  save();
+}
+
+function getDailyWords(){
+  return dailyState.chars
+    .filter(c=>!dailyState.done.includes(c))
+    .map(c=>ALL_WORDS.find(w=>w.char===c))
+    .filter(Boolean);
+}
+
+function updateDailyBanner(){
+  const today=todayStr();
+  initDaily();
+  const done=dailyState.done.length;
+  const total=DAILY_COUNT;
+  const completed=dailyState.completed;
+
+  const banner=document.getElementById('daily-banner');
+  const icon=document.getElementById('daily-icon');
+  const title=document.getElementById('daily-title');
+  const sub=document.getElementById('daily-sub');
+  const streakEl=document.getElementById('streak-num');
+
+  streakEl.textContent=streak;
+  if(completed){
+    banner.classList.add('done');
+    icon.textContent='✅';
+    title.textContent='きょうのれんしゅう かんりょう！';
+    sub.textContent='また あした ね！';
+  } else {
+    banner.classList.remove('done');
+    icon.textContent='🌅';
+    title.textContent='きょうの5もじ';
+    sub.textContent=done>0?`あと ${total-done} もじ！がんばろう！`:'まいにちれんしゅうしよう！';
+  }
+
+  // SRS復習バナー
+  const dueList=getDueChars();
+  const srsBanner=document.getElementById('srs-banner');
+  if(dueList.length>0 && !completed){
+    srsBanner.style.display='flex';
+    document.getElementById('srs-count').textContent=dueList.length+'こ';
+  } else {
+    srsBanner.style.display='none';
+  }
+}
+
+// ============================================================
+// XP・タイトル更新
+// ============================================================
 function getXP(){
   const x=Object.keys(cleared).length+bonXP;
   return{lv:Math.floor(x/5)+1, cur:x%5, next:5-(x%5)};
@@ -324,13 +628,47 @@ function updateTitle(){
     document.getElementById(`gbar-${g}`).style.width=`${Math.round(done/total*100)}%`;
   }
   updateGroupSel();
+  updateDailyBanner();
 }
 
 let curGroup='h1';
-function selGroup(g){snd('click');curGroup=g;updateGroupSel();}
 function updateGroupSel(){
   for(const g of Object.keys(GROUPS))
     document.getElementById(`gb-${g}`).classList.toggle('sel',g===curGroup);
+}
+
+// ============================================================
+// デイリー・SRS 起動
+// ============================================================
+function startDaily(){
+  if(dailyState.completed){ return; }
+  snd('click');
+  const words=getDailyWords();
+  if(!words.length){ return; }
+  curMode='daily'; isRandom=false;
+  queue=[...words]; qIdx=0;
+  setModeTag('daily');
+  showScreen('scr-game'); loadQ();
+}
+
+function startSRS(){
+  snd('click');
+  const due=getDueChars();
+  if(!due.length){alert('ふくしゅうはありません');return;}
+  curMode='srs'; isRandom=false;
+  queue=due.sort(()=>Math.random()-.5).slice(0,10); qIdx=0;
+  setModeTag('srs');
+  showScreen('scr-game'); loadQ();
+}
+
+function setModeTag(mode){
+  const tag=document.getElementById('mode-tag');
+  const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};
+  tag.textContent=labels[mode]||mode;
+  tag.className='mode-tag';
+  if(mode==='daily') tag.classList.add('daily');
+  else if(mode==='srs') tag.classList.add('srs');
+  else if(mode==='test') tag.classList.add('test');
 }
 
 // カード一覧
@@ -360,27 +698,40 @@ function updateListModeBtns(){
 function renderKanaGrid(){
   const grid=document.getElementById('kana-grid');
   grid.innerHTML='';
+  const today=todayStr();
   KANA_WORDS[curGroup].forEach(w=>{
     const hasPrac=!!localStorage.getItem('km_prac_'+w.char);
     const hasTest=!!localStorage.getItem('km_test_'+w.char);
+    const srs=srsData[w.char];
+    const isDue=srs&&srs.due<=today;
     const card=document.createElement('div');
     card.className='k-card';
-    if(hasPrac&&hasTest) card.classList.add('done-both');
+    if(isDue)            card.classList.add('due-review');
+    else if(hasPrac&&hasTest) card.classList.add('done-both');
     else if(hasPrac)     card.classList.add('done-prac');
     else if(hasTest)     card.classList.add('done-test');
-    // クリア済みバッジ
+
     if(cleared[w.char]){
       const b=document.createElement('div');
       b.className='k-badge'; b.textContent='✓'; card.appendChild(b);
     }
+    // SRS次回日表示
+    if(srs&&!isDue){
+      const b=document.createElement('div');
+      b.className='srs-badge';
+      const days=Math.round((new Date(srs.due)-new Date(today))/(86400000));
+      b.textContent=days<=0?'きょう':days+'にち後';
+      card.appendChild(b);
+    }
+
     const t=document.createTextNode(w.char);
     card.appendChild(t);
     card.onclick=()=>{
       snd('click'); curMode=listMode;
       const startIdx=KANA_WORDS[curGroup].indexOf(w);
-      // タップした文字から最後まで順番にqueueに入れる
       queue=KANA_WORDS[curGroup].slice(startIdx);
       qIdx=0; isRandom=false;
+      setModeTag(curMode);
       showScreen('scr-game'); loadQ();
     };
     grid.appendChild(card);
@@ -390,6 +741,7 @@ function renderKanaGrid(){
 function startAll(){
   snd('click'); curMode=listMode;
   queue=[...KANA_WORDS[curGroup]]; qIdx=0; isRandom=false;
+  setModeTag(curMode);
   showScreen('scr-game'); loadQ();
 }
 
@@ -400,6 +752,7 @@ function startSpecial(m){
   if(m==='nigate') list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>niga[w.char]));
   if(!list.length){alert('もじが ありません');return;}
   queue=list; qIdx=0; isRandom=false;
+  setModeTag(curMode);
   showScreen('scr-game'); loadQ();
 }
 
@@ -407,11 +760,13 @@ function startSpecial(m){
 // ゲーム管理
 // ============================================================
 let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,rLvBefore=1;
+let pendingSRSRating=false; // SRS評価待ち
 
 function startRandom(){
   snd('click'); curMode='test'; isRandom=true; rLvBefore=getXP().lv;
   queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);
-  qIdx=0; showScreen('scr-game'); loadQ();
+  qIdx=0; setModeTag('test');
+  showScreen('scr-game'); loadQ();
 }
 
 function showScreen(id){
@@ -423,8 +778,7 @@ function showScreen(id){
 function goTitle(){animating=false; showScreen('scr-title');}
 function goBack(){
   animating=false;
-  // とっくん・にがて・ランダムはタイトルへ、それ以外はカード一覧へ
-  if(isRandom||curMode==='tokkun'||curMode==='nigate') showScreen('scr-title');
+  if(isRandom||curMode==='tokkun'||curMode==='nigate'||curMode==='daily'||curMode==='srs') showScreen('scr-title');
   else{ renderKanaGrid(); showScreen('scr-list'); }
 }
 
@@ -433,6 +787,12 @@ function goBack(){
 // ============================================================
 async function loadQ(){
   curQ=queue[qIdx];
+  pendingSRSRating=false;
+  resetStrokeScores();
+  userDrawRecord=[]; currentStrokePts=[];
+  document.getElementById('srs-rating').classList.remove('show');
+  document.getElementById('star-result').classList.remove('show');
+  document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('prog-text').textContent=`${qIdx+1} / ${queue.length}`;
   const isTest=(curMode==='test');
   const hintEl=document.getElementById('hint-box');
@@ -451,56 +811,49 @@ async function loadQ(){
   const msg=document.getElementById('msg');
   msg.textContent=isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！';
   msg.style.color=isTest?'#FF6B9D':'#00D084';
-
   initCanvas();
-
-  // KanjiVG 1本で薄い字描画＋判定用パス取得を同時に行う
   await loadKanjiVG(curQ.char);
 }
 
 // ============================================================
-// Canvas初期化（offsetWidthでサイズ取得）
+// Canvas初期化
 // ============================================================
-let ctxBg,ctxFx,ctxDr,cW=0;
-let strokes=[],currentStroke=0;         // KanjiVGのpathd文字列配列
+let ctxBg,ctxFx,ctxDr,ctxOv,cW=0;
+let strokes=[],currentStroke=0;
 let drawing=false,animating=false;
-let drawLength=0,lastX=null,lastY=null; // 描画距離管理
-let userPts=[];                          // 通過点チェック用
+let drawLength=0,lastX=null,lastY=null;
+let userPts=[];
 const TOLERANCE_RATIO=0.18;
 
 function initCanvas(){
   const cont=document.getElementById('canvas-container');
   const size=cont.offsetWidth;
   cW=size;
-  ['canvas-bg','canvas-fx','canvas-dr'].forEach(id=>{
+  ['canvas-bg','canvas-fx','canvas-dr','canvas-ov'].forEach(id=>{
     const c=document.getElementById(id);
     c.width=size; c.height=size;
   });
   ctxBg=document.getElementById('canvas-bg').getContext('2d');
   ctxFx=document.getElementById('canvas-fx').getContext('2d');
   ctxDr=document.getElementById('canvas-dr').getContext('2d');
-
-  // グリッド線
-  ctxBg.strokeStyle='#E8F4FD'; ctxBg.lineWidth=1.5; ctxBg.setLineDash([5,5]);
-  ctxBg.beginPath();
-  ctxBg.moveTo(cW/2,0); ctxBg.lineTo(cW/2,cW);
-  ctxBg.moveTo(0,cW/2); ctxBg.lineTo(cW,cW/2);
-  ctxBg.stroke(); ctxBg.setLineDash([]);
-
+  ctxOv=document.getElementById('canvas-ov').getContext('2d');
+  document.getElementById('canvas-ov').style.opacity='0';
+  drawGrid();
   strokes=[]; currentStroke=0;
   drawing=false; animating=false;
   drawLength=0; lastX=null; lastY=null;
+  stopStartDot(); // 既存のアニメを止める
 
   const drC=document.getElementById('canvas-dr');
   drC.onpointerdown=e=>{
     if(animating)return;
     const{x,y}=getXY(e,drC);
-    // strokesがある場合は始点チェック（外れていたら無視）
     if(strokes.length && currentStroke<strokes.length){
       if(!checkStart(x,y))return;
     }
     drawing=true; drawLength=0; lastX=x; lastY=y; userPts=[{x,y}];
-    // なぞり開始したらSVGアニメレイヤーをクリア
+    currentStrokePts=[{x,y}]; // 比較用記録開始
+    stopStartDot(); // 書き始めたら●を消す
     document.getElementById('guideLayer').innerHTML='';
     ctxDr.beginPath(); ctxDr.moveTo(x,y);
   };
@@ -509,11 +862,11 @@ function initCanvas(){
     const{x,y}=getXY(e,drC);
     trackDraw(x,y);
     userPts.push({x,y});
+    currentStrokePts.push({x,y}); // 比較用記録
     ctxDr.lineTo(x,y);
     ctxDr.lineCap='round'; ctxDr.lineJoin='round';
     ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
     ctxDr.stroke();
-    // キラキラ（間引きで処理軽く）
     if(userPts.length%4===0){ addSparkle(x,y); if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();} }
   };
   drC.onpointerup=e=>{
@@ -528,6 +881,14 @@ function initCanvas(){
   };
 }
 
+function drawGrid(){
+  ctxBg.strokeStyle='#E8F4FD'; ctxBg.lineWidth=1.5; ctxBg.setLineDash([5,5]);
+  ctxBg.beginPath();
+  ctxBg.moveTo(cW/2,0); ctxBg.lineTo(cW/2,cW);
+  ctxBg.moveTo(0,cW/2); ctxBg.lineTo(cW,cW/2);
+  ctxBg.stroke(); ctxBg.setLineDash([]);
+}
+
 function getXY(e,canvas){
   const r=canvas.getBoundingClientRect();
   const cx=e.touches?e.touches[0].clientX:e.clientX;
@@ -536,25 +897,21 @@ function getXY(e,canvas){
 }
 
 // ============================================================
-// SVGアニメーション（guideLayerに1画ずつ描く）
+// SVGアニメーション
 // ============================================================
 async function animateGuide(svgText){
   const layer=document.getElementById('guideLayer');
   layer.innerHTML='';
-
   const parser=new DOMParser();
   const doc=parser.parseFromString(svgText,'image/svg+xml');
   const strokeGroup=doc.querySelector('[id^="kvg:StrokePaths"]');
   if(!strokeGroup) return;
-
   const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svgEl.setAttribute('viewBox','0 0 109 109');
   svgEl.style.width='100%'; svgEl.style.height='100%';
-
   const paths=[...strokeGroup.querySelectorAll('path')];
   paths.forEach(p=>svgEl.appendChild(p));
   layer.appendChild(svgEl);
-
   for(const p of paths){
     const len=p.getTotalLength();
     p.style.strokeDasharray=len;
@@ -564,20 +921,18 @@ async function animateGuide(svgText){
     p.style.strokeDashoffset=0;
     await new Promise(r=>setTimeout(r,950));
   }
-  // アニメ完了後もガイドは薄く残す（なぞる前に確認できるように）
 }
 
 // ============================================================
-// KanjiVG：薄い字描画 ＋ 判定用パス取得（1本で完結）
+// KanjiVG読み込み
 // ============================================================
 const svgCache={};
 
 async function loadKanjiVG(char){
-  const isPrac=(curMode==='practice'||curMode==='tokkun'||curMode==='nigate');
+  const isPrac=(curMode==='practice'||curMode==='tokkun'||curMode==='nigate'||curMode==='daily'||curMode==='srs');
   try{
     const hex=char.codePointAt(0).toString(16).padStart(5,'0');
     const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;
-
     let svgText=svgCache[hex];
     if(!svgText){
       const res=await fetch(url);
@@ -585,18 +940,19 @@ async function loadKanjiVG(char){
       svgText=await res.text();
       svgCache[hex]=svgText;
     }
-
-    // れんしゅうモードはSVGアニメーション
     if(isPrac) await animateGuide(svgText);
-
-    // ① 判定用パスをDOMParserで取得（あなたのfetchKanjiVGと同じ方式）
     const parser=new DOMParser();
     const doc=parser.parseFromString(svgText,'image/svg+xml');
     const strokeGroup=doc.querySelector('[id^="kvg:StrokePaths"]');
     strokes=strokeGroup?[...strokeGroup.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];
     currentStroke=0; drawLength=0; lastX=null; lastY=null;
 
-    // ② 薄い字をSVG Blob→Imageで描画（れんしゅうモードのみ）
+    // ストローク参照点をキャッシュ（DTW用）
+    strokeRefCache={};
+
+    // ② 書き始めガイド：最初のストロークの始点に●を表示
+    if(strokes.length) startStartDot();
+
     if(isPrac){
       let styled=svgText.replace('</svg>',`<style>
         path { stroke:#E2E8F0 !important; stroke-width:10 !important; fill:none !important; }
@@ -607,13 +963,8 @@ async function loadKanjiVG(char){
       await new Promise(resolve=>{
         const img=new Image();
         img.onload=()=>{
-          // グリッド線を再描画してからSVGを重ねる
           ctxBg.clearRect(0,0,cW,cW);
-          ctxBg.strokeStyle='#E8F4FD'; ctxBg.lineWidth=1.5; ctxBg.setLineDash([5,5]);
-          ctxBg.beginPath();
-          ctxBg.moveTo(cW/2,0); ctxBg.lineTo(cW/2,cW);
-          ctxBg.moveTo(0,cW/2); ctxBg.lineTo(cW,cW/2);
-          ctxBg.stroke(); ctxBg.setLineDash([]);
+          drawGrid();
           ctxBg.drawImage(img,0,0,cW,cW);
           URL.revokeObjectURL(blobUrl);
           resolve();
@@ -629,12 +980,8 @@ async function loadKanjiVG(char){
 }
 
 // ============================================================
-// 判定：あなたのcheckStart / draw / checkEnd をそのまま実装
+// ★ 判定精度向上：DTW（動的時間伸縮法）ベースの筆跡評価
 // ============================================================
-
-// KanjiVGのSVGパスは109×109のviewBoxで定義されている
-// getTotalLength/getPointAtLengthはDOMに追加しないと
-// Safariなど一部ブラウザで0を返すバグがある → 一時的にDOMに追加して取得
 const _svgMeasure=(()=>{
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
   svg.style.cssText='position:absolute;visibility:hidden;width:0;height:0';
@@ -642,27 +989,92 @@ const _svgMeasure=(()=>{
   return svg;
 })();
 
-// パスの5点通過チェック用データ取得
-function getStrokeData(pathStr){
+let strokeRefCache={};
+
+// パスをN点にリサンプリング
+function resamplePath(pathStr, N=20){
+  if(strokeRefCache[pathStr]) return strokeRefCache[pathStr];
   const path=document.createElementNS('http://www.w3.org/2000/svg','path');
   path.setAttribute('d',pathStr);
   _svgMeasure.appendChild(path);
   const len=path.getTotalLength();
   const sc=cW/109;
-  // 始点・1/4・中間・3/4・終点の5点
-  const points=[0,0.25,0.5,0.75,1].map(t=>({
-    x:path.getPointAtLength(len*t).x*sc,
-    y:path.getPointAtLength(len*t).y*sc,
-  }));
+  const pts=[];
+  for(let i=0;i<N;i++){
+    const p=path.getPointAtLength(len*i/(N-1));
+    pts.push({x:p.x*sc, y:p.y*sc});
+  }
   _svgMeasure.removeChild(path);
-  return{points, len:len*sc};
+  strokeRefCache[pathStr]=pts;
+  return pts;
+}
+
+// DTW距離計算（O(N^2)だがN=20なので高速）
+function dtwDistance(seq1, seq2){
+  const n=seq1.length, m=seq2.length;
+  const dtw=Array.from({length:n+1},()=>new Float32Array(m+1).fill(Infinity));
+  dtw[0][0]=0;
+  for(let i=1;i<=n;i++){
+    for(let j=1;j<=m;j++){
+      const d=Math.hypot(seq1[i-1].x-seq2[j-1].x, seq1[i-1].y-seq2[j-1].y);
+      dtw[i][j]=d+Math.min(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1]);
+    }
+  }
+  return dtw[n][m]/Math.max(n,m);
+}
+
+// ユーザーの描画点列をN点にリサンプリング
+function resampleUserPts(N=20){
+  if(userPts.length<2) return userPts;
+  // 累積長を計算
+  const dists=[0];
+  for(let i=1;i<userPts.length;i++)
+    dists.push(dists[i-1]+Math.hypot(userPts[i].x-userPts[i-1].x, userPts[i].y-userPts[i-1].y));
+  const total=dists[dists.length-1];
+  if(total<1) return userPts;
+  const result=[];
+  for(let i=0;i<N;i++){
+    const target=total*i/(N-1);
+    // 二分探索
+    let lo=0,hi=dists.length-1;
+    while(lo<hi-1){const mid=(lo+hi)>>1; if(dists[mid]<=target)lo=mid;else hi=mid;}
+    const t=(dists[lo]===dists[hi])?0:(target-dists[lo])/(dists[hi]-dists[lo]);
+    result.push({
+      x:userPts[lo].x+(userPts[hi].x-userPts[lo].x)*t,
+      y:userPts[lo].y+(userPts[hi].y-userPts[lo].y)*t,
+    });
+  }
+  return result;
+}
+
+// 始点チェック（変更なし）
+function getStrokeStart(pathStr){
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',pathStr);
+  _svgMeasure.appendChild(path);
+  const p=path.getPointAtLength(0);
+  const sc=cW/109;
+  const result={x:p.x*sc, y:p.y*sc};
+  _svgMeasure.removeChild(path);
+  return result;
+}
+
+function getStrokeEnd(pathStr){
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',pathStr);
+  _svgMeasure.appendChild(path);
+  const len=path.getTotalLength();
+  const p=path.getPointAtLength(len);
+  const sc=cW/109;
+  const result={x:p.x*sc, y:p.y*sc};
+  _svgMeasure.removeChild(path);
+  return result;
 }
 
 function checkStart(x,y){
   if(!strokes.length||currentStroke>=strokes.length)return false;
-  const{points}=getStrokeData(strokes[currentStroke]);
-  const THR=cW*TOLERANCE_RATIO;
-  return Math.hypot(x-points[0].x, y-points[0].y)<THR;
+  const st=getStrokeStart(strokes[currentStroke]);
+  return Math.hypot(x-st.x, y-st.y)<cW*TOLERANCE_RATIO;
 }
 
 function trackDraw(x,y){
@@ -670,14 +1082,60 @@ function trackDraw(x,y){
   lastX=x; lastY=y;
 }
 
-// ユーザーが描いた点列から、指定座標に一番近い点の距離を返す
-function minDistToPath(tx,ty){
-  if(!userPts.length)return Infinity;
-  let min=Infinity;
-  for(const p of userPts) min=Math.min(min,Math.hypot(p.x-tx,p.y-ty));
-  return min;
+// ============================================================
+// ★ 方向チェック：進行ベクトルの内積で逆走を検出
+// ============================================================
+function checkDirection(userResampled, refPts){
+  // 全体の進行方向を前半・後半に分けて内積チェック
+  // 内積の符号が負なら逆走と判定
+  const N=userResampled.length;
+  if(N<4) return true; // 点が少なすぎる場合はスルー
+  // ユーザーの全体ベクトル
+  const uVx=userResampled[N-1].x-userResampled[0].x;
+  const uVy=userResampled[N-1].y-userResampled[0].y;
+  // 参照パスの全体ベクトル
+  const M=refPts.length;
+  const rVx=refPts[M-1].x-refPts[0].x;
+  const rVy=refPts[M-1].y-refPts[0].y;
+  const dot=uVx*rVx+uVy*rVy;
+  const uLen=Math.hypot(uVx,uVy);
+  const rLen=Math.hypot(rVx,rVy);
+  if(uLen<1||rLen<1) return true; // ほぼ点の場合はスルー
+  const cos=dot/(uLen*rLen);
+  return cos>-0.3; // cos<-0.3（120度以上逆）なら逆走とみなす
 }
 
+// ============================================================
+// ★ はなまるスコア管理
+// ============================================================
+let strokeScores=[]; // 各ストロークのDTWスコアを蓄積
+
+function resetStrokeScores(){ strokeScores=[]; }
+
+// DTW距離をスコア(0〜1)に変換：距離が小さいほど高スコア
+function dtwToScore(dtw){
+  // DTW_THR(cW*0.22)が0点、0が満点
+  const perfect=cW*0.06;  // これ以下なら★★★
+  const good   =cW*0.13;  // これ以下なら★★
+  const ok     =cW*0.22;  // これ以下なら★
+  if(dtw<=perfect) return 1.0;
+  if(dtw<=good)    return 0.67;
+  if(dtw<=ok)      return 0.33;
+  return 0;
+}
+
+// 全ストロークの平均スコアから★数を決定
+function calcStars(){
+  if(!strokeScores.length) return 1;
+  const avg=strokeScores.reduce((a,b)=>a+b,0)/strokeScores.length;
+  if(avg>=0.85) return 3;
+  if(avg>=0.55) return 2;
+  return 1;
+}
+
+// ============================================================
+// ★ DTWベース評価（方向チェック追加版）
+// ============================================================
 function evalEnd(x,y){
   ctxDr.clearRect(0,0,cW,cW);
   if(!strokes.length){
@@ -685,20 +1143,59 @@ function evalEnd(x,y){
   }
   if(currentStroke>=strokes.length)return;
 
-  const{points,len}=getStrokeData(strokes[currentStroke]);
-  const THR=cW*TOLERANCE_RATIO;
+  const pathStr=strokes[currentStroke];
+  const refPts=resamplePath(pathStr,20);
+  const refLen=refPts.reduce((acc,p,i)=>i===0?0:acc+Math.hypot(p.x-refPts[i-1].x,p.y-refPts[i-1].y),0);
 
-  // 5点通過チェック：始点はpointerdown時チェック済み
-  // 残り4点（1/4・中間・3/4・終点）のうち3点以上通過 → 合計4/5点以上
-  const remaining=points.slice(1); // [1/4, 中間, 3/4, 終点]
-  const passCount=remaining.filter(p=>minDistToPath(p.x,p.y)<THR*1.4).length;
-  const ok=passCount>=3 && drawLength>len*0.25;
+  // 最小描画距離チェック
+  if(drawLength < refLen*0.2){
+    snd('error');
+    setMsg('もうすこし ながく かいてね！','#EF4444');
+    showHint(currentStroke);
+    drawLength=0; lastX=null; lastY=null; userPts=[];
+    return;
+  }
+
+  const userResampled=resampleUserPts(20);
+
+  // ★ 方向チェック
+  if(!checkDirection(userResampled, refPts)){
+    snd('error');
+    const msgEl=document.getElementById('msg');
+    msgEl.textContent='かくむきに きをつけてね！↕️';
+    msgEl.style.color='#F59E0B';
+    msgEl.classList.remove('shake');
+    void msgEl.offsetWidth; // reflow
+    msgEl.classList.add('shake');
+    showHint(currentStroke);
+    drawLength=0; lastX=null; lastY=null; userPts=[];
+    return;
+  }
+
+  // DTW距離で評価
+  const dtw=dtwDistance(userResampled, refPts);
+  const endRef=getStrokeEnd(pathStr);
+  const endDist=Math.hypot(x-endRef.x, y-endRef.y);
+
+  const DTW_THR=cW*0.22;
+  const END_THR=cW*TOLERANCE_RATIO*1.5;
+  const ok=dtw<DTW_THR && (endDist<END_THR || dtw<DTW_THR*0.7);
 
   drawLength=0; lastX=null; lastY=null; userPts=[];
 
   if(ok){
+    // スコアを蓄積
+    strokeScores.push(dtwToScore(dtw));
+    // ユーザー線を記録（比較用）
+    userDrawRecord.push({pts:[...currentStrokePts]});
     snd('stroke'); currentStroke++; redrawFx();
-    setMsg('いいぞ！ その調子！','#00D084');
+
+    // ストロークごとのフィードバック
+    const score=dtwToScore(dtw);
+    if(score>=1.0)      setMsg('✨ かんぺき！','#8B5CF6');
+    else if(score>=0.67) setMsg('👍 いいぞ！','#00D084');
+    else                 setMsg('🙆 まあまあ！','#F59E0B');
+
     if(currentStroke>=strokes.length){ speak(curQ.char); onComplete(); }
   }else{
     snd('error');
@@ -711,7 +1208,7 @@ function evalEnd(x,y){
 }
 
 // ============================================================
-// 読み上げ（speechSynthesis）
+// 読み上げ
 // ============================================================
 function speak(text){
   if(!window.speechSynthesis)return;
@@ -728,11 +1225,8 @@ let sparkles=[], isSparkling=false;
 function addSparkle(x,y){
   for(let i=0;i<2;i++){
     sparkles.push({
-      x,y,
-      vx:(Math.random()-0.5)*4,
-      vy:(Math.random()-0.5)*4,
-      life:1,
-      r:Math.random()*4+2,
+      x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,
+      life:1,r:Math.random()*4+2,
       color:`hsl(${Math.random()*60+30},100%,60%)`
     });
   }
@@ -741,7 +1235,6 @@ function drawSparkles(){
   if(!sparkles.length){ isSparkling=false; return; }
   sparkles=sparkles.filter(s=>s.life>0);
   ctxDr.clearRect(0,0,cW,cW);
-  // 書き途中の線を再描画
   if(drawing&&userPts.length>1){
     ctxDr.beginPath(); ctxDr.moveTo(userPts[0].x,userPts[0].y);
     ctxDr.lineCap='round'; ctxDr.lineJoin='round';
@@ -749,24 +1242,132 @@ function drawSparkles(){
     userPts.forEach(p=>ctxDr.lineTo(p.x,p.y)); ctxDr.stroke();
   }
   sparkles.forEach(s=>{
-    ctxDr.save();
-    ctxDr.globalAlpha=s.life;
-    ctxDr.fillStyle=s.color;
-    ctxDr.beginPath();
-    ctxDr.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctxDr.fill();
+    ctxDr.save(); ctxDr.globalAlpha=s.life; ctxDr.fillStyle=s.color;
+    ctxDr.beginPath(); ctxDr.arc(s.x,s.y,s.r,0,Math.PI*2); ctxDr.fill();
     ctxDr.restore();
     s.x+=s.vx; s.y+=s.vy; s.life-=0.06;
   });
   requestAnimationFrame(drawSparkles);
 }
 
-function setMsg(t,c){
-  const el=document.getElementById('msg');
-  el.textContent=t; el.style.color=c;
+// ============================================================
+// ② 書き始めガイド：脈打つ●をctxFxレイヤーに描画
+// ============================================================
+let startDotRaf=null;
+let startDotPhase=0;
+
+function startStartDot(){
+  stopStartDot();
+  if(!strokes.length||currentStroke>=strokes.length) return;
+  const st=getStrokeStart(strokes[currentStroke]);
+  startDotPhase=0;
+
+  function tick(){
+    startDotPhase+=0.07;
+    // すでに書き終わったストロークを再描画した上に●を重ねる
+    ctxFx.clearRect(0,0,cW,cW);
+    const sc=cW/109;
+    // 完了済みストロークを黒で
+    ctxFx.save(); ctxFx.scale(sc,sc);
+    ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
+    ctxFx.lineCap='round'; ctxFx.lineJoin='round';
+    for(let i=0;i<currentStroke;i++){
+      ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
+    }
+    ctxFx.restore();
+
+    // 脈打つ●（pulse: sin波で大きさ変化）
+    const pulse=0.5+0.5*Math.sin(startDotPhase);
+    const r=cW*0.045 + cW*0.018*pulse;
+    const alpha=0.55+0.35*pulse;
+
+    // 外輪（波紋）
+    ctxFx.save();
+    ctxFx.beginPath();
+    ctxFx.arc(st.x, st.y, r*1.6, 0, Math.PI*2);
+    ctxFx.strokeStyle=`rgba(255,107,157,${alpha*0.4})`;
+    ctxFx.lineWidth=2;
+    ctxFx.stroke();
+    // 内●
+    ctxFx.beginPath();
+    ctxFx.arc(st.x, st.y, r, 0, Math.PI*2);
+    ctxFx.fillStyle=`rgba(255,107,157,${alpha})`;
+    ctxFx.fill();
+    // 白い数字（何画目か）
+    const num=currentStroke+1;
+    ctxFx.fillStyle='white';
+    ctxFx.font=`bold ${r*1.1}px sans-serif`;
+    ctxFx.textAlign='center';
+    ctxFx.textBaseline='middle';
+    ctxFx.fillText(num, st.x, st.y+1);
+    ctxFx.restore();
+
+    startDotRaf=requestAnimationFrame(tick);
+  }
+  startDotRaf=requestAnimationFrame(tick);
 }
 
-// 書き終えた画をfxCanvasにstrokeで再描画
+function stopStartDot(){
+  if(startDotRaf){ cancelAnimationFrame(startDotRaf); startDotRaf=null; }
+}
+
+// ============================================================
+// ③ 書き終わり透明比較：お手本（ピンク半透明）＋ユーザー線（青）を重ねて表示
+// ============================================================
+// userDrawRecord: 各ストロークで書いた点列の記録
+let userDrawRecord=[]; // [{pts:[{x,y},...]}]
+let currentStrokePts=[]; // 現在書き中の点列
+
+// evalEndのpointerdown/moveでcurrentStrokePtsにも追記（initCanvas内のハンドラ修正で対応）
+
+async function showOverlayComparison(){
+  const ovC=document.getElementById('canvas-ov');
+  ctxOv.clearRect(0,0,cW,cW);
+
+  // お手本：SVGキャッシュから描画（ピンク半透明）
+  const hex=curQ.char.codePointAt(0).toString(16).padStart(5,'0');
+  const svgText=svgCache[hex];
+  if(svgText){
+    let styled=svgText.replace('</svg>',`<style>
+      path { stroke:rgba(255,107,157,0.55) !important; stroke-width:9 !important; fill:none !important; }
+      text { display:none !important; }
+    </style></svg>`);
+    const blob=new Blob([styled],{type:'image/svg+xml;charset=utf-8'});
+    const blobUrl=URL.createObjectURL(blob);
+    await new Promise(r=>{
+      const img=new Image();
+      img.onload=()=>{ ctxOv.drawImage(img,0,0,cW,cW); URL.revokeObjectURL(blobUrl); r(); };
+      img.onerror=()=>{ URL.revokeObjectURL(blobUrl); r(); };
+      img.src=blobUrl;
+    });
+  }
+
+  // ユーザーの線：全ストロークの記録を青で描画
+  ctxOv.save();
+  ctxOv.lineCap='round'; ctxOv.lineJoin='round';
+  ctxOv.lineWidth=cW*0.035;
+  ctxOv.strokeStyle='rgba(56,189,248,0.85)';
+  for(const rec of userDrawRecord){
+    if(rec.pts.length<2) continue;
+    ctxOv.beginPath(); ctxOv.moveTo(rec.pts[0].x, rec.pts[0].y);
+    for(const p of rec.pts) ctxOv.lineTo(p.x, p.y);
+    ctxOv.stroke();
+  }
+  ctxOv.restore();
+
+  // フェードイン
+  ovC.style.transition='opacity .4s';
+  ovC.style.opacity='1';
+  // fxレイヤーを一時的に隠す（比較をクリアに見せる）
+  document.getElementById('canvas-fx').style.opacity='0.15';
+
+  // 3秒後にフェードアウト
+  await new Promise(r=>setTimeout(r,3000));
+  ovC.style.opacity='0';
+  document.getElementById('canvas-fx').style.opacity='1';
+  ctxOv.clearRect(0,0,cW,cW);
+}
+
 function redrawFx(){
   ctxFx.clearRect(0,0,cW,cW);
   if(!strokes.length)return;
@@ -775,13 +1376,14 @@ function redrawFx(){
   ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
   ctxFx.lineCap='round'; ctxFx.lineJoin='round';
   for(let i=0;i<currentStroke;i++){
-    ctxFx.beginPath();
-    ctxFx.stroke(new Path2D(strokes[i]));
+    ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
   }
   ctxFx.restore();
+  // 次のストロークの書き始めガイドを更新
+  if(currentStroke<strokes.length) startStartDot();
+  else stopStartDot();
 }
 
-// 次の画をヒント表示（赤でflash）
 function showHint(idx){
   if(idx>=strokes.length)return;
   const sc=cW/109;
@@ -794,7 +1396,7 @@ function showHint(idx){
 }
 
 // ============================================================
-// アニメーション（画ごとにハイライト）
+// アニメーション
 // ============================================================
 async function doAnime(){
   if(animating||!strokes.length)return;
@@ -805,17 +1407,14 @@ async function doAnime(){
     if(!animating)break;
     ctxFx.clearRect(0,0,cW,cW);
     ctxFx.save(); ctxFx.scale(sc,sc);
-    // 描き終わった画を黒で
     ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
     ctxFx.lineCap='round'; ctxFx.lineJoin='round';
     for(let j=0;j<i;j++){ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[j]));}
-    // 今の画をハイライト
     ctxFx.strokeStyle='#38BDF8'; ctxFx.lineWidth=4/sc;
     ctxFx.beginPath(); ctxFx.stroke(new Path2D(strokes[i]));
     ctxFx.restore();
     await new Promise(r=>setTimeout(r,500));
   }
-  // 全部黒で仕上げ
   ctxFx.clearRect(0,0,cW,cW);
   ctxFx.save(); ctxFx.scale(sc,sc);
   ctxFx.strokeStyle='#222'; ctxFx.lineWidth=6/sc;
@@ -826,15 +1425,137 @@ async function doAnime(){
 }
 
 // ============================================================
+// ★ SRS評価
+// ============================================================
+function rateSRS(rating){
+  if(!curQ) return;
+  srsInit(curQ.char);
+  srsUpdate(curQ.char, rating);
+  document.getElementById('srs-rating').classList.remove('show');
+  pendingSRSRating=false;
+  doNext();
+}
+
+// ============================================================
+// ★ はなまる表示アニメーション
+// ============================================================
+function showStarResult(stars){
+  const container=document.getElementById('star-result');
+  const row=document.getElementById('star-row');
+  const label=document.getElementById('result-label');
+
+  const configs=[
+    {stars:1, icons:'⭐',         text:'クリア！',    color:'#F59E0B'},
+    {stars:2, icons:'⭐⭐',       text:'すごい！',    color:'#3B82F6'},
+    {stars:3, icons:'⭐⭐⭐',     text:'はなまる！',  color:'#EC4899'},
+  ];
+  const cfg=configs[stars-1];
+
+  row.innerHTML='';
+  [...cfg.icons].forEach((c,i)=>{
+    const span=document.createElement('span');
+    span.className='star-item';
+    span.textContent=c;
+    span.style.animationDelay=`${i*0.12}s`;
+    row.appendChild(span);
+  });
+  label.textContent=cfg.text;
+  label.style.color=cfg.color;
+
+  container.classList.add('show');
+
+  // ★3（はなまる）の場合はSVGでぐるっと丸を描く
+  if(stars===3){
+    drawHanamaru();
+    // 特別エフェクト：虹色パーティクル爆発
+    for(let i=0;i<20;i++){
+      setTimeout(()=>{
+        const px=cW*(0.2+Math.random()*0.6);
+        const py=cW*(0.2+Math.random()*0.6);
+        for(let j=0;j<3;j++) addSparkle(px,py);
+        if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}
+      },i*60);
+    }
+  }
+}
+
+function drawHanamaru(){
+  const layer=document.getElementById('hanamaru-layer');
+  layer.innerHTML='';
+  const svgNS='http://www.w3.org/2000/svg';
+  const svg=document.createElementNS(svgNS,'svg');
+  svg.setAttribute('viewBox','0 0 100 100');
+  svg.style.cssText='width:100%;height:100%;overflow:visible';
+
+  // はなまる円（CSSアニメーションで描画）
+  const circle=document.createElementNS(svgNS,'circle');
+  circle.setAttribute('cx','50'); circle.setAttribute('cy','50');
+  circle.setAttribute('r','40');
+  circle.setAttribute('fill','none');
+  circle.setAttribute('stroke','#EC4899');
+  circle.setAttribute('stroke-width','5');
+  circle.setAttribute('stroke-linecap','round');
+  circle.setAttribute('stroke-dasharray','251');
+  circle.setAttribute('stroke-dashoffset','251');
+  circle.style.transformOrigin='50% 50%';
+  circle.style.transform='rotate(-90deg)';
+  circle.style.animation='hanamaru 0.8s cubic-bezier(.4,0,.2,1) forwards';
+
+  svg.appendChild(circle);
+  layer.appendChild(svg);
+
+  // 1秒後にフェードアウト
+  setTimeout(()=>{
+    svg.style.transition='opacity 0.5s';
+    svg.style.opacity='0';
+    setTimeout(()=>{ layer.innerHTML=''; },500);
+  },1800);
+}
+
+// ============================================================
 // 完了・次へ
 // ============================================================
 function onComplete(){
   snd('complete');
+  stopStartDot();
   const oldLv=getXP().lv;
-  cleared[curQ.char]=true; save();
+  cleared[curQ.char]=true;
+  srsInit(curQ.char);
+  save();
   const newLv=getXP().lv;
-  document.getElementById('ov-icon').textContent=curMode==='practice'?'⭐':'🎊';
-  document.getElementById('ov-msg').textContent=curMode==='practice'?'できたー！':'だいせいかい！';
+
+  // ★ はなまる評価を表示
+  const stars=calcStars();
+  showStarResult(stars);
+
+  // 星3特別サウンド
+  if(stars===3) setTimeout(()=>snd('levelup'),100);
+
+  // ③ 書き終わり比較（少し遅らせてはなまると重ねる）
+  setTimeout(()=>showOverlayComparison(), 400);
+
+  // SRS/デイリーモードでは完了後にSRS評価を表示
+  if(curMode==='srs'||curMode==='daily'||curMode==='practice'){
+    setTimeout(()=>{
+      document.getElementById('srs-rating').classList.add('show');
+      pendingSRSRating=true;
+      const labels=['','クリア！', 'すごい！', 'はなまる！ 🌸'];
+      setMsg(labels[stars]+' どのくらい かんたんだった？','#FF6B9D');
+    }, 800);
+    if(newLv>oldLv){
+      setTimeout(()=>{
+        document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
+        document.getElementById('lv-num').textContent=newLv;
+        showOv('ov-lv');
+      },1200);
+    }
+    return;
+  }
+
+  const icons=['','⭐','⭐⭐','🌸'];
+  const msgs =['','できたー！','すごい！','はなまる！'];
+  document.getElementById('ov-icon').textContent=icons[stars];
+  document.getElementById('ov-msg').textContent =msgs[stars];
   setTimeout(()=>{
     showOv('ov-ok');
     if(newLv>oldLv){
@@ -845,18 +1566,35 @@ function onComplete(){
         showOv('ov-lv');
       },600);
     }
-  },500);
+  },900);
 }
 
 function doNext(){
+  if(pendingSRSRating) return; // 評価待ち中は進まない
   qIdx++;
   if(qIdx<queue.length) loadQ();
   else{
+    // デイリー完了処理
+    if(curMode==='daily'){
+      dailyState.done=[...dailyState.chars]; // 全完了
+      dailyState.completed=true;
+      const today=todayStr();
+      // ストリーク更新
+      if(lastStreakDate===addDays(today,-1)||lastStreakDate===today){
+        if(lastStreakDate!==today) streak++;
+      } else {
+        streak=1;
+      }
+      lastStreakDate=today;
+      bonXP+=5; save();
+      document.getElementById('ov-streak').textContent=streak;
+      showOv('ov-daily');
+      return;
+    }
     if(isRandom){bonXP+=10; save(); showOv('ov-rc');}
     else{
       snd('levelup');
-      // カード一覧から来た場合はそこへ戻る、それ以外はタイトルへ
-      if(curMode==='tokkun'||curMode==='nigate') goTitle();
+      if(curMode==='tokkun'||curMode==='nigate'||curMode==='srs') goTitle();
       else{ renderKanaGrid(); showScreen('scr-list'); }
     }
   }
@@ -865,21 +1603,35 @@ function doNext(){
 function doRetry(){
   currentStroke=0; drawing=false;
   drawLength=0; lastX=null; lastY=null; userPts=[]; sparkles=[]; isSparkling=false;
+  pendingSRSRating=false;
+  resetStrokeScores();
+  userDrawRecord=[]; currentStrokePts=[];
+  stopStartDot();
+  document.getElementById('srs-rating').classList.remove('show');
+  document.getElementById('star-result').classList.remove('show');
+  document.getElementById('hanamaru-layer').innerHTML='';
+  document.getElementById('canvas-ov').style.opacity='0';
+  document.getElementById('canvas-fx').style.opacity='1';
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const isTest=(curMode==='test');
   setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！', isTest?'#FF6B9D':'#00D084');
+  // ●を再表示
+  if(strokes.length) startStartDot();
 }
 
-function closeOvNext() {closeOv('ov-ok'); doNext();}
-function closeOvRetry(){closeOv('ov-ok'); doRetry();}
-function closeLv(){closeOv('ov-lv'); doNext();}
-function closeRc(){closeOv('ov-rc'); goTitle();}
+function closeOvNext()  {closeOv('ov-ok'); if(!pendingSRSRating)doNext();}
+function closeOvRetry() {closeOv('ov-ok'); doRetry();}
+function closeLv()      {closeOv('ov-lv'); if(!pendingSRSRating)doNext();}
+function closeRc()      {closeOv('ov-rc'); goTitle();}
+function closeDailyOv() {closeOv('ov-daily'); goTitle();}
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
 
 function doReset(){
   localStorage.clear();
   cleared={}; tokk={}; niga={}; bonXP=0; mistCnt={};
+  srsData={}; dailyState={date:'',chars:[],done:[],completed:false};
+  streak=0; lastStreakDate='';
   updateTitle();
 }
 
