@@ -4,13 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>かなマスター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
 :root {
   --primary:#FF6B9D; --secondary:#FF9DC6; --green:#00D084; --bg:#FFF5F9;
   --daily:#F59E0B; --srs:#8B5CF6;
 }
-body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ UDPGothic',sans-serif; background:var(--bg); min-height:100vh; color:#333; }
+body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',cursive; background:var(--bg); min-height:100vh; color:#333; }
 .screen { display:none; padding:16px; max-width:480px; margin:0 auto; }
 .screen.active { display:block; }
 
@@ -237,23 +239,20 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 
 /* ===== 1画OK トースト ===== */
 #stroke-toast {
-  position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%) scale(0);
-  background:white; border-radius:99px;
-  padding:10px 28px; white-space:nowrap;
-  font-size:1.4rem; font-weight:900;
-  box-shadow:0 6px 24px rgba(0,0,0,.18);
-  pointer-events:none; z-index:30; opacity:0;
+  display:block; width:100%; text-align:center;
+  font-size:1.3rem; font-weight:900;
+  min-height:2.2rem; line-height:2.2rem;
+  pointer-events:none; opacity:0;
+  transition:none;
 }
 @keyframes toastIn {
-  0%  { transform:translate(-50%,-50%) scale(0); opacity:0; }
-  40% { transform:translate(-50%,-50%) scale(1.12); opacity:1; }
-  70% { transform:translate(-50%,-50%) scale(.97); opacity:1; }
-  100%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+  0%  { opacity:0; transform:scale(.7); }
+  40% { opacity:1; transform:scale(1.1); }
+  100%{ opacity:1; transform:scale(1); }
 }
 @keyframes toastOut {
-  0%  { opacity:1; transform:translate(-50%,-50%) scale(1); }
-  100%{ opacity:0; transform:translate(-50%,-60%) scale(.9); }
+  0%  { opacity:1; transform:scale(1); }
+  100%{ opacity:0; transform:translateY(-6px) scale(.95); }
 }
 
 .ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; align-items:center; justify-content:center; padding:20px; }
@@ -382,6 +381,8 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     </div>
   </div>
   <div class="hint-box" id="hint-box"></div>
+  <!-- 1画OKトースト（キャンバス外） -->
+  <div id="stroke-toast"></div>
   <!-- キャンバス外の結果表示（星・はなまる） -->
   <div id="result-banner" style="display:none;text-align:center;padding:4px 0 6px;min-height:48px">
     <div id="rb-stars" style="font-size:2rem;letter-spacing:4px"></div>
@@ -399,14 +400,12 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
       <div class="star-row" id="star-row"></div>
       <div class="result-label" id="result-label"></div>
     </div>
-    <!-- 書き終わり演出 -->
+    <!-- 書き終わり演出（パーティクルのみ） -->
     <div id="clear-burst">
       <div id="burst-char"></div>
       <div id="burst-stars"></div>
       <div id="burst-label"></div>
     </div>
-    <!-- 1画OKトースト -->
-    <div id="stroke-toast"></div>
   </div>
   <div class="btn-row">
     <button class="btn-anime" onclick="doAnime()">▶ じゅん</button>
@@ -1349,15 +1348,13 @@ function showStrokeToast(score){
   toast.style.color=color;
   toast.style.borderColor=color;
   toast.style.border=`3px solid ${color}`;
-  // アニメリセット
   toast.style.animation='none';
   void toast.offsetWidth;
-  toast.style.animation='toastIn .3s cubic-bezier(.2,1.4,.4,1) forwards';
-  // 既存タイマーをクリア
+  toast.style.animation='toastIn .25s cubic-bezier(.2,1.4,.4,1) forwards';
   if(toastTimer) clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>{
-    toast.style.animation='toastOut .35s ease forwards';
-  }, 700);
+    toast.style.animation='toastOut .3s ease forwards';
+  }, 650);
 }
 
 // ストロークごとのフィードバック
