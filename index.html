@@ -1327,37 +1327,11 @@ function evalEnd(x,y){
   drawLength=0; lastX=null; lastY=null; userPts=[];
 
   if(ok){
-    // スコアを蓄積
     strokeScores.push(dtwToScore(dtw));
-    // ユーザー線を記録（比較用）
     userDrawRecord.push({pts:[...currentStrokePts]});
     snd('stroke'); currentStroke++; redrawFx();
 
-let toastTimer=null;
-function showStrokeToast(score){
-  const toast=document.getElementById('stroke-toast');
-  if(!toast) return;
-  // スコアに応じてメッセージと色を変える
-  const items=[
-    {min:1.0, text:'✨ かんぺき！', color:'#8B5CF6'},
-    {min:0.67,text:'👍 いいぞ！',  color:'#00D084'},
-    {min:0,   text:'🙆 できたよ！',color:'#F59E0B'},
-  ];
-  const {text,color}=items.find(i=>score>=i.min);
-  toast.textContent=text;
-  toast.style.color=color;
-  toast.style.borderColor=color;
-  toast.style.border=`3px solid ${color}`;
-  toast.style.animation='none';
-  void toast.offsetWidth;
-  toast.style.animation='toastIn .25s cubic-bezier(.2,1.4,.4,1) forwards';
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>{
-    toast.style.animation='toastOut .3s ease forwards';
-  }, 650);
-}
-
-// ストロークごとのフィードバック
+    // ストロークごとのフィードバック
     const score=dtwToScore(dtw);
     showStrokeToast(score);
     if(score>=1.0)      setMsg('✨ かんぺき！','#8B5CF6');
@@ -1373,6 +1347,30 @@ function showStrokeToast(score){
     else setMsg('おしい！ ここを みてね！','#EF4444');
     showHint(currentStroke);
   }
+}
+
+// ============================================================
+// 1画OKトースト
+// ============================================================
+let toastTimer=null;
+function showStrokeToast(score){
+  const toast=document.getElementById('stroke-toast');
+  if(!toast) return;
+  const items=[
+    {min:1.0, text:'✨ かんぺき！', color:'#8B5CF6'},
+    {min:0.67,text:'👍 いいぞ！',  color:'#00D084'},
+    {min:0,   text:'🙆 できたよ！',color:'#F59E0B'},
+  ];
+  const {text,color}=items.find(i=>score>=i.min);
+  toast.textContent=text;
+  toast.style.color=color;
+  toast.style.animation='none';
+  void toast.offsetWidth;
+  toast.style.animation='toastIn .25s cubic-bezier(.2,1.4,.4,1) forwards';
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{
+    toast.style.animation='toastOut .3s ease forwards';
+  }, 650);
 }
 
 // ============================================================
