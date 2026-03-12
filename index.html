@@ -471,9 +471,12 @@ function initCanvas(){
 
   const drC=document.getElementById('canvas-dr');
   drC.onpointerdown=e=>{
-    if(animating||currentStroke>=strokes.length)return;
+    if(animating)return;
     const{x,y}=getXY(e,drC);
-    if(!checkStart(x,y))return; // 始点が外れていたら無視
+    // strokesがある場合は始点チェック（外れていたら無視）
+    if(strokes.length && currentStroke<strokes.length){
+      if(!checkStart(x,y))return;
+    }
     drawing=true; drawLength=0; lastX=x; lastY=y;
     ctxDr.beginPath(); ctxDr.moveTo(x,y);
   };
@@ -605,7 +608,15 @@ function trackDraw(x,y){
 }
 
 function evalEnd(x,y){
-  if(!strokes.length||currentStroke>=strokes.length)return;
+  ctxDr.clearRect(0,0,cW,cW);
+  // strokesがない（KanjiVGデータなし）→ 判定スキップして次へ
+  if(!strokes.length){
+    snd('stroke');
+    setMsg('かけたね！','#00D084');
+    onComplete();
+    return;
+  }
+  if(currentStroke>=strokes.length)return;
   const{end,len}=getScaledEndPoints(strokes[currentStroke]);
   const THR=cW*TOLERANCE_RATIO;
   const dE=Math.hypot(x-end.x, y-end.y);
