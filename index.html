@@ -237,6 +237,18 @@ body { font-family:'Klee One','Hiragino Rounded Gothic Pro','BIZ UDPGothic',curs
 }
 .msg.shake { animation:shake .4s ease; }
 
+/* ===== 紙吹雪コンフェッティ ===== */
+.confetti-piece {
+  position:fixed; top:-20px; width:10px; height:10px;
+  z-index:9999; pointer-events:none; border-radius:2px;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall {
+  0%   { transform:translateY(0) rotate(0deg) scaleX(1);   opacity:1; }
+  50%  { transform:translateY(50vh) rotate(360deg) scaleX(-1); opacity:1; }
+  100% { transform:translateY(105vh) rotate(720deg) scaleX(1); opacity:0; }
+}
+
 /* ===== 1画OK トースト ===== */
 #stroke-toast {
   display:block; width:100%; text-align:center;
@@ -956,6 +968,17 @@ async function loadQ(){
   updateRegBtns();
   initCanvas();
   await loadKanjiVG(curQ.char);
+  // 次の文字をバックグラウンドでプリフェッチ
+  if(qIdx+1 < queue.length){
+    const nextChar=queue[qIdx+1].char;
+    const nextHex=nextChar.codePointAt(0).toString(16).padStart(5,'0');
+    if(!svgCache[nextHex]){
+      fetch(`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${nextHex}.svg`)
+        .then(r=>r.ok?r.text():null)
+        .then(t=>{ if(t) svgCache[nextHex]=t; })
+        .catch(()=>{});
+    }
+  }
 }
 
 // ============================================================
@@ -1750,6 +1773,25 @@ function hideResultBanner(){
   rb.style.display='none';
 }
 
+function showConfetti(count=45){
+  const colors=['#FF6B9D','#00D084','#F59E0B','#8B5CF6','#3B82F6','#EC4899','#FFD700'];
+  for(let i=0;i<count;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+      const dur=(Math.random()*1.5+1.2).toFixed(2);
+      el.style.animationDuration=dur+'s';
+      el.style.animationDelay='0s';
+      if(Math.random()>.5) el.style.borderRadius='50%';
+      el.style.width=el.style.height=(Math.random()*8+6)+'px';
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), (parseFloat(dur)+0.5)*1000);
+    }, Math.random()*300);
+  }
+}
+
 function onComplete(){
   snd('complete');
   stopStartDot();
@@ -1760,11 +1802,14 @@ function onComplete(){
   const newLv=getXP().lv;
 
   const stars=calcStars();
+
+  // 星3→派手に、星2→普通、星1→少なめ
+  showConfetti(stars===3?60:stars===2?35:15);
   if(stars===3) setTimeout(()=>snd('levelup'),100);
 
-  // パーティクル爆発
+  // キャンバスパーティクル
   showClearBurst(stars);
-  // キャンバス外（上）に星表示
+  // キャンバス外に星表示
   showResultBanner(stars);
 
   // レベルアップがあればポップアップ
@@ -1777,8 +1822,8 @@ function onComplete(){
     return;
   }
 
-  // 0.8秒後に自動で次へ
-  setTimeout(()=>doNext(), 800);
+  // 1秒後に自動で次へ
+  setTimeout(()=>doNext(), 1000);
 }
 
 function doNext(){
