@@ -360,7 +360,10 @@ function renderKanaGrid(){
     card.appendChild(t);
     card.onclick=()=>{
       snd('click'); curMode=listMode;
-      queue=[w]; qIdx=0; isRandom=false;
+      const startIdx=KANA_WORDS[curGroup].indexOf(w);
+      // タップした文字から最後まで順番にqueueに入れる
+      queue=KANA_WORDS[curGroup].slice(startIdx);
+      qIdx=0; isRandom=false;
       showScreen('scr-game'); loadQ();
     };
     grid.appendChild(card);
@@ -441,7 +444,7 @@ let ctxBg,ctxFx,ctxDr,cW=0;
 let strokes=[],currentStroke=0;         // KanjiVGのpathd文字列配列
 let drawing=false,animating=false;
 let drawLength=0,lastX=null,lastY=null; // 描画距離管理
-const TOLERANCE_RATIO=0.10;             // canvas幅に対する割合（固定px→比率に）
+const TOLERANCE_RATIO=0.18;             // canvas幅に対する割合（固定px→比率に）
 
 function initCanvas(){
   const cont=document.getElementById('canvas-container');
@@ -530,7 +533,7 @@ async function loadKanjiVG(char){
     // ② 薄い字をSVG Blob→Imageで描画（れんしゅうモードのみ）
     if(isPrac){
       let styled=svgText.replace('</svg>',`<style>
-        path { stroke:#E2E8F0 !important; stroke-width:6 !important; fill:none !important; }
+        path { stroke:#E2E8F0 !important; stroke-width:10 !important; fill:none !important; }
         text { fill:#94A3B8 !important; font-size:8px !important; font-family:sans-serif; }
       </style></svg>`);
       const blob=new Blob([styled],{type:'image/svg+xml;charset=utf-8'});
@@ -608,7 +611,7 @@ function evalEnd(x,y){
   const dE=Math.hypot(x-end.x, y-end.y);
   ctxDr.clearRect(0,0,cW,cW);
 
-  if(dE<THR && drawLength>len*0.4){
+  if(dE<THR && drawLength>len*0.25){
     // 正解
     snd('stroke');
     currentStroke++;
@@ -724,7 +727,12 @@ function doNext(){
   if(qIdx<queue.length) loadQ();
   else{
     if(isRandom){bonXP+=10; save(); showOv('ov-rc');}
-    else{snd('levelup'); alert('ぜんぶ おわったよ！🌸'); goTitle();}
+    else{
+      snd('levelup');
+      // カード一覧から来た場合はそこへ戻る、それ以外はタイトルへ
+      if(curMode==='tokkun'||curMode==='nigate') goTitle();
+      else{ renderKanaGrid(); showScreen('scr-list'); }
+    }
   }
 }
 
