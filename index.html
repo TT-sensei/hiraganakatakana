@@ -382,6 +382,11 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     </div>
   </div>
   <div class="hint-box" id="hint-box"></div>
+  <!-- キャンバス外の結果表示（星・はなまる） -->
+  <div id="result-banner" style="display:none;text-align:center;padding:4px 0 6px;min-height:48px">
+    <div id="rb-stars" style="font-size:2rem;letter-spacing:4px"></div>
+    <div id="rb-label" style="font-size:1rem;font-weight:900;margin-top:1px"></div>
+  </div>
   <div class="msg" id="msg">うすいせんを なぞろう！</div>
   <div class="canvas-container" id="canvas-container">
     <canvas id="canvas-bg"></canvas>
@@ -716,7 +721,7 @@ function updateDailyBanner(){
     banner.classList.add('done');
     icon.textContent='✅';
     title.textContent='きょうのれんしゅう かんりょう！';
-    sub.textContent='また あした ね！';
+    sub.textContent='もう一度タップ → くりかえし練習！';
   } else {
     banner.classList.remove('done');
     icon.textContent='🌅';
@@ -772,7 +777,13 @@ function updateGroupSel(){
 // デイリー・SRS 起動
 // ============================================================
 function startDaily(){
-  if(dailyState.completed){ return; }
+  initDaily();
+  // 完了済みならもう一周（doneをリセット）
+  if(dailyState.completed){
+    dailyState.done=[];
+    dailyState.completed=false;
+    save();
+  }
   snd('click');
   const words=getDailyWords();
   if(!words.length){ return; }
@@ -921,6 +932,7 @@ async function loadQ(){
   pendingSRSRating=false;
   resetStrokeScores();
   userDrawRecord=[]; currentStrokePts=[];
+  hideResultBanner();
   document.getElementById('srs-rating').classList.remove('show');
   document.getElementById('star-result').classList.remove('show');
   document.getElementById('hanamaru-layer').innerHTML='';
@@ -1706,15 +1718,15 @@ function drawHanamaru(){
 // ============================================================
 // ★ 書き終わり演出：キャンバス上にドカン
 // ============================================================
-function showClearBurst(stars, char, callback){
+function showClearBurst(stars, char){
   const burst=document.getElementById('clear-burst');
-  const bc   =document.getElementById('burst-char');
-  const bs   =document.getElementById('burst-stars');
-  const bl   =document.getElementById('burst-label');
+  const bc=document.getElementById('burst-char');
+  const bs=document.getElementById('burst-stars');
+  const bl=document.getElementById('burst-label');
 
   const msgs  =['','クリア！','すごい！','はなまる！'];
   const colors=['','#F59E0B','#3B82F6','#EC4899'];
-  const bgs   =['',
+  const bgs=['',
     'radial-gradient(ellipse at center,rgba(255,248,220,.92),rgba(255,248,220,.7))',
     'radial-gradient(ellipse at center,rgba(219,234,254,.92),rgba(219,234,254,.7))',
     'radial-gradient(ellipse at center,rgba(255,236,248,.95),rgba(255,236,248,.75))',
@@ -1728,7 +1740,6 @@ function showClearBurst(stars, char, callback){
   burst.style.background=bgs[stars];
   burst.style.borderRadius='16px';
 
-  // アニメリセット→再生
   burst.className='';
   void burst.offsetWidth;
   burst.classList.add('show');
@@ -1739,21 +1750,41 @@ function showClearBurst(stars, char, callback){
   for(let i=0;i<count;i++){
     setTimeout(()=>{
       const angle=Math.random()*Math.PI*2;
-      const dist=cW*(0.1+Math.random()*0.35);
-      addSparkle(cx+Math.cos(angle)*dist*0.3, cy+Math.sin(angle)*dist*0.3);
+      addSparkle(cx+Math.cos(angle)*0.3*cW*(0.1+Math.random()*0.35),
+                 cy+Math.sin(angle)*0.3*cW*(0.1+Math.random()*0.35));
       if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}
     },i*30);
   }
 
-  // 0.9秒後にフェードアウト→callback
+  // 0.8秒後フェードアウト
   setTimeout(()=>{
     burst.classList.remove('show');
     burst.classList.add('hide');
-    setTimeout(()=>{
-      burst.className='';
-      if(callback) callback();
-    }, 400);
-  }, 900);
+    setTimeout(()=>{ burst.className=''; },400);
+  }, 800);
+}
+
+// キャンバス外（上部）に星とはなまるを表示
+function showResultBanner(stars){
+  const rb=document.getElementById('result-banner');
+  const rs=document.getElementById('rb-stars');
+  const rl=document.getElementById('rb-label');
+  const msgs  =['','クリア！','すごい！','はなまる！🌸'];
+  const colors=['','#F59E0B','#3B82F6','#EC4899'];
+
+  rs.textContent='⭐'.repeat(stars);
+  rl.textContent=msgs[stars];
+  rl.style.color=colors[stars];
+
+  rb.style.display='block';
+  rb.style.animation='none';
+  void rb.offsetWidth;
+  rb.style.animation='pop .35s cubic-bezier(.2,1.4,.4,1) forwards';
+}
+
+function hideResultBanner(){
+  const rb=document.getElementById('result-banner');
+  rb.style.display='none';
 }
 
 function onComplete(){
@@ -1768,49 +1799,23 @@ function onComplete(){
   const stars=calcStars();
   if(stars===3) setTimeout(()=>snd('levelup'),100);
 
-  // キャンバス上演出 → 終わったらポップアップ
-  showClearBurst(stars, curQ.char, ()=>{
-    // ov-okポップアップを設定
-    const msgs  =['','クリア！','すごい！','はなまる！'];
-    const colors=['','#F59E0B','#3B82F6','#EC4899'];
-    const submsg=['','もっとれんしゅうしよう','じょうずだよ！','かんぺき！🌸'];
+  // キャンバス上にドカン
+  showClearBurst(stars, curQ.char);
+  // キャンバス外（上）に星表示
+  showResultBanner(stars);
 
-    document.getElementById('ov-stars').textContent='⭐'.repeat(stars);
-    document.getElementById('ov-msg').textContent=msgs[stars];
-    document.getElementById('ov-msg').style.color=colors[stars];
-    document.getElementById('ov-submsg').textContent=submsg[stars];
+  // レベルアップがあればポップアップ
+  if(newLv>oldLv){
+    setTimeout(()=>{
+      document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
+      document.getElementById('lv-num').textContent=newLv;
+      showOv('ov-lv');
+    },1000);
+    return; // レベルアップ後はcloseLv()→doNext()へ
+  }
 
-    const hm=document.getElementById('ov-hanamaru');
-    hm.style.display=stars===3?'block':'none';
-    if(stars===3){
-      const circle=hm.querySelector('circle');
-      circle.style.animation='none';
-      void circle.offsetWidth;
-      circle.style.animation='hanamaru 0.7s cubic-bezier(.4,0,.2,1) forwards';
-    }
-
-    const card=document.getElementById('ov-ok-card');
-    card.style.background=stars===3?'linear-gradient(160deg,#fff0f9,#fff)':'white';
-
-    const srsRating=document.getElementById('srs-rating');
-    if(curMode==='srs'||curMode==='daily'||curMode==='practice'){
-      if(!card.contains(srsRating)) card.appendChild(srsRating);
-      srsRating.classList.add('show');
-      pendingSRSRating=true;
-    } else {
-      srsRating.classList.remove('show');
-    }
-
-    showOv('ov-ok');
-    if(newLv>oldLv){
-      setTimeout(()=>{
-        closeOv('ov-ok');
-        document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
-        document.getElementById('lv-num').textContent=newLv;
-        showOv('ov-lv');
-      },1200);
-    }
-  });
+  // 1.2秒後に自動で次へ
+  setTimeout(()=>doNext(), 1200);
 }
 
 function doNext(){
@@ -1856,6 +1861,7 @@ function doRetry(){
   document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('canvas-ov').style.opacity='0';
   document.getElementById('canvas-fx').style.opacity='1';
+  hideResultBanner();
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const isTest=(curMode==='test');
   setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！', isTest?'#FF6B9D':'#00D084');
