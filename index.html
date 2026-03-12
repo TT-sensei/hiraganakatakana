@@ -235,6 +235,27 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 }
 .msg.shake { animation:shake .4s ease; }
 
+/* ===== 1画OK トースト ===== */
+#stroke-toast {
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:white; border-radius:99px;
+  padding:10px 28px; white-space:nowrap;
+  font-size:1.4rem; font-weight:900;
+  box-shadow:0 6px 24px rgba(0,0,0,.18);
+  pointer-events:none; z-index:30; opacity:0;
+}
+@keyframes toastIn {
+  0%  { transform:translate(-50%,-50%) scale(0); opacity:0; }
+  40% { transform:translate(-50%,-50%) scale(1.12); opacity:1; }
+  70% { transform:translate(-50%,-50%) scale(.97); opacity:1; }
+  100%{ transform:translate(-50%,-50%) scale(1); opacity:1; }
+}
+@keyframes toastOut {
+  0%  { opacity:1; transform:translate(-50%,-50%) scale(1); }
+  100%{ opacity:0; transform:translate(-50%,-60%) scale(.9); }
+}
+
 .ov { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; align-items:center; justify-content:center; padding:20px; }
 .ov.show { display:flex; }
 .ov-card { background:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
@@ -246,6 +267,18 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .lv-card { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
 .rc-card { background:linear-gradient(135deg,#f093fb,#f5576c); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
 .daily-card { background:linear-gradient(135deg,#F59E0B,#F97316); color:white; border-radius:24px; padding:28px 22px; text-align:center; width:100%; max-width:300px; }
+
+/* デイリー種類選択 */
+.daily-kind-row { display:flex; gap:6px; margin:-6px 0 12px; }
+.dk-btn {
+  flex:1; padding:7px 4px; border-radius:99px; border:2px solid #E5E7EB;
+  background:white; font-size:.78rem; font-weight:900; color:#aaa; cursor:pointer;
+  transition:all .15s;
+}
+.dk-btn:active { transform:scale(.95); }
+.dk-btn.sel-hira { border-color:#FF6B9D; background:#FFF0F6; color:#FF6B9D; }
+.dk-btn.sel-kata { border-color:#3B82F6; background:#EFF6FF; color:#3B82F6; }
+.dk-btn.sel-both { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
 
 /* デイリー完了画面パーティクル */
 .confetti-wrap { font-size:2rem; letter-spacing:4px; margin:8px 0; }
@@ -266,6 +299,12 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
       <div class="daily-sub"  id="daily-sub">まいにちれんしゅうしよう！</div>
     </div>
     <div class="streak-pill" id="streak-pill">🔥 <span id="streak-num">0</span>にち</div>
+  </div>
+  <!-- デイリー種類選択 -->
+  <div class="daily-kind-row">
+    <button class="dk-btn" id="dk-hira" onclick="setDailyKind('hira',event)">🌸 ひらがな</button>
+    <button class="dk-btn" id="dk-kata" onclick="setDailyKind('kata',event)">🔷 カタカナ</button>
+    <button class="dk-btn" id="dk-both" onclick="setDailyKind('both',event)">✨ どちらも</button>
   </div>
 
   <!-- SRS復習バナー（復習がある日だけ表示） -->
@@ -361,6 +400,8 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
       <div id="burst-stars"></div>
       <div id="burst-label"></div>
     </div>
+    <!-- 1画OKトースト -->
+    <div id="stroke-toast"></div>
   </div>
   <div class="btn-row">
     <button class="btn-anime" onclick="doAnime()">▶ じゅん</button>
@@ -525,6 +566,7 @@ let srsData  = JSON.parse(localStorage.getItem('km_srs'))    ||{};
 let dailyState = JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],done:[],completed:false};
 let streak     = parseInt(localStorage.getItem('km_streak')) ||0;
 let lastStreakDate = localStorage.getItem('km_streakdate')   ||'';
+let dailyKind  = localStorage.getItem('km_dailykind')       ||'hira'; // 'hira'|'kata'|'both'
 
 function save(){
   localStorage.setItem('km_cleared', JSON.stringify(cleared));
@@ -536,6 +578,7 @@ function save(){
   localStorage.setItem('km_daily',   JSON.stringify(dailyState));
   localStorage.setItem('km_streak',  streak);
   localStorage.setItem('km_streakdate', lastStreakDate);
+  localStorage.setItem('km_dailykind', dailyKind);
 }
 
 // ============================================================
@@ -600,18 +643,27 @@ function initDaily(){
     if(lastStreakDate!==yesterday) streak=0;
   }
 
+  // kindに応じた対象単語を絞り込む
+  const kindGroups={
+    hira:['h1','h2'],
+    kata:['k1','k2'],
+    both:['h1','h2','k1','k2'],
+  };
+  const targetGroups=kindGroups[dailyKind]||kindGroups.hira;
+  const TARGET_WORDS=targetGroups.flatMap(g=>KANA_WORDS[g]);
+
   // 今日の5問を選出：SRS期限切れ優先 → 未習得 → ランダム
-  const due=getDueChars();
+  const due=getDueChars().filter(w=>TARGET_WORDS.find(t=>t.char===w.char));
   let pool=[];
   if(due.length>=DAILY_COUNT){
     pool=due.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT);
   } else {
     pool=[...due];
-    const unlearned=ALL_WORDS.filter(w=>!cleared[w.char]&&!pool.find(p=>p.char===w.char));
+    const unlearned=TARGET_WORDS.filter(w=>!cleared[w.char]&&!pool.find(p=>p.char===w.char));
     const needed=DAILY_COUNT-pool.length;
     pool=[...pool, ...unlearned.sort(()=>Math.random()-.5).slice(0,needed)];
     if(pool.length<DAILY_COUNT){
-      const rest=ALL_WORDS.filter(w=>!pool.find(p=>p.char===w.char));
+      const rest=TARGET_WORDS.filter(w=>!pool.find(p=>p.char===w.char));
       pool=[...pool,...rest.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];
     }
   }
@@ -625,6 +677,25 @@ function getDailyWords(){
     .filter(c=>!dailyState.done.includes(c))
     .map(c=>ALL_WORDS.find(w=>w.char===c))
     .filter(Boolean);
+}
+
+function setDailyKind(kind, e){
+  e.stopPropagation(); // バナーのonclickを止める
+  if(dailyKind===kind) return;
+  dailyKind=kind;
+  // 種類が変わったら今日分をリセット（再選出）
+  dailyState={date:'',chars:[],done:[],completed:false};
+  save();
+  updateTitle(); // バナー・ピル両方更新
+}
+
+function updateDailyKindBtns(){
+  const map={hira:'sel-hira', kata:'sel-kata', both:'sel-both'};
+  ['hira','kata','both'].forEach(k=>{
+    const btn=document.getElementById('dk-'+k);
+    if(!btn) return;
+    btn.className='dk-btn'+(dailyKind===k?' '+map[k]:'');
+  });
 }
 
 function updateDailyBanner(){
@@ -654,6 +725,7 @@ function updateDailyBanner(){
   }
 
   // SRS復習バナー
+  updateDailyKindBtns();
   const dueList=getDueChars();
   const srsBanner=document.getElementById('srs-banner');
   if(dueList.length>0 && !completed){
@@ -1250,8 +1322,35 @@ function evalEnd(x,y){
     userDrawRecord.push({pts:[...currentStrokePts]});
     snd('stroke'); currentStroke++; redrawFx();
 
-    // ストロークごとのフィードバック
+let toastTimer=null;
+function showStrokeToast(score){
+  const toast=document.getElementById('stroke-toast');
+  if(!toast) return;
+  // スコアに応じてメッセージと色を変える
+  const items=[
+    {min:1.0, text:'✨ かんぺき！', color:'#8B5CF6'},
+    {min:0.67,text:'👍 いいぞ！',  color:'#00D084'},
+    {min:0,   text:'🙆 できたよ！',color:'#F59E0B'},
+  ];
+  const {text,color}=items.find(i=>score>=i.min);
+  toast.textContent=text;
+  toast.style.color=color;
+  toast.style.borderColor=color;
+  toast.style.border=`3px solid ${color}`;
+  // アニメリセット
+  toast.style.animation='none';
+  void toast.offsetWidth;
+  toast.style.animation='toastIn .3s cubic-bezier(.2,1.4,.4,1) forwards';
+  // 既存タイマーをクリア
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{
+    toast.style.animation='toastOut .35s ease forwards';
+  }, 700);
+}
+
+// ストロークごとのフィードバック
     const score=dtwToScore(dtw);
+    showStrokeToast(score);
     if(score>=1.0)      setMsg('✨ かんぺき！','#8B5CF6');
     else if(score>=0.67) setMsg('👍 いいぞ！','#00D084');
     else                 setMsg('🙆 まあまあ！','#F59E0B');
