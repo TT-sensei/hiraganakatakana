@@ -136,6 +136,14 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 .btn-next:active  { transform:translateY(4px); box-shadow:none; }
 .btn-retry { flex:1; padding:14px; background:white; color:#888; border:2px solid #ddd; border-radius:12px; font-size:.9rem; font-weight:bold; cursor:pointer; }
 .btn-anime { flex:1; padding:14px; background:white; color:#3B82F6; border:2px solid #3B82F6; border-radius:12px; font-size:.82rem; font-weight:bold; cursor:pointer; }
+.btn-reg {
+  flex:1; padding:9px 4px; background:white; border:2px solid #E5E7EB;
+  border-radius:10px; font-size:.78rem; font-weight:700; color:#aaa; cursor:pointer;
+  transition:all .15s;
+}
+.btn-reg:active { transform:scale(.95); }
+.btn-reg.on-tokk { border-color:#8B5CF6; background:#F5F3FF; color:#8B5CF6; }
+.btn-reg.on-niga { border-color:#00D084; background:#F0FDF4; color:#16A34A; }
 
 /* SRS評価ボタン（正解後） */
 .srs-rating {
@@ -323,6 +331,10 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     <button class="btn-retry" onclick="doRetry()">↺ やりなおし</button>
     <button class="btn-next"  onclick="doNext()">つぎへ →</button>
   </div>
+  <div class="btn-row" style="margin-top:8px">
+    <button class="btn-reg" id="btn-tokk" onclick="toggleTokk()">🏅 とっくん</button>
+    <button class="btn-reg" id="btn-niga" onclick="toggleNiga()">🐢 にがて</button>
+  </div>
   <!-- SRS評価ボタン（正解後に表示） -->
   <div class="srs-rating" id="srs-rating">
     <div style="font-size:.72rem;font-weight:700;color:#aaa;text-align:center;width:100%;margin-bottom:-4px">どのくらい かんたんだった？</div>
@@ -334,9 +346,20 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
 
 <!-- 正解 -->
 <div class="ov" id="ov-ok">
-  <div class="ov-card">
-    <div style="font-size:2.8rem;margin-bottom:6px" id="ov-icon">⭐</div>
-    <div class="ov-msg" id="ov-msg">できたー！</div>
+  <div class="ov-card" id="ov-ok-card">
+    <!-- 星エリア -->
+    <div id="ov-stars" style="font-size:2.6rem;letter-spacing:4px;margin-bottom:4px;min-height:2.8rem"></div>
+    <!-- はなまるSVG -->
+    <div id="ov-hanamaru" style="display:none;margin:-8px auto -4px">
+      <svg viewBox="0 0 80 80" width="80" height="80">
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#EC4899" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201"
+          style="transform-origin:50% 50%;transform:rotate(-90deg);
+                 animation:hanamaru 0.7s cubic-bezier(.4,0,.2,1) forwards"/>
+      </svg>
+    </div>
+    <div class="ov-msg" id="ov-msg" style="font-size:1.5rem">できたー！</div>
+    <div id="ov-submsg" style="font-size:.8rem;color:#aaa;margin:-8px 0 10px"></div>
     <div class="ov-btns">
       <button class="ob grn" onclick="closeOvNext()">つぎへ →</button>
       <button class="ob gry" onclick="closeOvRetry()">もういっかい</button>
@@ -811,6 +834,7 @@ async function loadQ(){
   const msg=document.getElementById('msg');
   msg.textContent=isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！';
   msg.style.color=isTest?'#FF6B9D':'#00D084';
+  updateRegBtns();
   initCanvas();
   await loadKanjiVG(curQ.char);
 }
@@ -823,7 +847,7 @@ let strokes=[],currentStroke=0;
 let drawing=false,animating=false;
 let drawLength=0,lastX=null,lastY=null;
 let userPts=[];
-const TOLERANCE_RATIO=0.18;
+const TOLERANCE_RATIO=0.28; // 始点の許容範囲（キャンバス幅の28%）
 
 function initCanvas(){
   const cont=document.getElementById('canvas-container');
@@ -1114,10 +1138,9 @@ function resetStrokeScores(){ strokeScores=[]; }
 
 // DTW距離をスコア(0〜1)に変換：距離が小さいほど高スコア
 function dtwToScore(dtw){
-  // DTW_THR(cW*0.22)が0点、0が満点
-  const perfect=cW*0.06;  // これ以下なら★★★
-  const good   =cW*0.13;  // これ以下なら★★
-  const ok     =cW*0.22;  // これ以下なら★
+  const perfect=cW*0.10;  // ★★★（かんぺき）
+  const good   =cW*0.20;  // ★★（すごい）
+  const ok     =cW*0.32;  // ★（クリア）
   if(dtw<=perfect) return 1.0;
   if(dtw<=good)    return 0.67;
   if(dtw<=ok)      return 0.33;
@@ -1177,9 +1200,10 @@ function evalEnd(x,y){
   const endRef=getStrokeEnd(pathStr);
   const endDist=Math.hypot(x-endRef.x, y-endRef.y);
 
-  const DTW_THR=cW*0.22;
-  const END_THR=cW*TOLERANCE_RATIO*1.5;
-  const ok=dtw<DTW_THR && (endDist<END_THR || dtw<DTW_THR*0.7);
+  // 子ども向けに広めの閾値。終点は参考程度（ORで判定）
+  const DTW_THR=cW*0.32;
+  const END_THR=cW*TOLERANCE_RATIO*2.0;
+  const ok=dtw<DTW_THR;
 
   drawLength=0; lastX=null; lastY=null; userPts=[];
 
@@ -1425,6 +1449,35 @@ async function doAnime(){
 }
 
 // ============================================================
+// とっくん・にがて 登録トグル
+// ============================================================
+function toggleTokk(){
+  if(!curQ) return;
+  snd('click');
+  const ch=curQ.char;
+  if(tokk[ch]) delete tokk[ch]; else tokk[ch]=true;
+  save(); updateRegBtns();
+}
+function toggleNiga(){
+  if(!curQ) return;
+  snd('click');
+  const ch=curQ.char;
+  if(niga[ch]) delete niga[ch]; else niga[ch]=true;
+  save(); updateRegBtns();
+}
+function updateRegBtns(){
+  if(!curQ) return;
+  const ch=curQ.char;
+  const bt=document.getElementById('btn-tokk');
+  const bn=document.getElementById('btn-niga');
+  if(!bt||!bn) return;
+  bt.className='btn-reg'+(tokk[ch]?' on-tokk':'');
+  bt.textContent=tokk[ch]?'🏅 とっくん ✓':'🏅 とっくん';
+  bn.className='btn-reg'+(niga[ch]?' on-niga':'');
+  bn.textContent=niga[ch]?'🐢 にがて ✓':'🐢 にがて';
+}
+
+// ============================================================
 // ★ SRS評価
 // ============================================================
 function rateSRS(rating){
@@ -1524,38 +1577,45 @@ function onComplete(){
   save();
   const newLv=getXP().lv;
 
-  // ★ はなまる評価を表示
   const stars=calcStars();
-  showStarResult(stars);
 
   // 星3特別サウンド
   if(stars===3) setTimeout(()=>snd('levelup'),100);
 
-  // ③ 書き終わり比較（少し遅らせてはなまると重ねる）
-  setTimeout(()=>showOverlayComparison(), 400);
+  // ov-okポップアップを星に応じて設定
+  const msgs  =['','クリア！','すごい！','はなまる！'];
+  const colors=['','#F59E0B','#3B82F6','#EC4899'];
+  const submsg=['','もっとれんしゅうしよう','じょうずだよ！','かんぺき！🌸'];
 
-  // SRS/デイリーモードでは完了後にSRS評価を表示
-  if(curMode==='srs'||curMode==='daily'||curMode==='practice'){
-    setTimeout(()=>{
-      document.getElementById('srs-rating').classList.add('show');
-      pendingSRSRating=true;
-      const labels=['','クリア！', 'すごい！', 'はなまる！ 🌸'];
-      setMsg(labels[stars]+' どのくらい かんたんだった？','#FF6B9D');
-    }, 800);
-    if(newLv>oldLv){
-      setTimeout(()=>{
-        document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
-        document.getElementById('lv-num').textContent=newLv;
-        showOv('ov-lv');
-      },1200);
-    }
-    return;
+  document.getElementById('ov-stars').textContent='⭐'.repeat(stars);
+  document.getElementById('ov-msg').textContent=msgs[stars];
+  document.getElementById('ov-msg').style.color=colors[stars];
+  document.getElementById('ov-submsg').textContent=submsg[stars];
+
+  // はなまる（★3）のみ丸アニメを表示
+  const hm=document.getElementById('ov-hanamaru');
+  hm.style.display=stars===3?'block':'none';
+  if(stars===3){
+    const circle=hm.querySelector('circle');
+    circle.style.animation='none';
+    void circle.offsetWidth;
+    circle.style.animation='hanamaru 0.7s cubic-bezier(.4,0,.2,1) forwards';
   }
 
-  const icons=['','⭐','⭐⭐','🌸'];
-  const msgs =['','できたー！','すごい！','はなまる！'];
-  document.getElementById('ov-icon').textContent=icons[stars];
-  document.getElementById('ov-msg').textContent =msgs[stars];
+  // カード背景
+  const card=document.getElementById('ov-ok-card');
+  card.style.background=stars===3?'linear-gradient(160deg,#fff0f9,#fff)':'white';
+
+  // SRS評価をポップアップ内に表示
+  const srsRating=document.getElementById('srs-rating');
+  if(curMode==='srs'||curMode==='daily'||curMode==='practice'){
+    if(!card.contains(srsRating)) card.appendChild(srsRating);
+    srsRating.classList.add('show');
+    pendingSRSRating=true;
+  } else {
+    srsRating.classList.remove('show');
+  }
+
   setTimeout(()=>{
     showOv('ov-ok');
     if(newLv>oldLv){
@@ -1564,9 +1624,9 @@ function onComplete(){
         document.getElementById('lv-mascot').textContent=getTitle(newLv).m;
         document.getElementById('lv-num').textContent=newLv;
         showOv('ov-lv');
-      },600);
+      },1200);
     }
-  },900);
+  }, 300);
 }
 
 function doNext(){
@@ -1619,8 +1679,21 @@ function doRetry(){
   if(strokes.length) startStartDot();
 }
 
-function closeOvNext()  {closeOv('ov-ok'); if(!pendingSRSRating)doNext();}
-function closeOvRetry() {closeOv('ov-ok'); doRetry();}
+function closeOvNext()  {
+  // srs-ratingを元の場所（scr-game）に戻す
+  const srsRating=document.getElementById('srs-rating');
+  const gameScreen=document.getElementById('scr-game');
+  if(!gameScreen.contains(srsRating)) gameScreen.appendChild(srsRating);
+  closeOv('ov-ok');
+  if(!pendingSRSRating)doNext();
+}
+function closeOvRetry() {
+  const srsRating=document.getElementById('srs-rating');
+  const gameScreen=document.getElementById('scr-game');
+  if(!gameScreen.contains(srsRating)) gameScreen.appendChild(srsRating);
+  closeOv('ov-ok');
+  doRetry();
+}
 function closeLv()      {closeOv('ov-lv'); if(!pendingSRSRating)doNext();}
 function closeRc()      {closeOv('ov-rc'); goTitle();}
 function closeDailyOv() {closeOv('ov-daily'); goTitle();}
