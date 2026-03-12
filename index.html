@@ -40,6 +40,15 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
   vertical-align: middle; margin-left: 6px;
 }
 .btn-sound:active { transform: scale(.9); background: #FFF0F6; }
+
+#guideLayer {
+  position:absolute; left:0; top:0; width:100%; height:100%;
+  pointer-events:none;
+}
+#guideLayer path {
+  fill:none; stroke:#E2E8F0; stroke-width:14;
+}
+
 .reset-btn { display:block; background:none; border:none; color:#ccc; font-size:.72rem; cursor:pointer; margin:10px auto 0; text-align:center; }
 
 /* カード一覧 */
@@ -164,6 +173,7 @@ body { font-family:'Hiragino Rounded Gothic Pro','ヒラギノ丸ゴ Pro','BIZ U
     <canvas id="canvas-bg"></canvas>
     <canvas id="canvas-fx"></canvas>
     <canvas id="canvas-dr"></canvas>
+    <div id="guideLayer"></div>
   </div>
   <div class="btn-row">
     <button class="btn-anime" onclick="doAnime()">▶ じゅん</button>
@@ -430,7 +440,7 @@ async function loadQ(){
     const wHTML=[...curQ.word].map((c,i)=>
       i===curQ.pos ? `<span class="hint-blank">＿</span>` : `<span class="hint-char">${c}</span>`
     ).join('');
-    hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div><div class="hint-word">${wHTML}<button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button></div>`;
+    hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div><div class="hint-word">${wHTML}<button class="btn-sound" onclick="speak('${curQ.word}')">🔊</button></div>`;
   }else{
     hintEl.innerHTML=`<div class="hint-emoji">${curQ.emoji}</div>
       <div class="hint-word">
@@ -490,6 +500,8 @@ function initCanvas(){
       if(!checkStart(x,y))return;
     }
     drawing=true; drawLength=0; lastX=x; lastY=y; userPts=[{x,y}];
+    // なぞり開始したらSVGアニメレイヤーをクリア
+    document.getElementById('guideLayer').innerHTML='';
     ctxDr.beginPath(); ctxDr.moveTo(x,y);
   };
   drC.onpointermove=e=>{
@@ -502,8 +514,7 @@ function initCanvas(){
     ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
     ctxDr.stroke();
     // キラキラ（間引きで処理軽く）
-    if(userPts.length%4===0) addSparkle(x,y);
-    drawSparkles();
+    if(userPts.length%4===0){ addSparkle(x,y); if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();} }
   };
   drC.onpointerup=e=>{
     if(!drawing)return; drawing=false;
@@ -525,6 +536,38 @@ function getXY(e,canvas){
 }
 
 // ============================================================
+// SVGアニメーション（guideLayerに1画ずつ描く）
+// ============================================================
+async function animateGuide(svgText){
+  const layer=document.getElementById('guideLayer');
+  layer.innerHTML='';
+
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(svgText,'image/svg+xml');
+  const strokeGroup=doc.querySelector('[id^="kvg:StrokePaths"]');
+  if(!strokeGroup) return;
+
+  const svgEl=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svgEl.setAttribute('viewBox','0 0 109 109');
+  svgEl.style.width='100%'; svgEl.style.height='100%';
+
+  const paths=[...strokeGroup.querySelectorAll('path')];
+  paths.forEach(p=>svgEl.appendChild(p));
+  layer.appendChild(svgEl);
+
+  for(const p of paths){
+    const len=p.getTotalLength();
+    p.style.strokeDasharray=len;
+    p.style.strokeDashoffset=len;
+    p.style.transition='stroke-dashoffset 0.9s linear';
+    await new Promise(r=>requestAnimationFrame(r));
+    p.style.strokeDashoffset=0;
+    await new Promise(r=>setTimeout(r,950));
+  }
+  // アニメ完了後もガイドは薄く残す（なぞる前に確認できるように）
+}
+
+// ============================================================
 // KanjiVG：薄い字描画 ＋ 判定用パス取得（1本で完結）
 // ============================================================
 const svgCache={};
@@ -542,6 +585,9 @@ async function loadKanjiVG(char){
       svgText=await res.text();
       svgCache[hex]=svgText;
     }
+
+    // れんしゅうモードはSVGアニメーション
+    if(isPrac) await animateGuide(svgText);
 
     // ① 判定用パスをDOMParserで取得（あなたのfetchKanjiVGと同じ方式）
     const parser=new DOMParser();
@@ -678,7 +724,7 @@ function speak(text){
 // ============================================================
 // キラキラパーティクル
 // ============================================================
-let sparkles=[];
+let sparkles=[], isSparkling=false;
 function addSparkle(x,y){
   for(let i=0;i<2;i++){
     sparkles.push({
@@ -692,8 +738,16 @@ function addSparkle(x,y){
   }
 }
 function drawSparkles(){
-  if(!sparkles.length)return;
+  if(!sparkles.length){ isSparkling=false; return; }
   sparkles=sparkles.filter(s=>s.life>0);
+  ctxDr.clearRect(0,0,cW,cW);
+  // 書き途中の線を再描画
+  if(drawing&&userPts.length>1){
+    ctxDr.beginPath(); ctxDr.moveTo(userPts[0].x,userPts[0].y);
+    ctxDr.lineCap='round'; ctxDr.lineJoin='round';
+    ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
+    userPts.forEach(p=>ctxDr.lineTo(p.x,p.y)); ctxDr.stroke();
+  }
   sparkles.forEach(s=>{
     ctxDr.save();
     ctxDr.globalAlpha=s.life;
@@ -704,19 +758,7 @@ function drawSparkles(){
     ctxDr.restore();
     s.x+=s.vx; s.y+=s.vy; s.life-=0.06;
   });
-  if(sparkles.length) requestAnimationFrame(()=>{
-    if(drawing||sparkles.length){
-      ctxDr.clearRect(0,0,cW,cW);
-      // 現在の書き途中の線を再描画
-      if(userPts.length>1){
-        ctxDr.beginPath(); ctxDr.moveTo(userPts[0].x,userPts[0].y);
-        ctxDr.lineCap='round'; ctxDr.lineJoin='round';
-        ctxDr.lineWidth=cW*0.04; ctxDr.strokeStyle='rgba(56,189,248,0.9)';
-        userPts.forEach(p=>ctxDr.lineTo(p.x,p.y)); ctxDr.stroke();
-      }
-      drawSparkles();
-    }
-  });
+  requestAnimationFrame(drawSparkles);
 }
 
 function setMsg(t,c){
@@ -822,7 +864,7 @@ function doNext(){
 
 function doRetry(){
   currentStroke=0; drawing=false;
-  drawLength=0; lastX=null; lastY=null; userPts=[]; sparkles=[];
+  drawLength=0; lastX=null; lastY=null; userPts=[]; sparkles=[]; isSparkling=false;
   ctxFx.clearRect(0,0,cW,cW); ctxDr.clearRect(0,0,cW,cW);
   const isTest=(curMode==='test');
   setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！', isTest?'#FF6B9D':'#00D084');
