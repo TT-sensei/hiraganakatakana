@@ -1784,7 +1784,6 @@ function onComplete(){
 }
 
 function doNext(){
-  if(pendingSRSRating) return; // 評価待ち中は進まない
   qIdx++;
   if(qIdx<queue.length) loadQ();
   else{
@@ -1881,7 +1880,11 @@ function snd(t){
     if(t==='stroke') o(700,'sine',.12,.2);
     else if(t==='error') o(200,'sawtooth',.25,.15);
     else if(t==='click') o(500,'triangle',.1,.08);
-    else if(t==='complete'){o(600,'sine',.15,.15); setTimeout(()=>o(900,'sine',.25,.15),120);}
+    else if(t==='complete'){
+      // キラリーン：高音が上がってキラキラ散る
+      [[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]]
+        .forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));
+    }
     else if(t==='levelup') [[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));
   }catch(e){}
 }
