@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>かなマスター</title>
+<title>かなカナ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<script src="titles.js"></script>
 <style>
 /*
   カラーシステム（役割ごとに分離）
@@ -52,7 +53,30 @@ body {
     radial-gradient(ellipse at 80% 20%,rgba(210,240,255,.18) 0%,transparent 50%);
 }
 .screen { display:none; max-width:440px; margin:0 auto; padding:16px 16px 36px; }
-@media (min-width: 600px) { .screen { max-width:560px; padding:20px 24px 48px; } }
+/* ゲーム画面：タブレット以上で画面ピッタリ */
+@media (min-width: 600px) {
+  #scr-game {
+    height:100dvh;
+    display:flex !important;
+    flex-direction:column;
+    padding:10px 20px 12px;
+    overflow:hidden;
+    max-width:580px;
+  }
+  #scr-game .canvas-wrap {
+    width:100%;
+    aspect-ratio:unset;
+    flex:1;
+    min-height:0;
+  }
+  #scr-game .game-controls { flex-shrink:0; }
+  #scr-game .hint-area     { flex-shrink:0; }
+  #scr-game .game-header   { flex-shrink:0; }
+  #scr-game #game-msg      { flex-shrink:0; }
+  #scr-game #stroke-toast  { flex-shrink:0; }
+  #scr-game #result-banner { flex-shrink:0; }
+}
+@media (min-width: 600px) { .screen:not(#scr-game) { max-width:580px; padding:20px 28px 48px; } }
 .screen.active { display:block; }
 
 /* ── タイトルヘッダー ── */
@@ -258,8 +282,6 @@ body {
 @keyframes cfFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(105vh) rotate(720deg);opacity:0} }
 
 
-  #scr-game { width: min(560px, calc(100vh - 80px)); }
-  .canvas-wrap { width: min(480px, calc(100vh - 300px)); height: min(480px, calc(100vh - 300px)); }
 }
 </style>
 </head>
@@ -269,7 +291,7 @@ body {
 <div id="scr-title" class="screen active">
   <div class="title-header">
     <div>
-      <div class="title-logo-main">✏️ かなマスター</div>
+      <div class="title-logo-main">✏️ かなカナ</div>
       <div class="title-logo-sub">ひらがな・カタカナ れんしゅう</div>
     </div>
   </div>
@@ -310,7 +332,7 @@ body {
         </div>
       </div>
       <div class="lv-card-right">
-        <div class="lv-xp-label">つぎまで <span id="t-nxp">5</span>こ</div>
+        <div class="lv-xp-label">あつめた⭐ <span id="t-nxp"></span></div>
         <div class="lv-xp-wrap"><div class="lv-xp-bar" id="t-xpbar" style="width:0%"></div></div>
       </div>
     </div>
@@ -446,13 +468,14 @@ body {
 const KANA_WORDS={h1:[{char:'あ',emoji:'🌧️',word:'あめ',pos:0},{char:'い',emoji:'🐶',word:'いぬ',pos:0},{char:'う',emoji:'🐴',word:'うま',pos:0},{char:'え',emoji:'📖',word:'えほん',pos:0},{char:'お',emoji:'🍙',word:'おにぎり',pos:0},{char:'か',emoji:'🐸',word:'かえる',pos:0},{char:'き',emoji:'🍄',word:'きのこ',pos:0},{char:'く',emoji:'🐻',word:'くま',pos:0},{char:'け',emoji:'🐛',word:'けむし',pos:0},{char:'こ',emoji:'🐨',word:'こあら',pos:0},{char:'さ',emoji:'🐟',word:'さかな',pos:0},{char:'し',emoji:'🦌',word:'しか',pos:0},{char:'す',emoji:'🍉',word:'すいか',pos:0},{char:'せ',emoji:'🐞',word:'せみ',pos:0},{char:'そ',emoji:'🌌',word:'そら',pos:0},{char:'た',emoji:'🥚',word:'たまご',pos:0},{char:'ち',emoji:'🦋',word:'ちょう',pos:0},{char:'つ',emoji:'🌙',word:'つき',pos:0},{char:'て',emoji:'🧤',word:'てぶくろ',pos:0},{char:'と',emoji:'🐯',word:'とら',pos:0},{char:'な',emoji:'🍐',word:'なし',pos:0},{char:'に',emoji:'🌈',word:'にじ',pos:0},{char:'ぬ',emoji:'🧵',word:'ぬの',pos:0},{char:'ね',emoji:'🐈',word:'ねこ',pos:0},{char:'の',emoji:'🍙',word:'のり',pos:0}],h2:[{char:'は',emoji:'🌸',word:'はな',pos:0},{char:'ひ',emoji:'🐤',word:'ひよこ',pos:0},{char:'ふ',emoji:'🚢',word:'ふね',pos:0},{char:'へ',emoji:'🐍',word:'へび',pos:0},{char:'ほ',emoji:'⭐',word:'ほし',pos:0},{char:'ま',emoji:'🐟',word:'まぐろ',pos:0},{char:'み',emoji:'👂',word:'みみ',pos:0},{char:'む',emoji:'🐛',word:'むし',pos:0},{char:'め',emoji:'👓',word:'めがね',pos:0},{char:'も',emoji:'🍑',word:'もも',pos:0},{char:'や',emoji:'🏔️',word:'やま',pos:0},{char:'ゆ',emoji:'⛄️',word:'ゆき',pos:0},{char:'よ',emoji:'🌙',word:'よる',pos:0},{char:'ら',emoji:'🦁',word:'らいおん',pos:0},{char:'り',emoji:'🍎',word:'りんご',pos:0},{char:'る',emoji:'🏠',word:'るすばん',pos:0},{char:'れ',emoji:'🍋',word:'れもん',pos:0},{char:'ろ',emoji:'🤖',word:'ろぼっと',pos:0},{char:'わ',emoji:'🐊',word:'わに',pos:0},{char:'を',emoji:'🌌',word:'そらを',pos:2},{char:'ん',emoji:'🍎',word:'りんご',pos:1}],k1:[{char:'ア',emoji:'🍦',word:'アイス',pos:0},{char:'イ',emoji:'🌭',word:'インク',pos:0},{char:'ウ',emoji:'🌭',word:'ウインナー',pos:0},{char:'エ',emoji:'🏢',word:'エレベーター',pos:0},{char:'オ',emoji:'🍳',word:'オムライス',pos:0},{char:'カ',emoji:'📷',word:'カメラ',pos:0},{char:'キ',emoji:'🥝',word:'キウイ',pos:0},{char:'ク',emoji:'🍪',word:'クッキー',pos:0},{char:'ケ',emoji:'🍰',word:'ケーキ',pos:0},{char:'コ',emoji:'☕',word:'コーヒー',pos:0},{char:'サ',emoji:'🥗',word:'サラダ',pos:0},{char:'シ',emoji:'🚿',word:'シャワー',pos:0},{char:'ス',emoji:'📱',word:'スマホ',pos:0},{char:'セ',emoji:'🧴',word:'セッケン',pos:0},{char:'ソ',emoji:'🛋️',word:'ソファ',pos:0},{char:'タ',emoji:'🚕',word:'タクシー',pos:0},{char:'チ',emoji:'🧀',word:'チーズ',pos:0},{char:'ツ',emoji:'🎄',word:'ツリー',pos:0},{char:'テ',emoji:'📺',word:'テレビ',pos:0},{char:'ト',emoji:'🍅',word:'トマト',pos:0},{char:'ナ',emoji:'🔪',word:'ナイフ',pos:0},{char:'ニ',emoji:'📰',word:'ニュース',pos:0},{char:'ヌ',emoji:'🐃',word:'ヌー',pos:0},{char:'ネ',emoji:'👔',word:'ネクタイ',pos:0},{char:'ノ',emoji:'📓',word:'ノート',pos:0}],k2:[{char:'ハ',emoji:'🍽️',word:'ハンバーグ',pos:0},{char:'ヒ',emoji:'🦸',word:'ヒーロー',pos:0},{char:'フ',emoji:'🍴',word:'フォーク',pos:0},{char:'ヘ',emoji:'🚁',word:'ヘリコプター',pos:0},{char:'ホ',emoji:'⭐',word:'ホシ',pos:0},{char:'マ',emoji:'🎤',word:'マイク',pos:0},{char:'ミ',emoji:'🥛',word:'ミルク',pos:0},{char:'ム',emoji:'🍮',word:'ムース',pos:0},{char:'メ',emoji:'🍈',word:'メロン',pos:0},{char:'モ',emoji:'👾',word:'モンスター',pos:0},{char:'ヤ',emoji:'🌴',word:'ヤシ',pos:0},{char:'ユ',emoji:'👕',word:'ユニフォーム',pos:0},{char:'ヨ',emoji:'⛵',word:'ヨット',pos:0},{char:'ラ',emoji:'🦁',word:'ライオン',pos:0},{char:'リ',emoji:'🎀',word:'リボン',pos:0},{char:'ル',emoji:'💎',word:'ルビー',pos:0},{char:'レ',emoji:'🍋',word:'レモン',pos:0},{char:'ロ',emoji:'🤖',word:'ロボット',pos:0},{char:'ワ',emoji:'🧇',word:'ワッフル',pos:0},{char:'ヲ',emoji:'🍰',word:'ケーキヲ',pos:3},{char:'ン',emoji:'🍞',word:'パン',pos:1}]};
 const ALL_WORDS=Object.values(KANA_WORDS).flat();
 const GROUPS={h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
-const TITLES=[{lv:1,m:'🥚',t:'かなタマゴ'},{lv:3,m:'🐣',t:'かなのひよこ'},{lv:5,m:'🐥',t:'かなのとり'},{lv:8,m:'🐦',t:'かなのつばめ'},{lv:12,m:'🦅',t:'かなのわし'},{lv:18,m:'🌟',t:'かなのほし'},{lv:25,m:'👑',t:'かなマスター！'}];
+// TITLESはtitles.jsで定義
 function getTitle(lv){let r=TITLES[0];for(const t of TITLES){if(lv>=t.lv)r=t;else break;}return r;}
 
 let cleared=JSON.parse(localStorage.getItem('km_cleared'))||{};
 let tokk=JSON.parse(localStorage.getItem('km_tokk'))||{};
 let niga=JSON.parse(localStorage.getItem('km_niga'))||{};
 let bonXP=parseInt(localStorage.getItem('km_bonxp'))||0;
+let xpTotal=parseInt(localStorage.getItem('km_xp'))||0;
 let mistCnt=JSON.parse(localStorage.getItem('km_mist'))||{};
 let srsData=JSON.parse(localStorage.getItem('km_srs'))||{};
 let dailyState=JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],done:[],completed:false};
@@ -460,7 +483,7 @@ let streak=parseInt(localStorage.getItem('km_streak'))||0;
 let lastStreakDate=localStorage.getItem('km_streakdate')||'';
 let dailyKind=localStorage.getItem('km_dailykind')||'hira';
 
-function save(){localStorage.setItem('km_cleared',JSON.stringify(cleared));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);}
+function save(){localStorage.setItem('km_cleared',JSON.stringify(cleared));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);}
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
 
@@ -484,14 +507,14 @@ function initDaily(){
 function getDailyWords(){return dailyState.chars.filter(c=>!dailyState.done.includes(c)).map(c=>ALL_WORDS.find(w=>w.char===c)).filter(Boolean);}
 function setDailyKind(kind,e){e.stopPropagation();if(dailyKind===kind)return;dailyKind=kind;dailyState={date:'',chars:[],done:[],completed:false};save();updateTitle();}
 
-function getXP(){const x=Object.keys(cleared).length+bonXP;return{lv:Math.floor(x/5)+1,cur:x%5};}
+function getXP(){const x=xpTotal+bonXP;return{lv:Math.floor(x/10)+1,cur:x%10,total:x};}
 function updateTitle(){
   const{lv,cur}=getXP();const ti=getTitle(lv);
   document.getElementById('t-mascot').textContent=ti.m;
   document.getElementById('t-lv').textContent=lv;
   document.getElementById('t-name').textContent=ti.t;
-  document.getElementById('t-xpbar').style.width=`${(cur/5)*100}%`;
-  document.getElementById('t-nxp').textContent=5-cur;
+  document.getElementById('t-xpbar').style.width=`${(cur/10)*100}%`;
+  document.getElementById('t-nxp').textContent='⭐'.repeat(cur)||'－';
   for(const g of Object.keys(GROUPS)){const total=GROUPS[g].total,done=KANA_WORDS[g].filter(w=>cleared[w.char]).length,pct=Math.round(done/total*100);document.getElementById(`gp-${g}`).textContent=`${done} / ${total}`;document.getElementById(`gpct-${g}`).textContent=`${pct}%`;document.getElementById(`gbar-${g}`).style.width=`${pct}%`;}
   updateDailyBanner();
 }
@@ -566,7 +589,8 @@ function drawGrid(){ctxBg.strokeStyle='rgba(224,216,206,.5)';ctxBg.lineWidth=1;c
 function getXY(e,canvas){const r=canvas.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(cW/r.width),y:(cy-r.top)*(cW/r.height)};}
 
 const svgCache={};let strokeRefCache={};
-async function loadKanjiVG(char){const isPrac=curMode!=='test';try{const hex=char.codePointAt(0).toString(16).padStart(5,'0');const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;if(!svgCache[hex]){const res=await fetch(url);if(!res.ok)throw new Error();svgCache[hex]=await res.text();}const svgText=svgCache[hex];const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');const sg=doc.querySelector('[id^="kvg:StrokePaths"]');strokes=sg?[...sg.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];currentStroke=0;drawLength=0;lastX=null;lastY=null;strokeRefCache={};if(strokes.length)startStartDot();if(isPrac){const styled=svgText.replace('</svg>',`<style>path{stroke:rgba(224,216,206,.8)!important;stroke-width:9!important;fill:none!important}text{fill:#C0B8A8!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);const blobUrl=URL.createObjectURL(new Blob([styled],{type:'image/svg+xml;charset=utf-8'}));await new Promise(r=>{const img=new Image();img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);r();};img.onerror=()=>{URL.revokeObjectURL(blobUrl);r();};img.src=blobUrl;});}}catch(e){console.warn(`「${char}」のKanjiVGデータがありません`);strokes=[];currentStroke=0;}}
+async function loadKanjiVG(char){const isPrac=curMode!=='test';try{const hex=char.codePointAt(0).toString(16).padStart(5,'0');const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;if(!svgCache[hex]){const res=await fetch(url);if(!res.ok)throw new Error();svgCache[hex]=await res.text();}const svgText=svgCache[hex];const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');const sg=doc.querySelector('[id^="kvg:StrokePaths"]');strokes=sg?[...sg.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];currentStroke=0;drawLength=0;lastX=null;lastY=null;strokeRefCache={};if(strokes.length)startStartDot();if(isPrac){const styled=svgText.replace('</svg>',`<script src="titles.js"></script>
+<style>path{stroke:rgba(224,216,206,.8)!important;stroke-width:9!important;fill:none!important}text{fill:#C0B8A8!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);const blobUrl=URL.createObjectURL(new Blob([styled],{type:'image/svg+xml;charset=utf-8'}));await new Promise(r=>{const img=new Image();img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);r();};img.onerror=()=>{URL.revokeObjectURL(blobUrl);r();};img.src=blobUrl;});}}catch(e){console.warn(`「${char}」のKanjiVGデータがありません`);strokes=[];currentStroke=0;}}
 
 const _svgM=(()=>{const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.style.cssText='position:absolute;visibility:hidden;width:0;height:0';document.body.appendChild(s);return s;})();
 function resamplePath(d,N=32){if(strokeRefCache[d])return strokeRefCache[d];const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);_svgM.appendChild(p);const len=p.getTotalLength(),sc=cW/109,pts=[];for(let i=0;i<N;i++){const pt=p.getPointAtLength(len*i/(N-1));pts.push({x:pt.x*sc,y:pt.y*sc});}_svgM.removeChild(p);strokeRefCache[d]=pts;return pts;}
@@ -628,7 +652,7 @@ function hideResultBanner(){document.getElementById('result-banner').classList.r
 
 function showConfetti(count=40){const colors=['#E8621A','#1A7A4A','#5B3FA6','#2A7FC1','#F59E0B','#EC4899','#FFD700'];for(let i=0;i<count;i++)setTimeout(()=>{const el=document.createElement('div');el.className='confetti-piece';el.style.left=Math.random()*100+'vw';el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];const dur=(Math.random()*1.5+1.2).toFixed(2);el.style.animationDuration=dur+'s';if(Math.random()>.5)el.style.borderRadius='50%';el.style.width=el.style.height=(Math.random()*8+5)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),(parseFloat(dur)+.5)*1000);},Math.random()*300);}
 
-function onComplete(){snd('complete');stopStartDot();const oldLv=getXP().lv;cleared[curQ.char]=true;srsInit(curQ.char);save();const newLv=getXP().lv;const stars=calcStars();showConfetti(stars===3?55:stars===2?30:12);if(stars===3){setTimeout(()=>snd('levelup'),100);drawHanamaru();}showResultBanner(stars);const cx=cW/2,cy=cW/2,cnt=stars===3?24:stars===2?14:6;for(let i=0;i<cnt;i++)setTimeout(()=>{const a=Math.random()*Math.PI*2,r=cW*(.05+Math.random()*.32);addSparkle(cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}},i*25);if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}setTimeout(()=>doNext(),2200);}
+function onComplete(){snd('complete');stopStartDot();const oldLv=getXP().lv;cleared[curQ.char]=true;srsInit(curQ.char);const stars=calcStars();xpTotal+=stars;save();const newLv=getXP().lv;showConfetti(stars===3?55:stars===2?30:12);if(stars===3){setTimeout(()=>snd('levelup'),100);drawHanamaru();}showResultBanner(stars);const cx=cW/2,cy=cW/2,cnt=stars===3?24:stars===2?14:6;for(let i=0;i<cnt;i++)setTimeout(()=>{const a=Math.random()*Math.PI*2,r=cW*(.05+Math.random()*.32);addSparkle(cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}},i*25);if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}setTimeout(()=>doNext(),2200);}
 
 function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}if(isRandom){bonXP+=10;save();showOv('ov-rc');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
 
@@ -636,10 +660,10 @@ function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=n
 
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
-function doReset(){localStorage.clear();cleared={};tokk={};niga={};bonXP=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
+function doReset(){localStorage.clear();cleared={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
 
 let AC;
-function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke')o(700,'sine',.12,.2);else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
+function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
 
 updateTitle();
 </script>
