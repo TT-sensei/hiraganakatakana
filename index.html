@@ -54,43 +54,56 @@ body {
     radial-gradient(ellipse at 80% 20%,rgba(210,240,255,.18) 0%,transparent 50%);
 }
 .screen { display:none; max-width:440px; margin:0 auto; padding:16px 16px 36px; }
-/* ゲーム画面：タブレット以上で画面ピッタリ */
+
+/* ── ゲーム画面：タブレット以上で画面ぴったり ── */
 @media (min-width: 600px) {
+  .screen:not(#scr-game) { max-width:580px; padding:20px 28px 48px; }
+
   #scr-game {
+    max-width:580px;
     height:100dvh;
     display:flex !important;
     flex-direction:column;
     padding:10px 20px 12px;
     overflow:hidden;
-    max-width:580px;
   }
-  #scr-game .canvas-wrap {
-    width:100%;
-    aspect-ratio:unset;
-    flex:1;
-    min-height:0;
-  }
-  #scr-game .game-controls { flex-shrink:0; }
-  #scr-game .hint-area     { flex-shrink:0; }
   #scr-game .game-header   { flex-shrink:0; }
+  #scr-game .hint-area     { flex-shrink:0; }
   #scr-game #game-msg      { flex-shrink:0; }
   #scr-game #stroke-toast  { flex-shrink:0; }
   #scr-game #result-banner { flex-shrink:0; }
+  #scr-game .game-controls { flex-shrink:0; }
+
+  /*
+   * キャンバス正方形維持の核心。
+   * flex:1 だと縦方向に引き伸ばされて正方形が崩れるため、
+   * min-height:0 で flex の縮小を許可しつつ
+   * width / height を JS で同値に揃える方式に切り替える。
+   * CSS 側では aspect-ratio を外し、width:100% のみ指定。
+   * 実際の height は JS の resizeCanvas() で制御する。
+   */
+  #scr-game .canvas-wrap {
+    flex:1;
+    min-height:0;
+    width:100%;
+    aspect-ratio:unset;  /* JS制御に委ねる */
+    align-self:center;
+  }
 }
-@media (min-width: 600px) { .screen:not(#scr-game) { max-width:580px; padding:20px 28px 48px; } }
+
 .screen.active { display:block; }
 
 /* ── タイトルヘッダー ── */
 .title-header { display:flex; align-items:center; justify-content:space-between; padding:20px 0 18px; }
 .title-logo-main { font-size:1.45rem; font-weight:900; color:var(--c-ink); letter-spacing:-.02em; }
 .title-logo-sub  { font-size:.68rem; color:var(--c-ink-dim); margin-top:1px; }
-.lv-chip { display:none; } /* 旧スタイル無効化 */
+.lv-chip { display:none; }
 .lv-mascot { font-size:2rem; line-height:1; }
 .lv-text { font-size:.9rem; font-weight:700; color:var(--c-ink); line-height:1; }
 .lv-xp-wrap { width:80px; height:5px; background:var(--c-border); border-radius:var(--r-pill); overflow:hidden; margin-top:4px; }
 .lv-xp-bar  { height:100%; background:var(--c-action); border-radius:var(--r-pill); transition:width .5s; }
 
-/* ── レベルカード（グループ上） ── */
+/* ── レベルカード ── */
 .lv-card-zone { margin-bottom:14px; }
 .lv-card-full {
   background:var(--c-surface);
@@ -116,7 +129,7 @@ body {
 /* ── ゾーンラベル ── */
 .zone-label { font-size:.62rem; font-weight:700; letter-spacing:.1em; color:var(--c-ink-dim); margin-bottom:7px; padding-left:2px; text-transform:uppercase; }
 
-/* ── デイリーカード（画面の主役） ── */
+/* ── デイリーカード ── */
 .mission-zone { margin-bottom:20px; }
 .daily-card {
   background:var(--c-action); border-radius:var(--r-card); padding:18px 18px 16px;
@@ -223,7 +236,20 @@ body {
 .result-label { font-size:.85rem; font-weight:700; margin-top:1px; display:block; animation:popIn .3s .08s ease both; }
 
 /* キャンバス */
-.canvas-wrap { width:100%; aspect-ratio:1; position:relative; border-radius:var(--r-card); overflow:hidden; border:2px solid var(--c-border); background:var(--c-surface); box-shadow:var(--shadow-md); background-image:radial-gradient(var(--c-border-l) 1px,transparent 1px); background-size:24px 24px; touch-action:none; background-color:#FFFFFF; }
+.canvas-wrap {
+  width:100%;
+  aspect-ratio:1;           /* スマホ: CSSで正方形を維持 */
+  position:relative;
+  border-radius:var(--r-card);
+  overflow:hidden;
+  border:2px solid var(--c-border);
+  background:var(--c-surface);
+  box-shadow:var(--shadow-md);
+  background-image:radial-gradient(var(--c-border-l) 1px,transparent 1px);
+  background-size:24px 24px;
+  touch-action:none;
+  background-color:#FFFFFF;
+}
 .canvas-wrap canvas { position:absolute; top:0; left:0; width:100%; height:100%; cursor:crosshair; }
 #guideLayer { position:absolute; inset:0; pointer-events:none; }
 #guideLayer path { fill:none; stroke:var(--c-border); stroke-width:12; }
@@ -281,9 +307,6 @@ body {
 /* 紙吹雪 */
 .confetti-piece { position:fixed; top:-16px; z-index:9999; pointer-events:none; border-radius:2px; animation:cfFall linear forwards; }
 @keyframes cfFall { 0%{transform:translateY(0) rotate(0deg);opacity:1} 100%{transform:translateY(105vh) rotate(720deg);opacity:0} }
-
-
-}
 </style>
 </head>
 <body>
@@ -468,7 +491,6 @@ body {
 'use strict';
 const ALL_WORDS=Object.values(KANA_WORDS).flat();
 const GROUPS={h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
-// TITLESはtitles.jsで定義
 function getTitle(lv){if(typeof TITLES==='undefined'||!TITLES.length)return{lv:1,m:'🥚',t:'かなカナタマゴ'};let r=TITLES[0];for(const t of TITLES){if(lv>=t.lv)r=t;else break;}return r;}
 
 let cleared=JSON.parse(localStorage.getItem('km_cleared'))||{};
@@ -544,10 +566,12 @@ function updateListModeBtns(){const pp=document.getElementById('lb-prac'),pt=doc
 function renderKanaGrid(){
   const grid=document.getElementById('kana-grid');grid.innerHTML='';const today=todayStr();
   KANA_WORDS[curGroup].forEach(w=>{
-    const hasPrac=!!localStorage.getItem('km_prac_'+w.char),hasTest=!!localStorage.getItem('km_test_'+w.char),srs=srsData[w.char],isDue=srs&&srs.due<=today;
+    // cleared[w.char] を正とする（km_prac_* / km_test_* は不使用）
+    const hasDone=!!cleared[w.char],srs=srsData[w.char],isDue=srs&&srs.due<=today;
     const card=document.createElement('div');card.className='k-card';
-    if(isDue)card.classList.add('due-srs');else if(hasPrac&&hasTest)card.classList.add('done-both');else if(hasPrac)card.classList.add('done-prac');else if(hasTest)card.classList.add('done-test');
-    if(cleared[w.char]){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
+    if(isDue)card.classList.add('due-srs');
+    else if(hasDone)card.classList.add('done-both');
+    if(hasDone){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
     if(srs&&!isDue){const tag=document.createElement('div');tag.className='k-srs-tag';const days=Math.round((new Date(srs.due)-new Date(today))/86400000);tag.textContent=days<=0?'きょう':days+'日後';card.appendChild(tag);}
     card.appendChild(document.createTextNode(w.char));
     card.onclick=()=>{snd('click');curMode=listMode;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();};
@@ -557,8 +581,44 @@ function renderKanaGrid(){
 function startAll(){snd('click');curMode=listMode;queue=[...KANA_WORDS[curGroup]];qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();}
 function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();}
 function startRandom(){snd('click');curMode='test';isRandom=true;queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('test');showScreen('scr-game');loadQ();}
-function showScreen(id){window.scrollTo(0,0);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='scr-title')updateTitle();}
+function showScreen(id){window.scrollTo(0,0);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='scr-title')updateTitle();if(id==='scr-game')resizeCanvas();}
 function goBack(){animating=false;if(isRandom||['tokkun','nigate','daily','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
+
+/* ── キャンバスサイズ決定（iPad正方形対応の核心） ──
+ * タブレット幅(≥600px)では flex レイアウト内で
+ * 残り高さに合わせた正方形サイズを計算して直接指定する。
+ * スマホ幅では CSS の aspect-ratio:1 に任せる。
+ */
+function resizeCanvas(){
+  const wrap=document.getElementById('canvas-wrap');
+  if(!wrap)return;
+  if(window.innerWidth>=600){
+    // flex コンテナ内で wrap が取れる最大高さを計算
+    const game=document.getElementById('scr-game');
+    const gameH=game.clientHeight;
+    // wrap 以外の子要素の高さ合計
+    let othersH=0;
+    for(const child of game.children){
+      if(child===wrap)continue;
+      othersH+=child.offsetHeight;
+    }
+    // gap 分（8px × 要素間）を引く（概算4要素間 = 32px）
+    othersH+=32;
+    const avail=gameH-othersH;
+    // 幅と高さの小さい方を辺とする
+    const maxW=game.clientWidth-40; // padding 20px×2
+    const side=Math.min(avail,maxW);
+    if(side>80){
+      wrap.style.width=side+'px';
+      wrap.style.height=side+'px';
+      wrap.style.alignSelf='center';
+    }
+  } else {
+    // スマホ: インラインスタイルをリセットして CSS の aspect-ratio に委ねる
+    wrap.style.width='';
+    wrap.style.height='';
+  }
+}
 
 async function loadQ(){
   curQ=queue[qIdx];resetStrokeScores();userDrawRecord=[];currentStrokePts=[];hideResultBanner();
@@ -567,29 +627,61 @@ async function loadQ(){
   const isTest=(curMode==='test'),hintEl=document.getElementById('hint-area');
   if(isTest){const wHTML=[...curQ.word].map((c,i)=>i===curQ.pos?`<span class="hint-blank">＿</span>`:`<span class="hint-char">${c}</span>`).join('');hintEl.innerHTML=`<span class="hint-emoji-lg">${curQ.emoji}</span><div class="hint-word-box">${wHTML}<button class="btn-sound" onclick="speak('${curQ.word}')">🔊</button></div>`;}
   else{hintEl.innerHTML=`<span class="hint-emoji-lg">${curQ.emoji}</span><div class="hint-word-box"><span class="hint-char is-target">${curQ.char}</span><button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button></div>`;}
-  const msg=document.getElementById('game-msg');msg.textContent='';  // じゅんびちゅうで上書きされるためリセットのみ
   updateRegBtns();initCanvas();
   isLoading=true;
   document.getElementById('canvas-dr').style.cursor='wait';
   setMsg('じゅんびちゅう…','var(--c-ink-dim)');
-  await loadKanjiVG(curQ.char);
+  await loadKanjiVG(curQ.char); // ← 修正: 1回だけ呼ぶ
   isLoading=false;
   document.getElementById('canvas-dr').style.cursor='crosshair';
-  await loadKanjiVG(curQ.char);
-  isLoading=false;
   const isTest2=(curMode==='test');
   setMsg(isTest2?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！',isTest2?'var(--c-action)':'var(--c-practice)');
+  // 次の文字をプリフェッチ
   if(qIdx+1<queue.length){const nc=queue[qIdx+1].char,nh=nc.codePointAt(0).toString(16).padStart(5,'0');if(!svgCache[nh])fetch(`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${nh}.svg`).then(r=>r.ok?r.text():null).then(t=>{if(t)svgCache[nh]=t;}).catch(()=>{});}
 }
 
 let ctxBg,ctxFx,ctxDr,ctxOv,cW=0,strokes=[],currentStroke=0,drawing=false,animating=false,isLoading=false,drawLength=0,lastX=null,lastY=null,userPts=[];
 const TOLERANCE_RATIO=0.22;
-function initCanvas(){const wrap=document.getElementById('canvas-wrap');cW=wrap.offsetWidth;['canvas-bg','canvas-fx','canvas-dr','canvas-ov'].forEach(id=>{const c=document.getElementById(id);c.width=cW;c.height=cW;});ctxBg=document.getElementById('canvas-bg').getContext('2d');ctxFx=document.getElementById('canvas-fx').getContext('2d');ctxDr=document.getElementById('canvas-dr').getContext('2d');ctxOv=document.getElementById('canvas-ov').getContext('2d');document.getElementById('canvas-ov').style.opacity='0';drawGrid();strokes=[];currentStroke=0;drawing=false;animating=false;drawLength=0;lastX=null;lastY=null;stopStartDot();const drC=document.getElementById('canvas-dr');drC.onpointerdown=e=>{if(animating||isLoading)return;const{x,y}=getXY(e,drC);if(strokes.length&&currentStroke<strokes.length&&!checkStart(x,y))return;drawing=true;drawLength=0;lastX=x;lastY=y;userPts=[{x,y}];currentStrokePts=[{x,y}];stopStartDot();document.getElementById('guideLayer').innerHTML='';ctxDr.beginPath();ctxDr.moveTo(x,y);};drC.onpointermove=e=>{if(!drawing)return;e.preventDefault();const{x,y}=getXY(e,drC);trackDraw(x,y);userPts.push({x,y});currentStrokePts.push({x,y});ctxDr.lineTo(x,y);ctxDr.lineCap='round';ctxDr.lineJoin='round';ctxDr.lineWidth=cW*0.04;ctxDr.strokeStyle='rgba(56,189,248,0.9)';ctxDr.stroke();if(userPts.length%4===0){addSparkle(x,y);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}}};drC.onpointerup=e=>{if(!drawing)return;drawing=false;const{x,y}=getXY(e,drC);trackDraw(x,y);evalEnd(x,y);};drC.onpointerleave=e=>{if(!drawing)return;drawing=false;evalEnd(lastX??0,lastY??0);};}
+function initCanvas(){
+  const wrap=document.getElementById('canvas-wrap');
+  resizeCanvas(); // サイズを確定させてから幅を取得
+  cW=wrap.offsetWidth;
+  ['canvas-bg','canvas-fx','canvas-dr','canvas-ov'].forEach(id=>{const c=document.getElementById(id);c.width=cW;c.height=cW;});
+  ctxBg=document.getElementById('canvas-bg').getContext('2d');
+  ctxFx=document.getElementById('canvas-fx').getContext('2d');
+  ctxDr=document.getElementById('canvas-dr').getContext('2d');
+  ctxOv=document.getElementById('canvas-ov').getContext('2d');
+  document.getElementById('canvas-ov').style.opacity='0';
+  drawGrid();strokes=[];currentStroke=0;drawing=false;animating=false;drawLength=0;lastX=null;lastY=null;stopStartDot();
+  const drC=document.getElementById('canvas-dr');
+  drC.onpointerdown=e=>{if(animating||isLoading)return;const{x,y}=getXY(e,drC);if(strokes.length&&currentStroke<strokes.length&&!checkStart(x,y))return;drawing=true;drawLength=0;lastX=x;lastY=y;userPts=[{x,y}];currentStrokePts=[{x,y}];stopStartDot();document.getElementById('guideLayer').innerHTML='';ctxDr.beginPath();ctxDr.moveTo(x,y);};
+  drC.onpointermove=e=>{if(!drawing)return;e.preventDefault();const{x,y}=getXY(e,drC);trackDraw(x,y);userPts.push({x,y});currentStrokePts.push({x,y});ctxDr.lineTo(x,y);ctxDr.lineCap='round';ctxDr.lineJoin='round';ctxDr.lineWidth=cW*0.04;ctxDr.strokeStyle='rgba(56,189,248,0.9)';ctxDr.stroke();if(userPts.length%4===0){addSparkle(x,y);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}}};
+  drC.onpointerup=e=>{if(!drawing)return;drawing=false;const{x,y}=getXY(e,drC);trackDraw(x,y);evalEnd(x,y);};
+  drC.onpointerleave=e=>{if(!drawing)return;drawing=false;evalEnd(lastX??0,lastY??0);};
+}
 function drawGrid(){ctxBg.strokeStyle='rgba(224,216,206,.5)';ctxBg.lineWidth=1;ctxBg.setLineDash([4,4]);ctxBg.beginPath();ctxBg.moveTo(cW/2,4);ctxBg.lineTo(cW/2,cW-4);ctxBg.moveTo(4,cW/2);ctxBg.lineTo(cW-4,cW/2);ctxBg.stroke();ctxBg.setLineDash([]);}
 function getXY(e,canvas){const r=canvas.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(cW/r.width),y:(cy-r.top)*(cW/r.height)};}
 
 const svgCache={};let strokeRefCache={};
-async function loadKanjiVG(char){const isPrac=curMode!=='test';try{const hex=char.codePointAt(0).toString(16).padStart(5,'0');const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;if(!svgCache[hex]){const res=await fetch(url);if(!res.ok)throw new Error();svgCache[hex]=await res.text();}const svgText=svgCache[hex];const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');const sg=doc.querySelector('[id^="kvg:StrokePaths"]');strokes=sg?[...sg.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];currentStroke=0;drawLength=0;lastX=null;lastY=null;strokeRefCache={};if(strokes.length)startStartDot();if(isPrac){const styled=svgText.replace('</svg>',`<style>path{stroke:rgba(224,216,206,.8)!important;stroke-width:9!important;fill:none!important}text{fill:#C0B8A8!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);const blobUrl=URL.createObjectURL(new Blob([styled],{type:'image/svg+xml;charset=utf-8'}));await new Promise(r=>{const img=new Image();img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);r();};img.onerror=()=>{URL.revokeObjectURL(blobUrl);r();};img.src=blobUrl;});}}catch(e){console.warn(`「${char}」のKanjiVGデータがありません`);strokes=[];currentStroke=0;}}
+async function loadKanjiVG(char){
+  const isPrac=curMode!=='test';
+  try{
+    const hex=char.codePointAt(0).toString(16).padStart(5,'0');
+    const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;
+    if(!svgCache[hex]){const res=await fetch(url);if(!res.ok)throw new Error();svgCache[hex]=await res.text();}
+    const svgText=svgCache[hex];
+    const doc=new DOMParser().parseFromString(svgText,'image/svg+xml');
+    const sg=doc.querySelector('[id^="kvg:StrokePaths"]');
+    strokes=sg?[...sg.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];
+    currentStroke=0;drawLength=0;lastX=null;lastY=null;strokeRefCache={};
+    if(strokes.length)startStartDot();
+    if(isPrac){
+      const styled=svgText.replace('</svg>',`<style>path{stroke:rgba(224,216,206,.8)!important;stroke-width:9!important;fill:none!important}text{fill:#C0B8A8!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);
+      const blobUrl=URL.createObjectURL(new Blob([styled],{type:'image/svg+xml;charset=utf-8'}));
+      await new Promise(r=>{const img=new Image();img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);r();};img.onerror=()=>{URL.revokeObjectURL(blobUrl);r();};img.src=blobUrl;});
+    }
+  }catch(e){console.warn(`「${char}」のKanjiVGデータがありません`);strokes=[];currentStroke=0;}
+}
 
 const _svgM=(()=>{const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.style.cssText='position:absolute;visibility:hidden;width:0;height:0';document.body.appendChild(s);return s;})();
 function resamplePath(d,N=32){if(strokeRefCache[d])return strokeRefCache[d];const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('d',d);_svgM.appendChild(p);const len=p.getTotalLength(),sc=cW/109,pts=[];for(let i=0;i<N;i++){const pt=p.getPointAtLength(len*i/(N-1));pts.push({x:pt.x*sc,y:pt.y*sc});}_svgM.removeChild(p);strokeRefCache[d]=pts;return pts;}
@@ -604,19 +696,39 @@ function resetStrokeScores(){strokeScores=[];}
 function dtwToScore(d){if(d<=cW*.06)return 1;if(d<=cW*.12)return .67;if(d<=cW*.20)return .33;return 0;}
 function calcStars(){if(!strokeScores.length)return 1;const avg=strokeScores.reduce((a,b)=>a+b,0)/strokeScores.length;if(avg>=.85)return 3;if(avg>=.55)return 2;return 1;}
 
+// ── ストローク評価の補助関数（evalEnd から切り出し）──
+function isStrokeTooShort(drawLength, refLen){ return drawLength < refLen * 0.25; }
+function isStrokeWrongDirection(ur, ref){ return !checkDirection(ur, ref); }
+
 function evalEnd(x,y){
   ctxDr.clearRect(0,0,cW,cW);
   if(!strokes.length){snd('stroke');setMsg('かけたね！','var(--c-practice)');speak(curQ.char);onComplete();return;}
   if(currentStroke>=strokes.length)return;
-  const pd=strokes[currentStroke],ref=resamplePath(pd,32),refLen=ref.reduce((a,p,i)=>i===0?0:a+Math.hypot(p.x-ref[i-1].x,p.y-ref[i-1].y),0);
-  if(drawLength<refLen*.25){snd('error');setMsg('もうすこし ながく かいてね！','var(--c-caution)');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
+  const pd=strokes[currentStroke],ref=resamplePath(pd,32);
+  const refLen=ref.reduce((a,p,i)=>i===0?0:a+Math.hypot(p.x-ref[i-1].x,p.y-ref[i-1].y),0);
+  if(isStrokeTooShort(drawLength,refLen)){
+    snd('error');setMsg('もうすこし ながく かいてね！','var(--c-caution)');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;
+  }
   const ur=resampleUserPts(32);
-  if(!checkDirection(ur,ref)){snd('error');const el=document.getElementById('game-msg');el.textContent='かくむきに きをつけてね！';el.style.color='var(--c-caution)';el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
+  if(isStrokeWrongDirection(ur,ref)){
+    snd('error');
+    const el=document.getElementById('game-msg');el.textContent='かくむきに きをつけてね！';el.style.color='var(--c-caution)';el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');
+    showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;
+  }
   const dtw=dtwDistance(ur,ref),endRef=getSVGPt(pd,1),endDist=Math.hypot(x-endRef.x,y-endRef.y);
   const ok=dtw<cW*.20&&(endDist<cW*TOLERANCE_RATIO*1.4||dtw<cW*.20*.60);
   drawLength=0;lastX=null;lastY=null;userPts=[];
-  if(ok){strokeScores.push(dtwToScore(dtw));userDrawRecord.push({pts:[...currentStrokePts]});snd('stroke');currentStroke++;redrawFx();const sc=dtwToScore(dtw);showStrokeToast(sc);if(sc>=1)setMsg('✨ かんぺき！','var(--c-srs)');else if(sc>=.67)setMsg('👍 いいぞ！','var(--c-practice)');else setMsg('🙆 まあまあ！','#8A5E00');if(currentStroke>=strokes.length){speak(curQ.char);onComplete();}}
-  else{snd('error');const ch=curQ.char;mistCnt[ch]=(mistCnt[ch]||0)+1;save();if(mistCnt[ch]>=3&&!niga[ch]){niga[ch]=true;save();setMsg('おしい！ にがてに とうろくしたよ🐢','var(--c-caution)');}else setMsg('おしい！ もう一度！','var(--c-caution)');showHint(currentStroke);}
+  if(ok){
+    strokeScores.push(dtwToScore(dtw));userDrawRecord.push({pts:[...currentStrokePts]});snd('stroke');currentStroke++;redrawFx();
+    const sc=dtwToScore(dtw);showStrokeToast(sc);
+    if(sc>=1)setMsg('✨ かんぺき！','var(--c-srs)');else if(sc>=.67)setMsg('👍 いいぞ！','var(--c-practice)');else setMsg('🙆 まあまあ！','#8A5E00');
+    if(currentStroke>=strokes.length){speak(curQ.char);onComplete();}
+  } else {
+    snd('error');const ch=curQ.char;mistCnt[ch]=(mistCnt[ch]||0)+1;save();
+    if(mistCnt[ch]>=3&&!niga[ch]){niga[ch]=true;save();setMsg('おしい！ にがてに とうろくしたよ🐢','var(--c-caution)');}
+    else setMsg('おしい！ もう一度！','var(--c-caution)');
+    showHint(currentStroke);
+  }
 }
 function setMsg(t,c){const el=document.getElementById('game-msg');el.textContent=t;el.style.color=c;}
 function trackDraw(x,y){if(lastX!==null)drawLength+=Math.hypot(x-lastX,y-lastY);lastX=x;lastY=y;}
@@ -624,26 +736,9 @@ function trackDraw(x,y){if(lastX!==null)drawLength+=Math.hypot(x-lastX,y-lastY);
 let toastTimer=null;
 function showStrokeToast(score){const t=document.getElementById('stroke-toast');if(!t)return;const items=[{min:1,text:'✨ かんぺき！',color:'var(--c-srs)'},{min:.67,text:'👍 いいぞ！',color:'var(--c-practice)'},{min:0,text:'🙆 できたよ！',color:'#8A5E00'}];const{text,color}=items.find(i=>score>=i.min);t.textContent=text;t.style.color=color;t.style.animation='none';void t.offsetWidth;t.style.animation='toastIn .22s cubic-bezier(.2,1.4,.4,1) forwards';if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.animation='toastOut .28s ease forwards';},600);}
 let _jpVoice=null;
-function _loadVoice(){
-  const voices=speechSynthesis.getVoices();
-  _jpVoice=voices.find(v=>v.name.includes('Nanami'))
-        ||voices.find(v=>v.name.includes('Keita'))
-        ||voices.find(v=>v.lang==='ja-JP'&&v.localService)
-        ||voices.find(v=>v.lang==='ja-JP')
-        ||null;
-}
-if(window.speechSynthesis){
-  _loadVoice();
-  speechSynthesis.onvoiceschanged=_loadVoice;
-}
-function speak(text){
-  if(!window.speechSynthesis)return;
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);
-  u.lang='ja-JP';u.rate=.85;u.pitch=1.2;
-  if(_jpVoice)u.voice=_jpVoice;
-  speechSynthesis.speak(u);
-}
+function _loadVoice(){const voices=speechSynthesis.getVoices();_jpVoice=voices.find(v=>v.name.includes('Nanami'))||voices.find(v=>v.name.includes('Keita'))||voices.find(v=>v.lang==='ja-JP'&&v.localService)||voices.find(v=>v.lang==='ja-JP')||null;}
+if(window.speechSynthesis){_loadVoice();speechSynthesis.onvoiceschanged=_loadVoice;}
+function speak(text){if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='ja-JP';u.rate=.85;u.pitch=1.2;if(_jpVoice)u.voice=_jpVoice;speechSynthesis.speak(u);}
 
 let sparkles=[],isSparkling=false;
 function addSparkle(x,y){for(let i=0;i<2;i++)sparkles.push({x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:1,r:Math.random()*4+2,color:`hsl(${Math.random()*60+30},100%,60%)`});}
@@ -680,6 +775,9 @@ function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=n
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
 function doReset(){localStorage.clear();cleared={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
+
+// ウィンドウリサイズ時にも再計算
+window.addEventListener('resize',()=>{if(document.getElementById('scr-game').classList.contains('active')){resizeCanvas();if(cW!==document.getElementById('canvas-wrap').offsetWidth)initCanvas();}});
 
 let AC;
 function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
