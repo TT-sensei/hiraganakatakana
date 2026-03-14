@@ -58,37 +58,36 @@ body {
 /* ── ゲーム画面：タブレット以上で画面ぴったり ── */
 @media (min-width: 600px) {
   .screen:not(#scr-game) { max-width:580px; padding:20px 28px 48px; }
+}
 
-  #scr-game {
-    max-width:580px;
-    height:100dvh;
-    display:flex !important;
-    flex-direction:column;
-    padding:10px 20px 12px;
-    overflow:hidden;
-  }
-  #scr-game .game-header   { flex-shrink:0; }
-  #scr-game .hint-area     { flex-shrink:0; }
-  #scr-game #game-msg      { flex-shrink:0; }
-  #scr-game #stroke-toast  { flex-shrink:0; }
-  #scr-game #result-banner { flex-shrink:0; }
-  #scr-game .game-controls { flex-shrink:0; }
+/* ゲーム画面は幅に関係なく常にflex縦積み・全画面 */
+#scr-game.active {
+  display:flex !important;
+  flex-direction:column;
+  height:100dvh;
+  max-width:580px;
+  padding:10px 20px 12px;
+  overflow:hidden;
+}
+#scr-game .game-header,
+#scr-game .hint-area,
+#scr-game #game-msg,
+#scr-game #stroke-toast,
+#scr-game #result-banner,
+#scr-game .game-controls { flex-shrink:0; }
 
-  /*
-   * キャンバス正方形維持の核心。
-   * flex:1 だと縦方向に引き伸ばされて正方形が崩れるため、
-   * min-height:0 で flex の縮小を許可しつつ
-   * width / height を JS で同値に揃える方式に切り替える。
-   * CSS 側では aspect-ratio を外し、width:100% のみ指定。
-   * 実際の height は JS の resizeCanvas() で制御する。
-   */
-  #scr-game .canvas-wrap {
-    flex:1;
-    min-height:0;
-    width:100%;
-    aspect-ratio:unset;  /* JS制御に委ねる */
-    align-self:center;
-  }
+/* スペーサー: flex:1 で残り縦スペースを確保するだけ */
+#scr-game .canvas-spacer {
+  flex:1;
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* canvas-wrap: JSがwidth/heightを直接セット。aspect-ratioは使わない */
+#scr-game .canvas-wrap {
+  width:100%; /* JSセット前のフォールバック */
+  aspect-ratio:1;
 }
 
 .screen.active { display:block; }
@@ -428,13 +427,15 @@ body {
     <span class="result-label" id="rb-label"></span>
   </div>
   <div class="game-msg" id="game-msg">うすいせんを なぞろう！</div>
-  <div class="canvas-wrap" id="canvas-wrap">
-    <canvas id="canvas-bg"></canvas>
-    <canvas id="canvas-fx"></canvas>
-    <canvas id="canvas-dr"></canvas>
-    <canvas id="canvas-ov" style="pointer-events:none;opacity:0;transition:opacity .4s"></canvas>
-    <div id="guideLayer"></div>
-    <div id="hanamaru-layer"></div>
+  <div class="canvas-spacer" id="canvas-spacer">
+    <div class="canvas-wrap" id="canvas-wrap">
+      <canvas id="canvas-bg"></canvas>
+      <canvas id="canvas-fx"></canvas>
+      <canvas id="canvas-dr"></canvas>
+      <canvas id="canvas-ov" style="pointer-events:none;opacity:0;transition:opacity .4s"></canvas>
+      <div id="guideLayer"></div>
+      <div id="hanamaru-layer"></div>
+    </div>
   </div>
   <div class="game-controls">
     <div class="ctrl-row">
@@ -555,8 +556,8 @@ function updateDailyBanner(){
 }
 
 let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,curGroup='h1';
-function startDaily(){initDaily();if(dailyState.completed){dailyState.done=[];dailyState.completed=false;save();}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game');loadQ();}
-function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';isRandom=false;queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game');loadQ();}
+function startDaily(){initDaily();if(dailyState.completed){dailyState.done=[];dailyState.completed=false;save();}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
+function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';isRandom=false;queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game',loadQ);}
 function setModePip(mode){const pip=document.getElementById('mode-pip');const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};pip.textContent=labels[mode]||mode;pip.className='mode-pip'+(mode==='daily'?' daily':mode==='srs'?' srs':mode==='test'?' test':'');}
 
 let listMode='practice';
@@ -574,49 +575,39 @@ function renderKanaGrid(){
     if(hasDone){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
     if(srs&&!isDue){const tag=document.createElement('div');tag.className='k-srs-tag';const days=Math.round((new Date(srs.due)-new Date(today))/86400000);tag.textContent=days<=0?'きょう':days+'日後';card.appendChild(tag);}
     card.appendChild(document.createTextNode(w.char));
-    card.onclick=()=>{snd('click');curMode=listMode;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();};
+    card.onclick=()=>{snd('click');curMode=listMode;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
     grid.appendChild(card);
   });
 }
-function startAll(){snd('click');curMode=listMode;queue=[...KANA_WORDS[curGroup]];qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();}
-function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game');loadQ();}
-function startRandom(){snd('click');curMode='test';isRandom=true;queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('test');showScreen('scr-game');loadQ();}
-function showScreen(id){window.scrollTo(0,0);document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='scr-title')updateTitle();if(id==='scr-game')resizeCanvas();}
+function startAll(){snd('click');curMode=listMode;queue=[...KANA_WORDS[curGroup]];qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
+function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
+function startRandom(){snd('click');curMode='test';isRandom=true;queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
+function showScreen(id, cb){
+  window.scrollTo(0,0);
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==='scr-title'){updateTitle();if(cb)cb();}
+  else if(id==='scr-game'){
+    // active付与→2フレーム待ちでレイアウト確定→サイズ計算→コールバック
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{resizeCanvas();if(cb)cb();}));
+  } else {if(cb)cb();}
+}
 function goBack(){animating=false;if(isRandom||['tokkun','nigate','daily','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
 
-/* ── キャンバスサイズ決定（iPad正方形対応の核心） ──
- * タブレット幅(≥600px)では flex レイアウト内で
- * 残り高さに合わせた正方形サイズを計算して直接指定する。
- * スマホ幅では CSS の aspect-ratio:1 に任せる。
+/* ── キャンバス正方形サイズ決定 ──
+ * Safari は flex 子要素の aspect-ratio を無視して縦横どちらにも潰れる。
+ * 解決策: spacer(flex:1)の clientWidth/clientHeight を両方測って
+ * 小さい方を一辺に直接セット。同期的に実行して initCanvas に値を渡す。
+ * iPhone横向き・iPad縦横すべてこれで対応。
  */
 function resizeCanvas(){
   const wrap=document.getElementById('canvas-wrap');
-  if(!wrap)return;
-  if(window.innerWidth>=600){
-    // flex コンテナ内で wrap が取れる最大高さを計算
-    const game=document.getElementById('scr-game');
-    const gameH=game.clientHeight;
-    // wrap 以外の子要素の高さ合計
-    let othersH=0;
-    for(const child of game.children){
-      if(child===wrap)continue;
-      othersH+=child.offsetHeight;
-    }
-    // gap 分（8px × 要素間）を引く（概算4要素間 = 32px）
-    othersH+=32;
-    const avail=gameH-othersH;
-    // 幅と高さの小さい方を辺とする
-    const maxW=game.clientWidth-40; // padding 20px×2
-    const side=Math.min(avail,maxW);
-    if(side>80){
-      wrap.style.width=side+'px';
-      wrap.style.height=side+'px';
-      wrap.style.alignSelf='center';
-    }
-  } else {
-    // スマホ: インラインスタイルをリセットして CSS の aspect-ratio に委ねる
-    wrap.style.width='';
-    wrap.style.height='';
+  const spacer=document.getElementById('canvas-spacer');
+  if(!wrap||!spacer)return;
+  const side=Math.min(spacer.clientWidth, spacer.clientHeight);
+  if(side>60){
+    wrap.style.width=side+'px';
+    wrap.style.height=side+'px';
   }
 }
 
@@ -777,7 +768,15 @@ function closeOv(id){document.getElementById(id).classList.remove('show');}
 function doReset(){localStorage.clear();cleared={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
 
 // ウィンドウリサイズ時にも再計算
-window.addEventListener('resize',()=>{if(document.getElementById('scr-game').classList.contains('active')){resizeCanvas();if(cW!==document.getElementById('canvas-wrap').offsetWidth)initCanvas();}});
+window.addEventListener('resize',()=>{
+  if(document.getElementById('scr-game').classList.contains('active')){
+    requestAnimationFrame(()=>{
+      resizeCanvas();
+      const newW=document.getElementById('canvas-wrap').offsetWidth;
+      if(newW>0&&newW!==cW)initCanvas();
+    });
+  }
+});
 
 let AC;
 function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
