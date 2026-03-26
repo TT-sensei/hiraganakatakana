@@ -145,6 +145,19 @@ body {
 .group-bar-fill { height:100%; background:linear-gradient(90deg,#5DE88A,#2CB86A); border-radius:var(--r-pill); transition:width .4s; }
 
 /* サブアクション */
+.random-zone { margin-bottom:14px; }
+.btn-random {
+  width:100%; padding:15px;
+  background:linear-gradient(135deg,#FFD700 0%,#FF9900 50%,#FF6B00 100%);
+  color:white; border:none; border-radius:20px;
+  font-family:inherit; font-size:1.05rem; font-weight:900;
+  cursor:pointer; letter-spacing:.04em;
+  box-shadow:0 5px 0 rgba(180,100,0,.4),0 8px 20px rgba(255,160,0,.3);
+  transition:all .12s;
+  position:relative; overflow:hidden;
+}
+.btn-random::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 60%); pointer-events:none; }
+.btn-random:active { transform:translateY(4px); box-shadow:0 1px 0 rgba(180,100,0,.3); }
 .sub-actions { display:flex; gap:8px; margin-bottom:20px; }
 .sub-btn { flex:1; padding:11px 4px; background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:16px; font-family:inherit; font-size:.75rem; font-weight:700; color:var(--c-ink-mid); cursor:pointer; text-align:center; transition:all .15s; box-shadow:0 4px 0 rgba(200,160,120,.2); }
 .sub-btn:active { transform:translateY(3px); box-shadow:none; }
@@ -329,6 +342,11 @@ body {
     </div>
   </div>
 
+  <div class="random-zone">
+    <div class="zone-label">チャレンジ</div>
+    <button class="btn-random" onclick="startRandom()">🎲 ランダムテスト！</button>
+  </div>
+
   <div class="groups-zone">
     <div class="zone-label">グループ</div>
     <div class="group-grid">
@@ -358,7 +376,6 @@ body {
   <div class="sub-actions">
     <button class="sub-btn tokkun" onclick="startSpecial('tokkun')">🏅 とっくん</button>
     <button class="sub-btn nigate" onclick="startSpecial('nigate')">🐢 にがて</button>
-    <button class="sub-btn" onclick="startRandom()">🎲 ランダム</button>
   </div>
 
   <div class="parent-note"><strong>保護者・先生方へ：</strong>筆順判定はあくまで目安です。正しい書き方は教科書・先生の指導を優先してください。</div>
@@ -526,7 +543,7 @@ function updateDailyBanner(){
   const card=document.getElementById('daily-card');
   document.getElementById('streak-num').textContent=streak;
   document.getElementById('daily-prog-fill').style.width=`${Math.round(done/DAILY_COUNT*100)}%`;
-  if(completed){card.classList.add('is-done');document.getElementById('daily-label').textContent='かんりょう';document.getElementById('daily-main-text').textContent='きょうのれんしゅう おわり！';document.getElementById('daily-sub-text').textContent='もう一度タップ → くりかえし練習';}
+  if(completed){card.classList.add('is-done');document.getElementById('daily-label').textContent='かんりょう';document.getElementById('daily-main-text').textContent='きょうのれんしゅう おわり！';document.getElementById('daily-sub-text').textContent='またあした！🌟';}
   else{card.classList.remove('is-done');document.getElementById('daily-label').textContent='デイリー';document.getElementById('daily-main-text').textContent='きょうの5もじ';document.getElementById('daily-sub-text').textContent=done>0?`あと ${DAILY_COUNT-done} もじ！がんばろう`:'まいにちれんしゅうしよう！';}
   const map={hira:'active-hira',kata:'active-kata',both:'active-both'};
   ['hira','kata','both'].forEach(k=>{const btn=document.getElementById('dk-'+k);if(btn)btn.className='kind-btn'+(dailyKind===k?' '+map[k]:'');});
@@ -534,7 +551,7 @@ function updateDailyBanner(){
   if(due.length>0&&!completed){sc.style.display='flex';document.getElementById('srs-count').textContent=due.length+'こ';}else{sc.style.display='none';}
 }
 let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,curGroup='h1';
-function startDaily(){initDaily();if(dailyState.completed){dailyState.done=[];dailyState.completed=false;save();}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
+function startDaily(){initDaily();if(dailyState.completed){return;}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
 function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';isRandom=false;queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game',loadQ);}
 function setModePip(mode){const pip=document.getElementById('mode-pip');const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};pip.textContent=labels[mode]||mode;pip.className='mode-pip'+(mode==='daily'?' daily':mode==='srs'?' srs':mode==='test'?' test':'');}
 let listMode='practice';
