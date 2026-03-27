@@ -50,18 +50,19 @@ body {
 @media (min-width:600px) { .screen:not(#scr-game) { max-width:580px; padding:20px 28px 48px; } }
 #scr-game.active {
   display:block !important;
-  max-width:680px;
+  max-width:720px;
   padding:10px 20px 40px;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
 }
 @media (min-width:700px) {
-  #scr-game.active { max-width:820px; padding:10px 32px 40px; }
+  #scr-game.active { max-width:860px; padding:10px 32px 40px; }
 }
 #scr-game .canvas-spacer {
   display:flex; align-items:center; justify-content:center; width:100%;
 }
-#scr-game .canvas-wrap { width:100%; max-width:min(76vh, 660px); aspect-ratio:1; }
+#scr-game .canvas-wrap { width:100%; max-width:min(72vh, 700px); aspect-ratio:1; }
+#scr-game .game-controls { width:100%; }
 .screen.active { display:block; }
 
 /* タイトルヘッダー */
@@ -200,8 +201,8 @@ body {
 .mode-pip.daily { background:linear-gradient(135deg,#FF8C42,#FF6B00); }
 .mode-pip.srs   { background:linear-gradient(135deg,#7B5CE5,#5B3DC8); }
 .prog-nums { font-size:.82rem; font-weight:700; color:var(--c-ink-dim); }
-.hint-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:6px 0 4px; }
-.hint-emoji-lg { font-size:2.6rem; line-height:1; display:block; flex-shrink:0; animation:emoji-pop .3s cubic-bezier(.2,1.4,.4,1); margin-bottom:0; display:inline; }
+.hint-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:6px 0 4px; flex-wrap:nowrap; }
+.hint-emoji-lg { font-size:2.4rem; line-height:1; flex-shrink:0; animation:emoji-pop .3s cubic-bezier(.2,1.4,.4,1); }
 @keyframes emoji-pop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
 .hint-word-box { display:inline-flex; align-items:flex-end; gap:3px; background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:16px; padding:6px 16px; box-shadow:var(--shadow-sm); }
 .hint-char { font-size:1.9rem; font-weight:700; font-family:'Klee One',cursive; color:var(--c-ink); }
@@ -410,12 +411,6 @@ body {
     </div>
   </div>
   <div class="hint-area" id="hint-area"></div>
-  <div id="stroke-toast"></div>
-  <div id="result-banner">
-    <span class="result-stars" id="rb-stars"></span>
-    <span class="result-label" id="rb-label"></span>
-  </div>
-  <div class="game-msg" id="game-msg">うすいせんを なぞろう！</div>
   <div class="canvas-spacer" id="canvas-spacer">
     <div class="canvas-wrap" id="canvas-wrap">
       <canvas id="canvas-bg"></canvas>
@@ -426,6 +421,12 @@ body {
       <div id="hanamaru-layer"></div>
     </div>
   </div>
+  <div id="stroke-toast"></div>
+  <div id="result-banner">
+    <span class="result-stars" id="rb-stars"></span>
+    <span class="result-label" id="rb-label"></span>
+  </div>
+  <div class="game-msg" id="game-msg">うすいせんを なぞろう！</div>
   <div class="game-controls">
     <div class="ctrl-row">
       <button class="btn-sub anim" onclick="doAnime()">▶ じゅん</button>
@@ -710,7 +711,7 @@ function animeDrawStroke(pathD, sc, doneCount, onFinish){
   const totalLen = p.getTotalLength();
   _svgM.removeChild(p);
 
-  const DURATION = Math.max(400, Math.min(900, totalLen * 5)); // 長さに応じた速度
+  const DURATION = Math.max(150, Math.min(400, totalLen * 2.2)); // 長さに応じた速度（高速化）
   const startTime = performance.now();
 
   function drawDone(){
@@ -796,7 +797,7 @@ async function doAnime(){
           for(let j=0;j<=i;j++){ctxFx.beginPath();ctxFx.stroke(new Path2D(strokes[j]));}
           ctxFx.restore();
         }
-        setTimeout(resolve, completed ? 180 : 0);
+        setTimeout(resolve, completed ? 80 : 0);
       });
     });
     if(!animating)break;
