@@ -6,6 +6,7 @@
 <title>かなカナ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet">
 <script src="titles.js"></script>
 <script src="kana_words.js"></script>
 <style>
@@ -34,7 +35,16 @@
   --shadow-md: 0 4px 16px rgba(255,140,80,.15);
 }
 * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+.material-symbols-rounded {
+  font-family:'Material Symbols Rounded'; font-weight:normal; font-style:normal;
+  font-size:1.35em; line-height:1; letter-spacing:normal; text-transform:none;
+  display:inline-block; white-space:nowrap; word-wrap:normal; direction:ltr;
+  -webkit-font-feature-settings:'liga'; -webkit-font-smoothing:antialiased;
+  font-feature-settings:'liga'; vertical-align:-.17em;
+}
+.material-symbols-rounded.filled { font-variation-settings:'FILL' 1; }
 html { touch-action: manipulation; -webkit-text-size-adjust: none; }
+button { touch-action:manipulation; user-select:none; -webkit-user-select:none; }
 body {
   font-family:'Zen Maru Gothic','Hiragino Rounded Gothic Pro',sans-serif;
   background: var(--c-paper);
@@ -68,7 +78,7 @@ body {
 /* タイトルヘッダー */
 .title-header { display:flex; align-items:center; justify-content:space-between; padding:20px 0 16px; }
 .title-logo-wrap { display:flex; align-items:center; gap:10px; }
-.title-logo-icon { font-size:2.2rem; animation:wobble 3s ease-in-out infinite; display:block; }
+.title-logo-icon { font-size:2.45rem; animation:wobble 3s ease-in-out infinite; display:block; color:var(--c-action); }
 @keyframes wobble { 0%,100%{transform:rotate(-5deg) scale(1)} 50%{transform:rotate(5deg) scale(1.1)} }
 .title-logo-main { font-size:1.6rem; font-weight:900; color:var(--c-action); letter-spacing:-.02em; text-shadow:0 3px 0 rgba(255,140,60,.3); }
 .title-logo-sub { font-size:.68rem; color:var(--c-ink-dim); margin-top:1px; }
@@ -82,10 +92,10 @@ body {
   box-shadow:var(--shadow-md),inset 0 1px 0 rgba(255,255,255,.8);
   position:relative; overflow:hidden;
 }
-.lv-card-full::after { content:'✨'; position:absolute; right:12px; top:-2px; font-size:1.4rem; opacity:.4; animation:spin 4s linear infinite; }
+.lv-card-full::after { content:''; position:absolute; right:-16px; top:-22px; width:78px; height:78px; border:10px dotted rgba(255,140,60,.16); border-radius:50%; animation:spin 8s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 .lv-card-left { display:flex; align-items:center; gap:12px; }
-.lv-mascot-lg { font-size:2.8rem; line-height:1; animation:bounce 2s ease-in-out infinite; }
+.lv-mascot-lg { font-size:2.8rem; line-height:1; color:var(--c-action); animation:bounce 2s ease-in-out infinite; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 .lv-card-title { font-size:1.35rem; font-weight:900; color:var(--c-action); line-height:1; text-shadow:0 2px 0 rgba(255,140,60,.2); }
 .lv-card-name { font-size:.72rem; color:var(--c-ink-dim); margin-top:3px; }
@@ -141,7 +151,7 @@ body {
 .groups-zone { margin-bottom:16px; }
 .group-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
 .group-card { background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:20px; padding:14px 12px 12px; cursor:pointer; transition:all .15s; box-shadow:0 4px 0 rgba(200,160,120,.2); position:relative; overflow:hidden; }
-.group-card::after { content:attr(data-emoji); position:absolute; right:8px; top:6px; font-size:1.1rem; opacity:.35; }
+.group-icon { position:absolute; right:10px; top:8px; font-size:1.7rem; color:var(--c-action); opacity:.24; }
 .group-card:active { transform:translateY(3px); box-shadow:none; }
 .group-name { font-size:1rem; font-weight:700; color:var(--c-ink); margin-bottom:5px; font-family:'Klee One',cursive; }
 .group-prog-line { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
@@ -202,7 +212,7 @@ body {
 .mode-pip.srs   { background:linear-gradient(135deg,#7B5CE5,#5B3DC8); }
 .prog-nums { font-size:.82rem; font-weight:700; color:var(--c-ink-dim); }
 .hint-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:6px 0 4px; flex-wrap:nowrap; }
-.hint-emoji-lg { font-size:2.4rem; line-height:1; flex-shrink:0; animation:emoji-pop .3s cubic-bezier(.2,1.4,.4,1); }
+.hint-icon-lg { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center; background:var(--c-action-l); color:var(--c-action); font-size:2.25rem; flex-shrink:0; animation:emoji-pop .3s cubic-bezier(.2,1.4,.4,1); }
 @keyframes emoji-pop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
 .hint-word-box { display:inline-flex; align-items:flex-end; gap:3px; background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:16px; padding:6px 16px; box-shadow:var(--shadow-sm); }
 .hint-char { font-size:1.9rem; font-weight:700; font-family:'Klee One',cursive; color:var(--c-ink); }
@@ -221,6 +231,23 @@ body {
 @keyframes popIn { 0%{transform:scale(.5);opacity:0} 65%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
 .result-stars { font-size:2rem; letter-spacing:4px; display:block; animation:popIn .35s ease forwards; }
 .result-label { font-size:.88rem; font-weight:700; margin-top:2px; display:block; animation:popIn .3s .08s ease both; }
+.result-stars .material-symbols-rounded { color:#F6B800; font-size:2rem; font-variation-settings:'FILL' 1; }
+.practice-steps { display:none; align-items:center; justify-content:center; gap:8px; padding:4px 0 6px; }
+.practice-steps.show { display:flex; }
+.practice-step { min-width:54px; height:32px; padding:0 9px; border-radius:999px; display:flex; align-items:center; justify-content:center; gap:3px; background:#F3EDE6; color:var(--c-ink-dim); font-size:.72rem; font-weight:900; transition:.2s; }
+.practice-step.current { background:var(--c-action-l); color:var(--c-action); outline:2px solid var(--c-action); }
+.practice-step.done { background:var(--c-practice-l); color:var(--c-practice); }
+.practice-note { text-align:center; font-size:.72rem; color:var(--c-ink-mid); margin:-5px 0 12px; min-height:1.2em; }
+.k-card.locked { background:#F4F1ED; border-color:#DDD4CA; color:#AAA29A; box-shadow:none; }
+.k-lock { position:absolute; right:3px; bottom:2px; font-size:.85rem; color:#9D948C; }
+.mode-help { min-height:22px; margin:-7px 0 9px; text-align:center; font-size:.68rem; color:var(--c-ink-dim); }
+.btn-main:disabled { background:#D7D1CB; color:#888; box-shadow:none; cursor:not-allowed; transform:none; }
+.button-icon { margin-right:4px; }
+@media (pointer:coarse) {
+  .kind-btn,.mode-toggle-btn,.sub-btn,.reg-btn,.btn-sound { min-height:48px; }
+  .group-card { min-height:86px; }
+  .btn-sound { min-width:48px; }
+}
 
 /* キャンバス */
 .canvas-wrap {
@@ -267,7 +294,7 @@ body {
 .overlay.show { display:flex; }
 @keyframes slideUp { from{transform:translateY(36px);opacity:0} to{transform:translateY(0);opacity:1} }
 .ov-sheet { background:var(--c-surface); border-radius:28px; padding:28px 24px; text-align:center; width:calc(100% - 32px); max-width:380px; animation:slideUp .25s cubic-bezier(.2,.8,.4,1) forwards; box-shadow:0 -4px 40px rgba(0,0,0,.15); }
-.ov-emoji { font-size:2.8rem; display:block; margin-bottom:12px; animation:emoji-pop .4s .1s cubic-bezier(.2,1.4,.4,1) both; }
+.ov-emoji { font-size:3.2rem; display:block; margin-bottom:12px; color:var(--c-action); animation:emoji-pop .4s .1s cubic-bezier(.2,1.4,.4,1) both; }
 .ov-title { font-size:1.3rem; font-weight:900; margin-bottom:6px; color:var(--c-ink); }
 .ov-sub   { font-size:.8rem; color:var(--c-ink-dim); margin-bottom:20px; }
 .ov-btns  { display:flex; gap:8px; }
@@ -276,7 +303,7 @@ body {
 .ov-btn.primary { background:linear-gradient(135deg,#FF8C42,#FF6B00); color:white; box-shadow:0 4px 0 rgba(200,80,0,.35); }
 .ov-btn.secondary { background:var(--c-border-l); color:var(--c-ink-mid); }
 .lv-sheet { background:linear-gradient(160deg,#4B38DC 0%,#7B5CE5 50%,#A855F7 100%); border-radius:28px; padding:32px 24px; text-align:center; width:calc(100% - 32px); max-width:380px; animation:slideUp .25s cubic-bezier(.2,.8,.4,1) forwards; box-shadow:0 -4px 40px rgba(80,40,200,.3); position:relative; overflow:hidden; }
-.lv-sheet::before { content:'✨'; position:absolute; top:10px; left:0; right:0; text-align:center; font-size:1.4rem; letter-spacing:1.5rem; opacity:.5; }
+.lv-sheet::before { content:''; position:absolute; top:-48px; left:50%; width:150px; height:150px; transform:translateX(-50%); border:18px dotted rgba(255,255,255,.16); border-radius:50%; }
 .lv-title-sm { font-size:1rem; font-weight:700; color:rgba(255,255,255,.75); margin-bottom:4px; letter-spacing:.1em; }
 .lv-num { font-size:3.2rem; font-weight:900; color:white; line-height:1; text-shadow:0 4px 0 rgba(0,0,0,.2); }
 .lv-name { font-size:.85rem; color:rgba(255,255,255,.7); margin:8px 0 22px; }
@@ -297,7 +324,7 @@ body {
 <div id="scr-title" class="screen active">
   <div class="title-header">
     <div class="title-logo-wrap">
-      <span class="title-logo-icon">✏️</span>
+      <span class="title-logo-icon material-symbols-rounded filled" aria-hidden="true">edit</span>
       <div>
         <div class="title-logo-main">かなカナ</div>
         <div class="title-logo-sub">ひらがな・カタカナ れんしゅう</div>
@@ -310,19 +337,19 @@ body {
     <div class="daily-card" id="daily-card" onclick="startDaily()">
       <div class="daily-top">
         <span class="daily-label" id="daily-label">デイリー</span>
-        <span class="streak-badge">🔥&ensp;<span id="streak-num">0</span>にち</span>
+        <span class="streak-badge"><span class="material-symbols-rounded filled" aria-hidden="true">local_fire_department</span><span id="streak-num">0</span>にち</span>
       </div>
       <div class="daily-main-text" id="daily-main-text">きょうの5もじ</div>
       <div class="daily-sub-text"  id="daily-sub-text">まいにちれんしゅうしよう！</div>
       <div class="daily-prog-bar"><div class="daily-prog-fill" id="daily-prog-fill" style="width:0%"></div></div>
     </div>
     <div class="kind-row">
-      <button class="kind-btn" id="dk-hira" onclick="setDailyKind('hira',event)">🌸 ひらがな</button>
-      <button class="kind-btn" id="dk-kata" onclick="setDailyKind('kata',event)">🔷 カタカナ</button>
-      <button class="kind-btn" id="dk-both" onclick="setDailyKind('both',event)">✨ どちらも</button>
+      <button class="kind-btn" id="dk-hira" onclick="setDailyKind('hira',event)"><span class="material-symbols-rounded" aria-hidden="true">spa</span> ひらがな</button>
+      <button class="kind-btn" id="dk-kata" onclick="setDailyKind('kata',event)"><span class="material-symbols-rounded" aria-hidden="true">diamond</span> カタカナ</button>
+      <button class="kind-btn" id="dk-both" onclick="setDailyKind('both',event)"><span class="material-symbols-rounded" aria-hidden="true">auto_awesome</span> どちらも</button>
     </div>
     <div class="srs-card" id="srs-card" onclick="startSRS()" style="display:none">
-      <div class="srs-icon">🧠</div>
+      <div class="srs-icon"><span class="material-symbols-rounded" aria-hidden="true">psychology_alt</span></div>
       <div class="srs-info">
         <div class="srs-title">ふくしゅうタイム</div>
         <div class="srs-sub">わすれないうちにおさらい</div>
@@ -334,14 +361,14 @@ body {
   <div class="lv-card-zone">
     <div class="lv-card-full">
       <div class="lv-card-left">
-        <div class="lv-mascot-lg" id="t-mascot">🥚</div>
+        <div class="lv-mascot-lg material-symbols-rounded filled" id="t-mascot">egg</div>
         <div class="lv-card-info">
           <div class="lv-card-title">Lv.<span id="t-lv">1</span></div>
           <div class="lv-card-name" id="t-name">かなタマゴ</div>
         </div>
       </div>
       <div class="lv-card-right">
-        <div class="lv-xp-label">あつめた⭐ <span id="t-nxp"></span></div>
+        <div class="lv-xp-label">あつめたスター <span id="t-nxp"></span></div>
         <div class="lv-xp-wrap"><div class="lv-xp-bar" id="t-xpbar" style="width:0%"></div></div>
       </div>
     </div>
@@ -349,28 +376,32 @@ body {
 
   <div class="random-zone">
     <div class="zone-label">チャレンジ</div>
-    <button class="btn-random" onclick="startRandom()">🎲 ランダムテスト！</button>
+    <button class="btn-random" onclick="startRandom()"><span class="material-symbols-rounded button-icon" aria-hidden="true">casino</span>ランダムテスト！</button>
   </div>
 
   <div class="groups-zone">
     <div class="zone-label">グループ</div>
     <div class="group-grid">
-      <div class="group-card" data-emoji="🌸" onclick="openList('h1')">
+      <div class="group-card" onclick="openList('h1')">
+        <span class="group-icon material-symbols-rounded" aria-hidden="true">spa</span>
         <div class="group-name">あ〜な行</div>
         <div class="group-prog-line"><span class="group-prog-text" id="gp-h1">0 / 25</span><span class="group-prog-text" id="gpct-h1">0%</span></div>
         <div class="group-bar-wrap"><div class="group-bar-fill" id="gbar-h1" style="width:0%"></div></div>
       </div>
-      <div class="group-card" data-emoji="🌼" onclick="openList('h2')">
+      <div class="group-card" onclick="openList('h2')">
+        <span class="group-icon material-symbols-rounded" aria-hidden="true">local_florist</span>
         <div class="group-name">は〜ん</div>
         <div class="group-prog-line"><span class="group-prog-text" id="gp-h2">0 / 21</span><span class="group-prog-text" id="gpct-h2">0%</span></div>
         <div class="group-bar-wrap"><div class="group-bar-fill" id="gbar-h2" style="width:0%"></div></div>
       </div>
-      <div class="group-card" data-emoji="💎" onclick="openList('k1')">
+      <div class="group-card" onclick="openList('k1')">
+        <span class="group-icon material-symbols-rounded" aria-hidden="true">diamond</span>
         <div class="group-name">ア〜ナ行</div>
         <div class="group-prog-line"><span class="group-prog-text" id="gp-k1">0 / 25</span><span class="group-prog-text" id="gpct-k1">0%</span></div>
         <div class="group-bar-wrap"><div class="group-bar-fill" id="gbar-k1" style="width:0%"></div></div>
       </div>
-      <div class="group-card" data-emoji="🌊" onclick="openList('k2')">
+      <div class="group-card" onclick="openList('k2')">
+        <span class="group-icon material-symbols-rounded" aria-hidden="true">waves</span>
         <div class="group-name">ハ〜ン</div>
         <div class="group-prog-line"><span class="group-prog-text" id="gp-k2">0 / 21</span><span class="group-prog-text" id="gpct-k2">0%</span></div>
         <div class="group-bar-wrap"><div class="group-bar-fill" id="gbar-k2" style="width:0%"></div></div>
@@ -379,8 +410,8 @@ body {
   </div>
 
   <div class="sub-actions">
-    <button class="sub-btn tokkun" onclick="startSpecial('tokkun')">🏅 とっくん</button>
-    <button class="sub-btn nigate" onclick="startSpecial('nigate')">🐢 にがて</button>
+    <button class="sub-btn tokkun" onclick="startSpecial('tokkun')"><span class="material-symbols-rounded" aria-hidden="true">workspace_premium</span> とっくん</button>
+    <button class="sub-btn nigate" onclick="startSpecial('nigate')"><span class="material-symbols-rounded" aria-hidden="true">exercise</span> にがて</button>
   </div>
 
   <div class="parent-note"><strong>保護者・先生方へ：</strong>筆順判定はあくまで目安です。正しい書き方は教科書・先生の指導を優先してください。</div>
@@ -390,26 +421,33 @@ body {
 <!-- カード一覧 -->
 <div id="scr-list" class="screen">
   <div class="list-header">
-    <button class="btn-back" onclick="showScreen('scr-title')">←</button>
+    <button class="btn-back" onclick="showScreen('scr-title')" aria-label="もどる"><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span></button>
     <div class="list-title" id="list-title">あ〜な行</div>
   </div>
   <div class="mode-toggle">
-    <button class="mode-toggle-btn" id="lb-prac" onclick="listSetMode('practice')">✏️ れんしゅう</button>
-    <button class="mode-toggle-btn" id="lb-test" onclick="listSetMode('test')">🎯 テスト</button>
+    <button class="mode-toggle-btn" id="lb-prac" onclick="listSetMode('practice')"><span class="material-symbols-rounded" aria-hidden="true">edit</span> れんしゅう</button>
+    <button class="mode-toggle-btn" id="lb-test" onclick="listSetMode('test')"><span class="material-symbols-rounded" aria-hidden="true">target</span> テスト</button>
   </div>
+  <div class="mode-help" id="mode-help">1もじを 3かい かくと、テストが ひらくよ</div>
   <div id="kana-grid" class="kana-grid"></div>
-  <button class="btn-all" onclick="startAll()">ぜんぶ やる →</button>
+  <button class="btn-all" onclick="startAll()">ぜんぶ やる <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></button>
 </div>
 
 <!-- ゲーム画面 -->
 <div id="scr-game" class="screen">
   <div class="game-header">
-    <button class="btn-back" onclick="goBack()">←</button>
+    <button class="btn-back" onclick="goBack()" aria-label="もどる"><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span></button>
     <div class="game-progress">
       <span class="mode-pip" id="mode-pip">れんしゅう</span>
       <span class="prog-nums" id="prog-text">1 / 25</span>
     </div>
   </div>
+  <div class="practice-steps" id="practice-steps" aria-label="3かいれんしゅう">
+    <span class="practice-step" data-round="1">1かいめ</span>
+    <span class="practice-step" data-round="2">2かいめ</span>
+    <span class="practice-step" data-round="3">3かいめ</span>
+  </div>
+  <div class="practice-note" id="practice-note"></div>
   <div class="hint-area" id="hint-area"></div>
   <div class="canvas-spacer" id="canvas-spacer">
     <div class="canvas-wrap" id="canvas-wrap">
@@ -429,20 +467,20 @@ body {
   <div class="game-msg" id="game-msg">うすいせんを なぞろう！</div>
   <div class="game-controls">
     <div class="ctrl-row">
-      <button class="btn-sub anim" onclick="doAnime()">▶ じゅん</button>
-      <button class="btn-sub"      onclick="doRetry()">↺ やりなおし</button>
-      <button class="btn-main"     onclick="doNext()">つぎへ →</button>
+      <button class="btn-sub anim" onclick="doAnime()"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span> じゅん</button>
+      <button class="btn-sub" onclick="doRetry()"><span class="material-symbols-rounded" aria-hidden="true">replay</span> やりなおし</button>
+      <button class="btn-main" id="btn-next" onclick="doNext()">つぎへ <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></button>
     </div>
     <div class="register-row">
-      <button class="reg-btn" id="btn-tokk" onclick="toggleTokk()">🏅 とっくん</button>
-      <button class="reg-btn" id="btn-niga" onclick="toggleNiga()">🐢 にがて</button>
+      <button class="reg-btn" id="btn-tokk" onclick="toggleTokk()"><span class="material-symbols-rounded" aria-hidden="true">workspace_premium</span> とっくん</button>
+      <button class="reg-btn" id="btn-niga" onclick="toggleNiga()"><span class="material-symbols-rounded" aria-hidden="true">exercise</span> にがて</button>
     </div>
     <div class="srs-eval" id="srs-eval">
       <span class="srs-eval-label">どのくらい かんたんだった？</span>
       <div class="srs-eval-btns">
-        <button class="srs-btn hard" onclick="rateSRS(1)">😓 むずかしい<br><small>1にち後</small></button>
-        <button class="srs-btn ok"   onclick="rateSRS(3)">🙂 ふつう<br><small>3にち後</small></button>
-        <button class="srs-btn easy" onclick="rateSRS(5)">😄 かんたん<br><small>7にち後</small></button>
+        <button class="srs-btn hard" onclick="rateSRS(1)"><span class="material-symbols-rounded" aria-hidden="true">sentiment_dissatisfied</span> むずかしい<br><small>1にち後</small></button>
+        <button class="srs-btn ok" onclick="rateSRS(3)"><span class="material-symbols-rounded" aria-hidden="true">sentiment_neutral</span> ふつう<br><small>3にち後</small></button>
+        <button class="srs-btn easy" onclick="rateSRS(5)"><span class="material-symbols-rounded" aria-hidden="true">sentiment_very_satisfied</span> かんたん<br><small>7にち後</small></button>
       </div>
     </div>
   </div>
@@ -451,17 +489,17 @@ body {
 <!-- ov: レベルアップ -->
 <div class="overlay" id="ov-lv">
   <div class="lv-sheet">
-    <span class="ov-emoji" id="lv-mascot">🐣</span>
+    <span class="ov-emoji material-symbols-rounded filled" id="lv-mascot">flutter_dash</span>
     <div class="lv-title-sm">LEVEL UP !</div>
     <div class="lv-num">Lv.<span id="lv-num">2</span></div>
     <div class="lv-name" id="lv-name">かなのひよこ</div>
-    <button class="lv-btn" onclick="closeOv('ov-lv');doNext()">やったー！🎉</button>
+    <button class="lv-btn" onclick="closeOv('ov-lv');doNext()">やったー！</button>
   </div>
 </div>
 <!-- ov: ランダム完了 -->
 <div class="overlay" id="ov-rc">
   <div class="ov-sheet">
-    <span class="ov-emoji">🎉</span>
+    <span class="ov-emoji material-symbols-rounded filled">celebration</span>
     <div class="ov-title">テストクリア！</div>
     <div class="ov-sub">ボーナス +10XP ゲット！</div>
     <div class="ov-btns"><button class="ov-btn primary" onclick="closeOv('ov-rc');showScreen('scr-title')">ホームへ</button></div>
@@ -470,11 +508,24 @@ body {
 <!-- ov: デイリー完了 -->
 <div class="overlay" id="ov-daily">
   <div class="daily-done-sheet">
-    <span class="ov-emoji">🎊</span>
+    <span class="ov-emoji material-symbols-rounded filled">celebration</span>
     <div class="ov-title">きょうのれんしゅう おわり！</div>
-    <div class="daily-done-streak">🔥 <span id="ov-streak">1</span>にちれんぞく！</div>
+    <div class="daily-done-streak"><span class="material-symbols-rounded filled" aria-hidden="true">local_fire_department</span> <span id="ov-streak">1</span>にちれんぞく！</div>
     <div class="ov-sub" style="color:rgba(255,255,255,.8)">ボーナス +5XP ゲット！</div>
-    <button class="daily-done-btn" onclick="closeOv('ov-daily');showScreen('scr-title')">やったー！🌟</button>
+    <button class="daily-done-btn" onclick="closeOv('ov-daily');showScreen('scr-title')">やったー！</button>
+  </div>
+</div>
+
+<!-- ov: 3回練習完了 -->
+<div class="overlay" id="ov-practice">
+  <div class="ov-sheet">
+    <span class="ov-emoji material-symbols-rounded filled">task_alt</span>
+    <div class="ov-title"><span id="practice-char">あ</span>を 3かい かけたよ！</div>
+    <div class="ov-sub">じゅんび かんりょう。こんどは おてほんなしで かいてみよう。</div>
+    <div class="ov-btns">
+      <button class="ov-btn secondary" onclick="continuePracticeQueue()">つぎのもじ</button>
+      <button class="ov-btn primary" onclick="startUnlockedTest()"><span class="material-symbols-rounded" aria-hidden="true">target</span> テストへ</button>
+    </div>
   </div>
 </div>
 
@@ -498,8 +549,13 @@ document.addEventListener('touchmove',function(e){
 
 const ALL_WORDS=Object.values(KANA_WORDS).flat();
 const GROUPS={h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
-function getTitle(lv){if(typeof TITLES==='undefined'||!TITLES.length)return{lv:1,m:'🥚',t:'かなカナタマゴ'};let r=TITLES[0];for(const t of TITLES){if(lv>=t.lv)r=t;else break;}return r;}
+const TITLE_ICONS=[{lv:1,m:'egg'},{lv:5,m:'flutter_dash'},{lv:30,m:'pets'},{lv:80,m:'water'},{lv:100,m:'crown'},{lv:105,m:'cloud'},{lv:130,m:'stars'},{lv:150,m:'rocket_launch'},{lv:155,m:'auto_awesome'},{lv:180,m:'temple_buddhist'},{lv:205,m:'school'},{lv:230,m:'edit_note'},{lv:255,m:'all_inclusive'},{lv:280,m:'trophy'}];
+function getTitle(lv){let r=(typeof TITLES==='undefined'||!TITLES.length)?{lv:1,t:'かなカナタマゴ'}:TITLES[0];if(typeof TITLES!=='undefined')for(const t of TITLES){if(lv>=t.lv)r=t;else break;}let icon=TITLE_ICONS[0].m;for(const item of TITLE_ICONS){if(lv>=item.lv)icon=item.m;else break;}return{...r,m:icon};}
 let cleared=JSON.parse(localStorage.getItem('km_cleared'))||{};
+let practiceDone=JSON.parse(localStorage.getItem('km_practice_done'))||{};
+let testDone=JSON.parse(localStorage.getItem('km_test_done'))||{};
+// 旧版の記録を引き継ぎ、これまでに終えた文字は練習・テスト済みとして扱う。
+if(!Object.keys(practiceDone).length&&!Object.keys(testDone).length&&Object.keys(cleared).length){practiceDone={...cleared};testDone={...cleared};}
 let tokk=JSON.parse(localStorage.getItem('km_tokk'))||{};
 let niga=JSON.parse(localStorage.getItem('km_niga'))||{};
 let bonXP=parseInt(localStorage.getItem('km_bonxp'))||0;
@@ -510,9 +566,10 @@ let dailyState=JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],d
 let streak=parseInt(localStorage.getItem('km_streak'))||0;
 let lastStreakDate=localStorage.getItem('km_streakdate')||'';
 let dailyKind=localStorage.getItem('km_dailykind')||'hira';
-function save(){localStorage.setItem('km_cleared',JSON.stringify(cleared));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);}
-function todayStr(){return new Date().toISOString().slice(0,10);}
-function addDays(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));localStorage.setItem('km_practice_done',JSON.stringify(practiceDone));localStorage.setItem('km_test_done',JSON.stringify(testDone));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);}
+function dateKey(dt=new Date()){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
+function todayStr(){return dateKey(new Date());}
+function addDays(d,n){const [y,m,day]=d.split('-').map(Number),dt=new Date(y,m-1,day+n);return dateKey(dt);}
 function srsInit(c){if(!srsData[c])srsData[c]={interval:1,ef:2.5,due:todayStr(),reps:0};}
 function srsUpdate(c,r){srsInit(c);const s=srsData[c];if(r<3){s.interval=1;s.reps=0;}else{if(s.reps===0)s.interval=1;else if(s.reps===1)s.interval=3;else s.interval=Math.round(s.interval*s.ef);s.reps++;s.ef=Math.max(1.3,s.ef+0.1-(5-r)*(0.08+(5-r)*0.02));}s.due=addDays(todayStr(),s.interval);save();}
 function getDueChars(){const t=todayStr();return ALL_WORDS.filter(w=>{const s=srsData[w.char];return s&&s.due<=t;});}
@@ -526,7 +583,7 @@ function initDaily(){
   const due=getDueChars().filter(w=>TARGET.find(t=>t.char===w.char));
   let pool=[];
   if(due.length>=DAILY_COUNT){pool=due.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT);}
-  else{pool=[...due];const unlearned=TARGET.filter(w=>!cleared[w.char]&&!pool.find(p=>p.char===w.char));pool=[...pool,...unlearned.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];if(pool.length<DAILY_COUNT){const rest=TARGET.filter(w=>!pool.find(p=>p.char===w.char));pool=[...pool,...rest.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];}}
+  else{pool=[...due];const unlearned=TARGET.filter(w=>!testDone[w.char]&&!pool.find(p=>p.char===w.char));pool=[...pool,...unlearned.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];if(pool.length<DAILY_COUNT){const rest=TARGET.filter(w=>!pool.find(p=>p.char===w.char));pool=[...pool,...rest.sort(()=>Math.random()-.5).slice(0,DAILY_COUNT-pool.length)];}}
   dailyState={date:today,chars:pool.map(w=>w.char),done:[],completed:false};save();
 }
 function getDailyWords(){return dailyState.chars.filter(c=>!dailyState.done.includes(c)).map(c=>ALL_WORDS.find(w=>w.char===c)).filter(Boolean);}
@@ -538,8 +595,8 @@ function updateTitle(){
   document.getElementById('t-lv').textContent=lv;
   document.getElementById('t-name').textContent=ti.t;
   document.getElementById('t-xpbar').style.width=`${(cur/10)*100}%`;
-  document.getElementById('t-nxp').textContent='⭐'.repeat(cur)||'－';
-  for(const g of Object.keys(GROUPS)){const total=GROUPS[g].total,done=KANA_WORDS[g].filter(w=>cleared[w.char]).length,pct=Math.round(done/total*100);document.getElementById(`gp-${g}`).textContent=`${done} / ${total}`;document.getElementById(`gpct-${g}`).textContent=`${pct}%`;document.getElementById(`gbar-${g}`).style.width=`${pct}%`;}
+  document.getElementById('t-nxp').innerHTML=cur?'<span class="material-symbols-rounded filled" aria-hidden="true">star</span>'.repeat(cur):'－';
+  for(const g of Object.keys(GROUPS)){const total=GROUPS[g].total,done=KANA_WORDS[g].filter(w=>testDone[w.char]).length,pct=Math.round(done/total*100);document.getElementById(`gp-${g}`).textContent=`${done} / ${total}`;document.getElementById(`gpct-${g}`).textContent=`${pct}%`;document.getElementById(`gbar-${g}`).style.width=`${pct}%`;}
   updateDailyBanner();
 }
 function updateDailyBanner(){
@@ -548,37 +605,38 @@ function updateDailyBanner(){
   const card=document.getElementById('daily-card');
   document.getElementById('streak-num').textContent=streak;
   document.getElementById('daily-prog-fill').style.width=`${Math.round(done/DAILY_COUNT*100)}%`;
-  if(completed){card.classList.add('is-done');document.getElementById('daily-label').textContent='かんりょう';document.getElementById('daily-main-text').textContent='きょうのれんしゅう おわり！';document.getElementById('daily-sub-text').textContent='またあした！🌟';}
+  if(completed){card.classList.add('is-done');document.getElementById('daily-label').textContent='かんりょう';document.getElementById('daily-main-text').textContent='きょうのれんしゅう おわり！';document.getElementById('daily-sub-text').textContent='またあした！';}
   else{card.classList.remove('is-done');document.getElementById('daily-label').textContent='デイリー';document.getElementById('daily-main-text').textContent='きょうの5もじ';document.getElementById('daily-sub-text').textContent=done>0?`あと ${DAILY_COUNT-done} もじ！がんばろう`:'まいにちれんしゅうしよう！';}
   const map={hira:'active-hira',kata:'active-kata',both:'active-both'};
   ['hira','kata','both'].forEach(k=>{const btn=document.getElementById('dk-'+k);if(btn)btn.className='kind-btn'+(dailyKind===k?' '+map[k]:'');});
   const due=getDueChars();const sc=document.getElementById('srs-card');
   if(due.length>0&&!completed){sc.style.display='flex';document.getElementById('srs-count').textContent=due.length+'こ';}else{sc.style.display='none';}
 }
-let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,curGroup='h1';
+let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,curGroup='h1',practiceRound=1;
 function startDaily(){initDaily();if(dailyState.completed){return;}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
 function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';isRandom=false;queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game',loadQ);}
 function setModePip(mode){const pip=document.getElementById('mode-pip');const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};pip.textContent=labels[mode]||mode;pip.className='mode-pip'+(mode==='daily'?' daily':mode==='srs'?' srs':mode==='test'?' test':'');}
 let listMode='practice';
 function openList(g){snd('click');curGroup=g;const labels={h1:'あ〜な行',h2:'は〜ん',k1:'ア〜ナ行',k2:'ハ〜ン'};document.getElementById('list-title').textContent=labels[g];listMode='practice';updateListModeBtns();renderKanaGrid();showScreen('scr-list');}
 function listSetMode(m){snd('click');listMode=m;updateListModeBtns();renderKanaGrid();}
-function updateListModeBtns(){const pp=document.getElementById('lb-prac'),pt=document.getElementById('lb-test');pp.className='mode-toggle-btn'+(listMode==='practice'?' active-prac':'');pt.className='mode-toggle-btn'+(listMode==='test'?' active-test':'');}
+function updateListModeBtns(){const pp=document.getElementById('lb-prac'),pt=document.getElementById('lb-test'),help=document.getElementById('mode-help');pp.className='mode-toggle-btn'+(listMode==='practice'?' active-prac':'');pt.className='mode-toggle-btn'+(listMode==='test'?' active-test':'');help.textContent=listMode==='practice'?'1もじを 3かい かくと、テストが ひらくよ':'かぎの あいている もじを テストしよう';}
 function renderKanaGrid(){
   const grid=document.getElementById('kana-grid');grid.innerHTML='';const today=todayStr();
   KANA_WORDS[curGroup].forEach(w=>{
-    const hasDone=!!cleared[w.char],srs=srsData[w.char],isDue=srs&&srs.due<=today;
+    const hasPractice=!!practiceDone[w.char],hasTest=!!testDone[w.char],isLocked=listMode==='test'&&!hasPractice,srs=srsData[w.char],isDue=srs&&srs.due<=today;
     const card=document.createElement('div');card.className='k-card';
-    if(isDue)card.classList.add('due-srs');else if(hasDone)card.classList.add('done-both');
-    if(hasDone){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
+    if(isLocked)card.classList.add('locked');else if(isDue)card.classList.add('due-srs');else if(hasTest)card.classList.add('done-both');else if(hasPractice)card.classList.add('done-prac');
+    if(hasTest||hasPractice){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
+    if(isLocked){const lock=document.createElement('span');lock.className='k-lock material-symbols-rounded';lock.textContent='lock';card.appendChild(lock);}
     if(srs&&!isDue){const tag=document.createElement('div');tag.className='k-srs-tag';const days=Math.round((new Date(srs.due)-new Date(today))/86400000);tag.textContent=days<=0?'きょう':days+'日後';card.appendChild(tag);}
     card.appendChild(document.createTextNode(w.char));
-    card.onclick=()=>{snd('click');curMode=listMode;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
+    card.onclick=()=>{snd('click');if(isLocked){speak('まずは3かいれんしゅうしよう');return;}curMode=listMode;practiceRound=1;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
     grid.appendChild(card);
   });
 }
-function startAll(){snd('click');curMode=listMode;queue=[...KANA_WORDS[curGroup]];qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
+function startAll(){snd('click');curMode=listMode;practiceRound=1;queue=listMode==='test'?KANA_WORDS[curGroup].filter(w=>practiceDone[w.char]):[...KANA_WORDS[curGroup]];if(!queue.length){alert('まずは もじを 3かい れんしゅうしよう');return;}qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
 function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
-function startRandom(){snd('click');curMode='test';isRandom=true;queue=[...KANA_WORDS[curGroup]].sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
+function startRandom(){snd('click');curMode='test';isRandom=true;queue=ALL_WORDS.filter(w=>practiceDone[w.char]).sort(()=>Math.random()-.5).slice(0,10);if(!queue.length){alert('まずは もじを 3かい れんしゅうしよう');return;}qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
 function showScreen(id,cb){
   window.scrollTo(0,0);
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -600,18 +658,28 @@ async function loadQ(){
   curQ=queue[qIdx];resetStrokeScores();userDrawRecord=[];currentStrokePts=[];hideResultBanner();
   document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('prog-text').textContent=`${qIdx+1} / ${queue.length}`;
+  updatePracticeUI();
+  const nextBtn=document.getElementById('btn-next');nextBtn.disabled=curMode==='practice';nextBtn.setAttribute('aria-disabled',String(curMode==='practice'));
   const isTest=(curMode==='test'),hintEl=document.getElementById('hint-area');
-  if(isTest){const wHTML=[...curQ.word].map((c,i)=>i===curQ.pos?`<span class="hint-blank">＿</span>`:`<span class="hint-char">${c}</span>`).join('');hintEl.innerHTML=`<span class="hint-emoji-lg">${curQ.emoji}</span><div class="hint-word-box">${wHTML}<button class="btn-sound" onclick="speak('${curQ.word}')">🔊</button></div>`;}
-  else{hintEl.innerHTML=`<span class="hint-emoji-lg">${curQ.emoji}</span><div class="hint-word-box"><span class="hint-char is-target">${curQ.char}</span><button class="btn-sound" onclick="speak('${curQ.char}'.charAt(0))">🔊</button></div>`;}
+  const icon=`<span class="hint-icon-lg material-symbols-rounded filled" aria-hidden="true">${curQ.icon||'image'}</span>`;
+  if(isTest){const wHTML=[...curQ.word].map((c,i)=>i===curQ.pos?`<span class="hint-blank">＿</span>`:`<span class="hint-char">${c}</span>`).join('');hintEl.innerHTML=`${icon}<div class="hint-word-box">${wHTML}<button class="btn-sound" aria-label="ことばをきく" onclick="speak('${curQ.word}')"><span class="material-symbols-rounded" aria-hidden="true">volume_up</span></button></div>`;}
+  else{hintEl.innerHTML=`${icon}<div class="hint-word-box"><span class="hint-char is-target">${curQ.char}</span><button class="btn-sound" aria-label="もじをきく" onclick="speak('${curQ.char}'.charAt(0))"><span class="material-symbols-rounded" aria-hidden="true">volume_up</span></button></div>`;}
   updateRegBtns();initCanvas();
   isLoading=true;document.getElementById('canvas-dr').style.cursor='wait';
   setMsg('じゅんびちゅう…','var(--c-ink-dim)');
   await loadKanjiVG(curQ.char);
   isLoading=false;document.getElementById('canvas-dr').style.cursor='crosshair';
   const isTest2=(curMode==='test');
-  setMsg(isTest2?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！',isTest2?'var(--c-action)':'var(--c-practice)');
+  setMsg(getRoundMessage(),isTest2?'var(--c-action)':'var(--c-practice)');
   if(qIdx+1<queue.length){const nc=queue[qIdx+1].char,nh=nc.codePointAt(0).toString(16).padStart(5,'0');if(!svgCache[nh])fetch(`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${nh}.svg`).then(r=>r.ok?r.text():null).then(t=>{if(t)svgCache[nh]=t;}).catch(()=>{});}
 }
+function updatePracticeUI(){
+  const steps=document.getElementById('practice-steps'),note=document.getElementById('practice-note'),isPractice=curMode==='practice';
+  steps.classList.toggle('show',isPractice);
+  note.textContent=isPractice?['','おてほんを よくみて なぞろう','もういちど、ていねいに なぞろう','さいごは じぶんの ちからで かこう'][practiceRound]:'';
+  steps.querySelectorAll('.practice-step').forEach(el=>{const n=Number(el.dataset.round);el.className='practice-step'+(n<practiceRound?' done':n===practiceRound?' current':'');});
+}
+function getRoundMessage(){if(curMode==='test')return'ぬけている もじを かいてね';if(curMode==='practice')return practiceRound===3?'おてほんなしで かいてみよう':'うすいせんを なぞろう';return'うすいせんを なぞろう';}
 let ctxBg,ctxFx,ctxDr,ctxOv,cW=0,strokes=[],currentStroke=0,drawing=false,animating=false,isLoading=false,drawLength=0,lastX=null,lastY=null,userPts=[];
 const TOLERANCE_RATIO=0.22;
 function initCanvas(){
@@ -630,7 +698,7 @@ function drawGrid(){ctxBg.strokeStyle='rgba(255,200,160,.4)';ctxBg.lineWidth=1;c
 function getXY(e,canvas){const r=canvas.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*(cW/r.width),y:(cy-r.top)*(cW/r.height)};}
 const svgCache={};let strokeRefCache={};
 async function loadKanjiVG(char){
-  const isPrac=curMode!=='test';
+  const showGuide=curMode!=='test'&&!(curMode==='practice'&&practiceRound===3);
   try{
     const hex=char.codePointAt(0).toString(16).padStart(5,'0');
     const url=`https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${hex}.svg`;
@@ -641,8 +709,9 @@ async function loadKanjiVG(char){
     strokes=sg?[...sg.querySelectorAll('path')].map(p=>p.getAttribute('d')):[];
     currentStroke=0;drawLength=0;lastX=null;lastY=null;strokeRefCache={};
     if(strokes.length)startStartDot();
-    if(isPrac){
-      const styled=svgText.replace('</svg>',`<style>path{stroke:rgba(255,190,140,.7)!important;stroke-width:9!important;fill:none!important}text{fill:#FFB080!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);
+    if(showGuide){
+      const guideAlpha=curMode==='practice'&&practiceRound===2?.42:.7;
+      const styled=svgText.replace('</svg>',`<style>path{stroke:rgba(255,190,140,${guideAlpha})!important;stroke-width:9!important;fill:none!important}text{fill:#FFB080!important;font-size:8px!important;font-family:sans-serif}</style></svg>`);
       const blobUrl=URL.createObjectURL(new Blob([styled],{type:'image/svg+xml;charset=utf-8'}));
       await new Promise(r=>{const img=new Image();img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);r();};img.onerror=()=>{URL.revokeObjectURL(blobUrl);r();};img.src=blobUrl;});
     }
@@ -663,32 +732,32 @@ function isStrokeTooShort(dl,rl){return dl<rl*0.25;}
 function isStrokeWrongDirection(ur,ref){return !checkDirection(ur,ref);}
 function evalEnd(x,y){
   ctxDr.clearRect(0,0,cW,cW);
-  if(!strokes.length){snd('stroke');setMsg('かけたね！ 🎉','var(--c-practice)');speak(curQ.char);onComplete();return;}
+  if(!strokes.length){snd('stroke');setMsg('かけたね！','var(--c-practice)');speak(curQ.char);onComplete();return;}
   if(currentStroke>=strokes.length)return;
   const pd=strokes[currentStroke],ref=resamplePath(pd,32);
   const refLen=ref.reduce((a,p,i)=>i===0?0:a+Math.hypot(p.x-ref[i-1].x,p.y-ref[i-1].y),0);
-  if(isStrokeTooShort(drawLength,refLen)){snd('error');setMsg('もうすこし ながく かいてね！ 📏','var(--c-caution)');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
+  if(isStrokeTooShort(drawLength,refLen)){snd('error');setMsg('もうすこし ながく かいてね','var(--c-caution)');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
   const ur=resampleUserPts(32);
-  if(isStrokeWrongDirection(ur,ref)){snd('error');const el=document.getElementById('game-msg');el.textContent='かくむきに きをつけてね！ 👆';el.style.color='var(--c-caution)';el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
+  if(isStrokeWrongDirection(ur,ref)){snd('error');const el=document.getElementById('game-msg');el.textContent='かく むきに きをつけてね';el.style.color='var(--c-caution)';el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');showHint(currentStroke);drawLength=0;lastX=null;lastY=null;userPts=[];return;}
   const dtw=dtwDistance(ur,ref),endRef=getSVGPt(pd,1),endDist=Math.hypot(x-endRef.x,y-endRef.y);
   const ok=dtw<cW*.20&&(endDist<cW*TOLERANCE_RATIO*1.4||dtw<cW*.20*.60);
   drawLength=0;lastX=null;lastY=null;userPts=[];
   if(ok){
     strokeScores.push(dtwToScore(dtw));userDrawRecord.push({pts:[...currentStrokePts]});snd('stroke');currentStroke++;redrawFx();
     const sc=dtwToScore(dtw);showStrokeToast(sc);
-    if(sc>=1)setMsg('✨ かんぺき！','var(--c-srs)');else if(sc>=.67)setMsg('👍 いいぞ！','var(--c-practice)');else setMsg('🙆 まあまあ！','#8A5E00');
+    if(sc>=1)setMsg('かんぺき！','var(--c-srs)');else if(sc>=.67)setMsg('いいぞ！','var(--c-practice)');else setMsg('できたよ！','#8A5E00');
     if(currentStroke>=strokes.length){speak(curQ.char);onComplete();}
   }else{
     snd('error');const ch=curQ.char;mistCnt[ch]=(mistCnt[ch]||0)+1;save();
-    if(mistCnt[ch]>=3&&!niga[ch]){niga[ch]=true;save();setMsg('おしい！ にがてに とうろくしたよ🐢','var(--c-caution)');}
-    else setMsg('おしい！ もう一度！ 💪','var(--c-caution)');
+    if(mistCnt[ch]>=3&&!niga[ch]){niga[ch]=true;save();setMsg('おしい！ にがてに とうろくしたよ','var(--c-caution)');}
+    else setMsg('おしい！ もういちど','var(--c-caution)');
     showHint(currentStroke);
   }
 }
 function setMsg(t,c){const el=document.getElementById('game-msg');el.textContent=t;el.style.color=c;}
 function trackDraw(x,y){if(lastX!==null)drawLength+=Math.hypot(x-lastX,y-lastY);lastX=x;lastY=y;}
 let toastTimer=null;
-function showStrokeToast(score){const t=document.getElementById('stroke-toast');if(!t)return;const items=[{min:1,text:'✨ かんぺき！',color:'var(--c-srs)'},{min:.67,text:'👍 いいぞ！',color:'var(--c-practice)'},{min:0,text:'🙆 できたよ！',color:'#8A5E00'}];const{text,color}=items.find(i=>score>=i.min);t.textContent=text;t.style.color=color;t.style.animation='none';void t.offsetWidth;t.style.animation='toastIn .22s cubic-bezier(.2,1.4,.4,1) forwards';if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.animation='toastOut .28s ease forwards';},600);}
+function showStrokeToast(score){const t=document.getElementById('stroke-toast');if(!t)return;const items=[{min:1,text:'かんぺき！',color:'var(--c-srs)'},{min:.67,text:'いいぞ！',color:'var(--c-practice)'},{min:0,text:'できたよ！',color:'#8A5E00'}];const{text,color}=items.find(i=>score>=i.min);t.textContent=text;t.style.color=color;t.style.animation='none';void t.offsetWidth;t.style.animation='toastIn .22s cubic-bezier(.2,1.4,.4,1) forwards';if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.animation='toastOut .28s ease forwards';},600);}
 let _jpVoice=null;
 function _loadVoice(){const voices=speechSynthesis.getVoices();_jpVoice=voices.find(v=>v.name.includes('Nanami'))||voices.find(v=>v.name.includes('Keita'))||voices.find(v=>v.lang==='ja-JP'&&v.localService)||voices.find(v=>v.lang==='ja-JP')||null;}
 if(window.speechSynthesis){_loadVoice();speechSynthesis.onvoiceschanged=_loadVoice;}
@@ -805,23 +874,39 @@ async function doAnime(){
 
   animating=false;
   const isTest=(curMode==='test');
-  setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！',isTest?'var(--c-action)':'var(--c-practice)');
+  setMsg(getRoundMessage(),isTest?'var(--c-action)':'var(--c-practice)');
   if(strokes.length) startStartDot();
 }
 function toggleTokk(){if(!curQ)return;snd('click');if(tokk[curQ.char])delete tokk[curQ.char];else tokk[curQ.char]=true;save();updateRegBtns();}
 function toggleNiga(){if(!curQ)return;snd('click');if(niga[curQ.char])delete niga[curQ.char];else niga[curQ.char]=true;save();updateRegBtns();}
-function updateRegBtns(){if(!curQ)return;const ch=curQ.char,bt=document.getElementById('btn-tokk'),bn=document.getElementById('btn-niga');if(!bt||!bn)return;bt.className='reg-btn'+(tokk[ch]?' active-tokk':'');bt.textContent=tokk[ch]?'🏅 とっくん ✓':'🏅 とっくん';bn.className='reg-btn'+(niga[ch]?' active-niga':'');bn.textContent=niga[ch]?'🐢 にがて ✓':'🐢 にがて';}
+function updateRegBtns(){if(!curQ)return;const ch=curQ.char,bt=document.getElementById('btn-tokk'),bn=document.getElementById('btn-niga');if(!bt||!bn)return;bt.className='reg-btn'+(tokk[ch]?' active-tokk':'');bt.innerHTML=`<span class="material-symbols-rounded" aria-hidden="true">workspace_premium</span> とっくん${tokk[ch]?' ✓':''}`;bn.className='reg-btn'+(niga[ch]?' active-niga':'');bn.innerHTML=`<span class="material-symbols-rounded" aria-hidden="true">exercise</span> にがて${niga[ch]?' ✓':''}`;}
 function rateSRS(rating){if(!curQ)return;srsInit(curQ.char);srsUpdate(curQ.char,rating);document.getElementById('srs-eval').classList.remove('show');doNext();}
 function drawHanamaru(){const layer=document.getElementById('hanamaru-layer');layer.innerHTML='';const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.style.cssText='width:100%;height:100%;overflow:visible';const c=document.createElementNS(ns,'circle');c.setAttribute('cx','50');c.setAttribute('cy','50');c.setAttribute('r','40');c.setAttribute('fill','none');c.setAttribute('stroke','var(--c-action)');c.setAttribute('stroke-width','5');c.setAttribute('stroke-linecap','round');c.setAttribute('stroke-dasharray','251');c.setAttribute('stroke-dashoffset','251');c.style.transformOrigin='50% 50%';c.style.transform='rotate(-90deg)';c.style.animation='hanamaru 0.8s cubic-bezier(.4,0,.2,1) forwards';svg.appendChild(c);layer.appendChild(svg);setTimeout(()=>{svg.style.transition='opacity 0.5s';svg.style.opacity='0';setTimeout(()=>{layer.innerHTML='';},500);},1800);}
-function showResultBanner(stars){const rb=document.getElementById('result-banner');const msgs=['','クリア！🌟','すごい！✨','はなまる！🌸'],colors=['','var(--c-action)','var(--c-done)','var(--c-srs)'];document.getElementById('rb-stars').textContent='⭐'.repeat(stars);const rl=document.getElementById('rb-label');rl.textContent=msgs[stars];rl.style.color=colors[stars];rb.classList.add('show');}
+function showResultBanner(stars){const rb=document.getElementById('result-banner');const msgs=['','クリア！','すごい！','はなまる！'],colors=['','var(--c-action)','var(--c-done)','var(--c-srs)'];document.getElementById('rb-stars').innerHTML='<span class="material-symbols-rounded filled" aria-hidden="true">star</span>'.repeat(stars);const rl=document.getElementById('rb-label');rl.textContent=msgs[stars];rl.style.color=colors[stars];rb.classList.add('show');}
 function hideResultBanner(){document.getElementById('result-banner').classList.remove('show');}
 function showConfetti(count=40){const colors=['#FF8C42','#2CB86A','#7B5CE5','#2AAAE8','#FFD700','#FF6B9D','#A0E860'];for(let i=0;i<count;i++)setTimeout(()=>{const el=document.createElement('div');el.className='confetti-piece';el.style.left=Math.random()*100+'vw';el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];const dur=(Math.random()*1.5+1.2).toFixed(2);el.style.animationDuration=dur+'s';if(Math.random()>.5)el.style.borderRadius='50%';el.style.width=el.style.height=(Math.random()*8+5)+'px';document.body.appendChild(el);setTimeout(()=>el.remove(),(parseFloat(dur)+.5)*1000);},Math.random()*300);}
-function onComplete(){snd('complete');stopStartDot();const oldLv=getXP().lv;cleared[curQ.char]=true;srsInit(curQ.char);const stars=calcStars();xpTotal+=stars;save();const newLv=getXP().lv;showConfetti(stars===3?55:stars===2?30:12);if(stars===3){setTimeout(()=>snd('levelup'),100);drawHanamaru();}showResultBanner(stars);const cx=cW/2,cy=cW/2,cnt=stars===3?24:stars===2?14:6;for(let i=0;i<cnt;i++)setTimeout(()=>{const a=Math.random()*Math.PI*2,r=cW*(.05+Math.random()*.32);addSparkle(cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}},i*25);if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}setTimeout(()=>doNext(),2200);}
+function onComplete(){
+  snd('complete');stopStartDot();const stars=calcStars();
+  showConfetti(stars===3?38:stars===2?24:10);if(stars===3){setTimeout(()=>snd('levelup'),100);drawHanamaru();}showResultBanner(stars);
+  const cx=cW/2,cy=cW/2,cnt=stars===3?20:stars===2?12:5;for(let i=0;i<cnt;i++)setTimeout(()=>{const a=Math.random()*Math.PI*2,r=cW*(.05+Math.random()*.32);addSparkle(cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}},i*25);
+  if(curMode==='practice'){
+    if(practiceRound<3){practiceRound++;setTimeout(()=>loadQ(),1150);return;}
+    practiceDone[curQ.char]=true;xpTotal+=stars;save();document.getElementById('practice-char').textContent=curQ.char;setTimeout(()=>showOv('ov-practice'),900);return;
+  }
+  const oldLv=getXP().lv;
+  if(curMode==='test'){testDone[curQ.char]=true;cleared[curQ.char]=true;srsInit(curQ.char);}
+  xpTotal+=stars;save();const newLv=getXP().lv;
+  if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}
+  if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}
+  setTimeout(()=>doNext(),1800);
+}
+function continuePracticeQueue(){closeOv('ov-practice');qIdx++;if(qIdx<queue.length){practiceRound=1;loadQ();return;}renderKanaGrid();showScreen('scr-list');}
+function startUnlockedTest(){const word=curQ;closeOv('ov-practice');curMode='test';practiceRound=1;queue=[word];qIdx=0;isRandom=false;setModePip('test');showScreen('scr-game',loadQ);}
 function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}if(isRandom){bonXP+=10;save();showOv('ov-rc');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
-function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=null;userPts=[];sparkles=[];isSparkling=false;resetStrokeScores();userDrawRecord=[];currentStrokePts=[];stopStartDot();document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';document.getElementById('canvas-ov').style.opacity='0';hideResultBanner();ctxFx.clearRect(0,0,cW,cW);ctxDr.clearRect(0,0,cW,cW);const isTest=(curMode==='test');setMsg(isTest?'ぬけてるもじをかいてね。':'うすいせんを なぞろう！',isTest?'var(--c-action)':'var(--c-practice)');if(strokes.length)startStartDot();}
+function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=null;userPts=[];sparkles=[];isSparkling=false;resetStrokeScores();userDrawRecord=[];currentStrokePts=[];stopStartDot();document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';document.getElementById('canvas-ov').style.opacity='0';hideResultBanner();ctxFx.clearRect(0,0,cW,cW);ctxDr.clearRect(0,0,cW,cW);const isTest=(curMode==='test');setMsg(getRoundMessage(),isTest?'var(--c-action)':'var(--c-practice)');if(strokes.length)startStartDot();}
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
-function doReset(){localStorage.clear();cleared={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
+function doReset(){localStorage.clear();cleared={};practiceDone={};testDone={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
 window.addEventListener('resize',()=>{if(document.getElementById('scr-game').classList.contains('active')){requestAnimationFrame(()=>{resizeCanvas();const newW=document.getElementById('canvas-wrap').offsetWidth;if(newW>0&&newW!==cW)initCanvas();});}});
 let AC;
 function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
