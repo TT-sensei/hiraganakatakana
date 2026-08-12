@@ -213,6 +213,7 @@ body {
 .prog-nums { font-size:.82rem; font-weight:700; color:var(--c-ink-dim); }
 .hint-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:6px 0 4px; flex-wrap:nowrap; }
 .hint-icon-lg { width:58px; height:58px; border-radius:18px; display:flex; align-items:center; justify-content:center; background:var(--c-action-l); color:var(--c-action); font-size:2.25rem; flex-shrink:0; animation:emoji-pop .3s cubic-bezier(.2,1.4,.4,1); }
+.koboyo-icon { width:42px; height:42px; object-fit:contain; display:block; }
 @keyframes emoji-pop { from{transform:scale(.5);opacity:0} to{transform:scale(1);opacity:1} }
 .hint-word-box { display:inline-flex; align-items:flex-end; gap:3px; background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:16px; padding:6px 16px; box-shadow:var(--shadow-sm); }
 .hint-char { font-size:1.9rem; font-weight:700; font-family:'Klee One',cursive; color:var(--c-ink); }
@@ -654,14 +655,22 @@ function resizeCanvas(){
   wrap.style.width='';
   wrap.style.height='';
 }
-async function loadQ(){
+async function renderHintIcon(icon){
+  const value=icon||'image';
+  if(value.startsWith('https://koboyo.com/icons/svg/')){
+    return '<img class="hint-icon-lg koboyo-icon" src="'+value+'" alt="" aria-hidden="true" loading="eager" onerror="this.replaceWith(document.createTextNode(\'🖼️\'))">';
+  }
+  return '<span class="hint-icon-lg material-symbols-rounded filled" aria-hidden="true">'+value+'</span>';
+}
+
+function loadQ(){
   curQ=queue[qIdx];resetStrokeScores();userDrawRecord=[];currentStrokePts=[];hideResultBanner();
   document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('prog-text').textContent=`${qIdx+1} / ${queue.length}`;
   updatePracticeUI();
   const nextBtn=document.getElementById('btn-next');nextBtn.disabled=curMode==='practice';nextBtn.setAttribute('aria-disabled',String(curMode==='practice'));
   const isTest=(curMode==='test'),hintEl=document.getElementById('hint-area');
-  const icon=`<span class="hint-icon-lg material-symbols-rounded filled" aria-hidden="true">${curQ.icon||'image'}</span>`;
+  const icon=renderHintIcon(curQ.icon);
   if(isTest){const wHTML=[...curQ.word].map((c,i)=>i===curQ.pos?`<span class="hint-blank">＿</span>`:`<span class="hint-char">${c}</span>`).join('');hintEl.innerHTML=`${icon}<div class="hint-word-box">${wHTML}<button class="btn-sound" aria-label="ことばをきく" onclick="speak('${curQ.word}')"><span class="material-symbols-rounded" aria-hidden="true">volume_up</span></button></div>`;}
   else{hintEl.innerHTML=`${icon}<div class="hint-word-box"><span class="hint-char is-target">${curQ.char}</span><button class="btn-sound" aria-label="もじをきく" onclick="speak('${curQ.char}'.charAt(0))"><span class="material-symbols-rounded" aria-hidden="true">volume_up</span></button></div>`;}
   updateRegBtns();initCanvas();
