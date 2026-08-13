@@ -657,9 +657,6 @@ function resizeCanvas(){
 }
 function renderHintIcon(icon){
   const value=icon||'image';
-  if(value.startsWith('emoji:')){
-    return '<span class="hint-icon-lg emoji-icon" aria-hidden="true">'+value.slice(6)+'</span>';
-  }
   if(value.startsWith('https://koboyo.com/icons/svg/')){
     return '<img class="hint-icon-lg koboyo-icon" src="'+value+'" alt="" aria-hidden="true" loading="eager" onerror="this.replaceWith(document.createTextNode(\'🖼️\'))">';
   }
