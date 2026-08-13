@@ -655,7 +655,7 @@ function resizeCanvas(){
   wrap.style.width='';
   wrap.style.height='';
 }
-async function renderHintIcon(icon){
+function renderHintIcon(icon){
   const value=icon||'image';
   if(value.startsWith('https://koboyo.com/icons/svg/')){
     return '<img class="hint-icon-lg koboyo-icon" src="'+value+'" alt="" aria-hidden="true" loading="eager" onerror="this.replaceWith(document.createTextNode(\'🖼️\'))">';
