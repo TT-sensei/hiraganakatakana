@@ -84,7 +84,7 @@ const KANA_WORDS = {
     { char:'イ', icon:'https://koboyo.com/icons/svg/dolphin.svg',           word:'イルカ',word:'イルカ',       pos:0 },
     { char:'ウ', icon:'https://koboyo.com/icons/svg/hot-dog.svg',        word:'ウインナー',   pos:0 },
     { char:'エ', icon:'https://koboyo.com/icons/svg/apron.svg',      word:'エプロン',word:'エプロン',     pos:0 },
-    { char:'オ', icon:'https://koboyo.com/icons/svg/egg.svg',            word:'オムライス',   pos:0 },
+    { char:'オ', icon:'https://koboyo.com/icons/svg/cartoon-parrot.svg', word:'オウム', pos:0 },
 
     { char:'カ', icon:'https://koboyo.com/icons/svg/camera.svg',   word:'カメラ',word:'カメラ',       pos:0 },
     { char:'キ', icon:'https://koboyo.com/icons/svg/kiwi.svg',      word:'キウイ',word:'キウイ',       pos:0 },
@@ -94,7 +94,7 @@ const KANA_WORDS = {
 
     { char:'サ', icon:'https://koboyo.com/icons/svg/salad.svg',      word:'サラダ',word:'サラダ',       pos:0 },
     { char:'シ', icon:'https://koboyo.com/icons/svg/zebra.svg',           word:'シマウマ',word:'シマウマ',     pos:0 },
-    { char:'ス', icon:'https://koboyo.com/icons/svg/skateboard.svg',     word:'スケート',     pos:0 },
+    { char:'ス', icon:'https://koboyo.com/icons/svg/slippers.svg', word:'スリッパ', pos:0 },
     { char:'セ', icon:'https://koboyo.com/icons/svg/jumper.svg',         word:'セーター',     pos:0 },
     { char:'ソ', icon:'https://koboyo.com/icons/svg/socks.svg',           word:'ソックス',     pos:0 },
 
@@ -116,15 +116,15 @@ const KANA_WORDS = {
   // ==========================================================
   k2: [
     { char:'ハ', icon:'https://koboyo.com/icons/svg/hamburger.svg',   word:'ハンバーガー',word:'ハンバーガー', pos:0 },
-    { char:'ヒ', icon:'https://koboyo.com/icons/svg/knight.svg',          word:'ヒーロー',     pos:0 },
-    { char:'フ', icon:'https://koboyo.com/icons/svg/utensils.svg',        word:'フォーク',     pos:0 },
+    { char:'ヒ', icon:'https://koboyo.com/icons/svg/cartoon-hero-flexing-both-arms.svg', word:'ヒーロー', pos:0 },
+    { char:'フ', icon:'https://koboyo.com/icons/svg/fork-hand.svg', word:'フォーク', pos:0 },
     { char:'ヘ', icon:'https://koboyo.com/icons/svg/helicopter.svg',         word:'ヘリコプター',word:'ヘリコプター', pos:0 },
     { char:'ホ', icon:'https://koboyo.com/icons/svg/hotel.svg',          word:'ホテル',word:'ホテル',       pos:0 },
     { char:'マ', icon:'https://koboyo.com/icons/svg/mic.svg',             word:'マイク',       pos:0 },
-    { char:'ミ', icon:'https://koboyo.com/icons/svg/milk.svg',     word:'ミルク',word:'ミルク',       pos:0 },
+    { char:'ミ', icon:'https://koboyo.com/icons/svg/cartoon-milk.svg', word:'ミルク', pos:0 }
     { char:'ム', icon:'https://koboyo.com/icons/svg/bug.svg',             word:'ムシ',         pos:0 },
     { char:'メ', icon:'https://koboyo.com/icons/svg/melon.svg',      word:'メロン',word:'メロン',       pos:0 },
-    { char:'モ', icon:'https://koboyo.com/icons/svg/alien.svg',           word:'モンスター',   pos:0 },
+    { char:'モ', icon:'https://koboyo.com/icons/svg/cartoon-goblin.svg', word:'ゴブリン', pos:0 },
 
     { char:'ヤ', icon:'https://koboyo.com/icons/svg/palm-tree.svg',           word:'ヤシ',word:'ヤシ',         pos:0 },
     { char:'ユ', icon:'https://koboyo.com/icons/svg/unicorn.svg',           word:'ユニコーン',word:'ユニコーン',   pos:0 },
