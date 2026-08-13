@@ -663,7 +663,7 @@ function renderHintIcon(icon){
   return '<span class="hint-icon-lg material-symbols-rounded filled" aria-hidden="true">'+value+'</span>';
 }
 
-function loadQ(){
+async function loadQ(){
   curQ=queue[qIdx];resetStrokeScores();userDrawRecord=[];currentStrokePts=[];hideResultBanner();
   document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';
   document.getElementById('prog-text').textContent=`${qIdx+1} / ${queue.length}`;
