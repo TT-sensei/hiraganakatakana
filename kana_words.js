@@ -21,7 +21,7 @@ const KANA_WORDS = {
     { char:'い', icon:'https://koboyo.com/icons/svg/dog.svg',         word:'いぬ',word:'いぬ',       pos:0 },
     { char:'う', icon:'https://koboyo.com/icons/svg/horse-drinking.svg',         word:'うま',word:'うま',       pos:0 },
     { char:'え', icon:'https://koboyo.com/icons/svg/child-picture-book.svg',    word:'えほん',word:'えほん',     pos:0 },
-    { char:'お', icon:'https://koboyo.com/icons/svg/mochi.svg',    word:'おにぎり',word:'おにぎり',   pos:0 },
+    { char:'お', icon:'https://koboyo.com/icons/svg/mochi.svg',    word:'おもち',   pos:0 },
 
     { char:'か', icon:'https://koboyo.com/icons/svg/frog.svg',         word:'かえる',word:'かえる',     pos:0 },
     { char:'き', icon:'https://koboyo.com/icons/svg/mushroom.svg',       word:'きのこ',word:'きのこ',     pos:0 },
@@ -32,7 +32,7 @@ const KANA_WORDS = {
     { char:'さ', icon:'https://koboyo.com/icons/svg/fish.svg',     word:'さかな',word:'さかな',     pos:0 },
     { char:'し', icon:'https://koboyo.com/icons/svg/deer.svg',         word:'しか',word:'しか',       pos:0 },
     { char:'す', icon:'https://koboyo.com/icons/svg/watermelon-slice.svg',    word:'すいか',word:'すいか',     pos:0 },
-    { char:'せ', icon:'https://koboyo.com/icons/svg/mochi.svg',       word:'せんべい',word:'せんべい',   pos:0 },
+    { char:'せ', icon:'https://koboyo.com/icons/svg/mochi.svg',       word:'せみ',   pos:0 },
     { char:'そ', icon:'https://koboyo.com/icons/svg/cloud.svg',     word:'そら',word:'そら',       pos:0 },
 
     { char:'た', icon:'https://koboyo.com/icons/svg/egg.svg',          word:'たまご',word:'たまご',     pos:0 },
