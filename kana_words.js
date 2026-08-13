@@ -71,7 +71,7 @@ const KANA_WORDS = {
     { char:'る', icon:'https://koboyo.com/icons/svg/monkey.svg',         word:'さる',word:'さる',       pos:1 },
     { char:'れ', icon:'https://koboyo.com/icons/svg/refrigerator.svg',      word:'れいぞうこ',word:'れいぞうこ', pos:0 },
     { char:'ろ', icon:'https://koboyo.com/icons/svg/candle.svg', word:'ろうそく',word:'ろうそく',  pos:0 },
-    { char:'わ', icon:'https://koboyo.com/icons/svg/waffle.svg',     word:'わっふる', pos:0 }
+    { char:'わ', icon:'https://koboyo.com/icons/svg/waffle.svg',     word:'わっふる', pos:0 },
     { char:'を', icon:'https://koboyo.com/icons/svg/cat.svg',         word:'ねこをみた',word:'ねこをみた', pos:2 },
     { char:'ん', icon:'https://koboyo.com/icons/svg/apple.svg',    word:'りんご',word:'りんご',     pos:1 },
   ],
