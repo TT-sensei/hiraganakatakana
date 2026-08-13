@@ -37,12 +37,12 @@ const KANA_WORDS = {
     { char:'た', icon:'https://koboyo.com/icons/svg/egg.svg',          word:'たまご',word:'たまご',     pos:0 },
     { char:'ち', icon:'https://koboyo.com/icons/svg/butterfly.svg', word:'ちょう',word:'ちょう',     pos:0 },
     { char:'つ', icon:'https://koboyo.com/icons/svg/moon.svg',    word:'つき',word:'つき',       pos:0 },
-    { char:'て', icon:'https://koboyo.com/icons/svg/mitten.svg',    word:'てぶくろ',word:'てぶくろ',   pos:0 },
+    { char:'て', icon:'https://koboyo.com/icons/svg/gloves.svg',    word:'てぶくろ',   pos:0 },
     { char:'と', icon:'https://koboyo.com/icons/svg/tiger.svg',         word:'とら',word:'とら',       pos:0 },
 
     { char:'な', icon:'https://koboyo.com/icons/svg/pear.svg',    word:'なし',word:'なし',       pos:0 },
     { char:'に', icon:'https://koboyo.com/icons/svg/rainbow.svg',        word:'にじ',word:'にじ',       pos:0 },
-    { char:'ぬ', icon:'https://koboyo.com/icons/svg/bear.svg',      word:'ぬいぐるみ', pos:0 },
+    { char:'ぬ', icon:'https://koboyo.com/icons/svg/doll.svg',      word:'ぬいぐるみ', pos:0 },
     { char:'ね', icon:'https://koboyo.com/icons/svg/cat.svg',         word:'ねこ',word:'ねこ',       pos:0 },
     { char:'の', icon:'https://koboyo.com/icons/svg/boat.svg',      word:'のりもの', pos:0 },
   ],
@@ -52,11 +52,11 @@ const KANA_WORDS = {
   // ==========================================================
   h2: [
     { char:'は', icon:'https://koboyo.com/icons/svg/flower.svg', word:'はな',word:'はな',      pos:0 },
-    { char:'ひ', icon:'https://koboyo.com/icons/svg/flower.svg',     word:'ひまわり', pos:0 },
+    { char:'ひ', icon:'https://koboyo.com/icons/svg/sunflower.svg', word:'ひまわり',   pos:0 },
     { char:'ふ', icon:'https://koboyo.com/icons/svg/boat.svg',      word:'ふね',word:'ふね',       pos:0 },
     { char:'へ', icon:'https://koboyo.com/icons/svg/snake.svg',         word:'へび',word:'へび',       pos:0 },
     { char:'ほ', icon:'https://koboyo.com/icons/svg/star.svg',         word:'ほし',word:'ほし',       pos:0 },
-    { char:'ま', icon:'https://koboyo.com/icons/svg/nut.svg',        word:'まめ',     pos:0 },
+    { char:'ま', icon:'https://koboyo.com/icons/svg/cartoon-plate-beans.svg', word:'まめ', pos:0 },
     { char:'み', icon:'https://koboyo.com/icons/svg/ear.svg',      word:'みみ',word:'みみ',       pos:0 },
     { char:'む', icon:'https://koboyo.com/icons/svg/bug.svg',   word:'むし',word:'むし',       pos:0 },
     { char:'め', icon:'https://koboyo.com/icons/svg/glasses.svg',   word:'めがね',word:'めがね',     pos:0 },
