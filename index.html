@@ -429,7 +429,7 @@ body {
     <button class="mode-toggle-btn" id="lb-prac" onclick="listSetMode('practice')"><span class="material-symbols-rounded" aria-hidden="true">edit</span> れんしゅう</button>
     <button class="mode-toggle-btn" id="lb-test" onclick="listSetMode('test')"><span class="material-symbols-rounded" aria-hidden="true">target</span> テスト</button>
   </div>
-  <div class="mode-help" id="mode-help">1もじを 3かい かくと、テストが ひらくよ</div>
+  <div class="mode-help" id="mode-help">れんしゅうしなくても、すぐに テストできるよ</div>
   <div id="kana-grid" class="kana-grid"></div>
   <button class="btn-all" onclick="startAll()">ぜんぶ やる <span class="material-symbols-rounded" aria-hidden="true">arrow_forward</span></button>
 </div>
@@ -620,24 +620,23 @@ function setModePip(mode){const pip=document.getElementById('mode-pip');const la
 let listMode='practice';
 function openList(g){snd('click');curGroup=g;const labels={h1:'あ〜な行',h2:'は〜ん',k1:'ア〜ナ行',k2:'ハ〜ン'};document.getElementById('list-title').textContent=labels[g];listMode='practice';updateListModeBtns();renderKanaGrid();showScreen('scr-list');}
 function listSetMode(m){snd('click');listMode=m;updateListModeBtns();renderKanaGrid();}
-function updateListModeBtns(){const pp=document.getElementById('lb-prac'),pt=document.getElementById('lb-test'),help=document.getElementById('mode-help');pp.className='mode-toggle-btn'+(listMode==='practice'?' active-prac':'');pt.className='mode-toggle-btn'+(listMode==='test'?' active-test':'');help.textContent=listMode==='practice'?'1もじを 3かい かくと、テストが ひらくよ':'かぎの あいている もじを テストしよう';}
+function updateListModeBtns(){const pp=document.getElementById('lb-prac'),pt=document.getElementById('lb-test'),help=document.getElementById('mode-help');pp.className='mode-toggle-btn'+(listMode==='practice'?' active-prac':'');pt.className='mode-toggle-btn'+(listMode==='test'?' active-test':'');help.textContent=listMode==='practice'?'れんしゅうモードで、書き方を くりかえし れんしゅうしよう':'れんしゅうしなくても、すぐに テストできるよ';}
 function renderKanaGrid(){
   const grid=document.getElementById('kana-grid');grid.innerHTML='';const today=todayStr();
   KANA_WORDS[curGroup].forEach(w=>{
-    const hasPractice=!!practiceDone[w.char],hasTest=!!testDone[w.char],isLocked=listMode==='test'&&!hasPractice,srs=srsData[w.char],isDue=srs&&srs.due<=today;
+    const hasPractice=!!practiceDone[w.char],hasTest=!!testDone[w.char],isLocked=false,srs=srsData[w.char],isDue=srs&&srs.due<=today;
     const card=document.createElement('div');card.className='k-card';
     if(isLocked)card.classList.add('locked');else if(isDue)card.classList.add('due-srs');else if(hasTest)card.classList.add('done-both');else if(hasPractice)card.classList.add('done-prac');
     if(hasTest||hasPractice){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
-    if(isLocked){const lock=document.createElement('span');lock.className='k-lock material-symbols-rounded';lock.textContent='lock';card.appendChild(lock);}
     if(srs&&!isDue){const tag=document.createElement('div');tag.className='k-srs-tag';const days=Math.round((new Date(srs.due)-new Date(today))/86400000);tag.textContent=days<=0?'きょう':days+'日後';card.appendChild(tag);}
     card.appendChild(document.createTextNode(w.char));
-    card.onclick=()=>{snd('click');if(isLocked){speak('まずは3かいれんしゅうしよう');return;}curMode=listMode;practiceRound=1;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
+    card.onclick=()=>{snd('click');curMode=listMode;practiceRound=1;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
     grid.appendChild(card);
   });
 }
-function startAll(){snd('click');curMode=listMode;practiceRound=1;queue=listMode==='test'?KANA_WORDS[curGroup].filter(w=>practiceDone[w.char]):[...KANA_WORDS[curGroup]];if(!queue.length){alert('まずは もじを 3かい れんしゅうしよう');return;}qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
+function startAll(){snd('click');curMode=listMode;practiceRound=1;queue=[...KANA_WORDS[curGroup]];if(!queue.length){alert('もじが ありません');return;}qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
 function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
-function startRandom(){snd('click');curMode='test';isRandom=true;queue=ALL_WORDS.filter(w=>practiceDone[w.char]).sort(()=>Math.random()-.5).slice(0,10);if(!queue.length){alert('まずは もじを 3かい れんしゅうしよう');return;}qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
+function startRandom(){snd('click');curMode='test';isRandom=true;queue=ALL_WORDS.sort(()=>Math.random()-.5).slice(0,10);if(!queue.length){alert('もじが ありません');return;}qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
 function showScreen(id,cb){
   window.scrollTo(0,0);
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
