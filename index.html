@@ -621,18 +621,18 @@ let earnedBadges=JSON.parse(localStorage.getItem('km_badges'))||{};
 const ASSET_BASE='https://tt-sensei.github.io/edu-assets/assets/';
 const BADGE_GROUPS=[
   {title:'できた！バッジ',items:[
-    ['first-step','はじめの一歩','common/first-step',()=>practiceTotal()>=1],
-    ['careful-writing','ていねい名人','common/careful-writing',()=>practiceTotal()>=5],
-    ['practice-master','れんしゅうマスター','common/practice-master',()=>practiceTotal()>=20],
-    ['test-first','はじめてのテスト','common/clear',()=>testTotal()>=1],
-    ['word-detective','もじたんてい','japanese/word-detective',()=>testTotal()>=10],
-    ['mastery','かなマスター','common/mastery',()=>testTotal()>=25],
-    ['steady-progress','こつこつ名人','common/steady-progress',()=>testTotal()>=46],
-    ['mission-complete','ミッション達成','common/mission-complete',()=>dailyCount>=1],
-    ['review-master','ふくしゅう名人','common/review-master',()=>reviewCount>=5],
-    ['speed','チャレンジャー','common/speed',()=>randomCount>=1],
-    ['streak','れんぞくパワー','common/streak',()=>streak>=3],
-    ['never-give-up','あきらめない心','common/never-give-up',()=>Object.keys(niga).length>=1]
+    ['first-step','はじめの一歩','badges/common/first-step',()=>practiceTotal()>=1],
+    ['careful-writing','ていねい名人','badges/japanese/careful-writing',()=>practiceTotal()>=5],
+    ['practice-master','れんしゅうマスター','badges/common/practice-master',()=>practiceTotal()>=20],
+    ['test-first','はじめてのテスト','badges/common/clear',()=>testTotal()>=1],
+    ['word-detective','もじたんてい','badges/japanese/word-detective',()=>testTotal()>=10],
+    ['mastery','かなマスター','badges/common/mastery',()=>testTotal()>=25],
+    ['steady-progress','こつこつ名人','badges/common/steady-progress',()=>testTotal()>=46],
+    ['mission-complete','ミッション達成','badges/common/mission-complete',()=>dailyCount>=1],
+    ['review-master','ふくしゅう名人','badges/common/review-master',()=>reviewCount>=5],
+    ['speed','チャレンジャー','badges/common/speed',()=>randomCount>=1],
+    ['streak','れんぞくパワー','badges/common/streak',()=>streak>=3],
+    ['never-give-up','あきらめない心','badges/common/never-give-up',()=>Object.keys(niga).length>=1]
   ]},
   {title:'エレメントバッジ',items:[
     ['fire','ファイヤー','elements/fire/level-1',()=>practiceTotal()>=1],
