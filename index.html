@@ -182,6 +182,35 @@ body {
 .reset-btn { background:none; border:none; color:var(--c-border); font-size:.64rem; cursor:pointer; display:block; margin:0 auto; font-family:inherit; padding:4px; transition:color .15s; }
 .reset-btn:hover { color:var(--c-caution); }
 
+/* ごほうびボックス */
+.reward-zone { margin:0 0 18px; }
+.reward-card { width:100%; border:0; border-radius:22px; padding:13px 15px; display:flex; align-items:center; gap:12px; text-align:left; color:white; cursor:pointer; font-family:inherit; background:linear-gradient(135deg,#5546B8 0%,#7B5CE5 55%,#B66BDA 100%); box-shadow:0 5px 0 rgba(78,55,155,.35),0 10px 22px rgba(101,78,202,.2); transition:transform .15s,box-shadow .15s; position:relative; overflow:hidden; }
+.reward-card::after { content:''; position:absolute; width:120px; height:120px; right:-35px; top:-45px; border:14px solid rgba(255,255,255,.12); border-radius:50%; }
+.reward-card:active { transform:translateY(3px); box-shadow:0 2px 0 rgba(78,55,155,.35),0 5px 12px rgba(101,78,202,.18); }
+.reward-card-icon { width:44px; height:44px; display:grid; place-items:center; flex:none; border-radius:15px; background:rgba(255,255,255,.18); font-size:1.45rem; z-index:1; }
+.reward-card-copy { flex:1; min-width:0; z-index:1; }
+.reward-card-title { font-weight:900; font-size:.96rem; }
+.reward-card-sub { display:block; margin-top:2px; font-size:.65rem; color:rgba(255,255,255,.82); }
+.reward-card-count { font-size:.8rem; font-weight:900; background:rgba(255,255,255,.2); padding:5px 9px; border-radius:999px; z-index:1; white-space:nowrap; }
+.reward-new-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#FFE16A; margin-left:5px; vertical-align:2px; box-shadow:0 0 0 4px rgba(255,225,106,.17); }
+
+/* バッジ図鑑 */
+.badge-sheet { max-height:min(78vh,650px); overflow:auto; text-align:left; }
+.badge-sheet .ov-title { text-align:center; }
+.badge-summary { display:flex; align-items:center; justify-content:center; gap:8px; margin:-2px 0 16px; color:var(--c-ink-mid); font-size:.72rem; }
+.badge-summary strong { color:var(--c-srs); font-size:1.1rem; }
+.badge-section-title { display:flex; align-items:center; gap:7px; margin:14px 0 8px; color:var(--c-ink); font-size:.78rem; font-weight:900; }
+.badge-section-title::after { content:''; height:1px; flex:1; background:var(--c-border); }
+.badge-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.badge-tile { min-width:0; border:1.5px solid var(--c-border); border-radius:13px; padding:6px 3px 5px; background:#FFF9F3; text-align:center; position:relative; }
+.badge-tile img { display:block; width:100%; aspect-ratio:1; object-fit:contain; border-radius:9px; }
+.badge-tile.locked img { filter:grayscale(1); opacity:.2; }
+.badge-tile.locked::after { content:'?'; position:absolute; top:25%; left:50%; transform:translate(-50%,-50%); color:#A79A90; font-weight:900; font-size:1.05rem; }
+.badge-tile-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--c-ink-mid); font-size:.53rem; margin-top:3px; }
+.badge-tile:not(.locked) .badge-tile-name { color:var(--c-srs); font-weight:700; }
+.badge-close { width:100%; margin-top:16px; padding:11px; border:0; border-radius:14px; background:var(--c-border-l); color:var(--c-ink-mid); font:700 .82rem inherit; cursor:pointer; }
+@media (min-width:600px) { .badge-grid { grid-template-columns:repeat(6,1fr); } }
+
 /* カード一覧 */
 .list-header { display:flex; align-items:center; gap:12px; padding:18px 0 14px; }
 .btn-back { width:40px; height:40px; background:var(--c-surface); border:2.5px solid var(--c-border); border-radius:14px; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 3px 0 rgba(200,160,120,.2); transition:all .12s; }
@@ -375,6 +404,14 @@ body {
     </div>
   </div>
 
+  <div class="reward-zone">
+    <button class="reward-card" onclick="openBadges()" aria-label="ごほうびボックスをひらく">
+      <span class="reward-card-icon material-symbols-rounded filled" aria-hidden="true">workspace_premium</span>
+      <span class="reward-card-copy"><span class="reward-card-title">ごほうびボックス<span class="reward-new-dot" id="badge-new-dot" hidden></span></span><span class="reward-card-sub" id="badge-card-sub">できたことをバッジであつめよう！</span></span>
+      <span class="reward-card-count" id="badge-card-count">0 / 0</span>
+    </button>
+  </div>
+
   <div class="random-zone">
     <div class="zone-label">チャレンジ</div>
     <button class="btn-random" onclick="startRandom()"><span class="material-symbols-rounded button-icon" aria-hidden="true">casino</span>ランダムテスト！</button>
@@ -530,6 +567,16 @@ body {
   </div>
 </div>
 
+<!-- ov: バッジ図鑑 -->
+<div class="overlay" id="ov-badges" onclick="if(event.target===this)closeOv('ov-badges')">
+  <div class="ov-sheet badge-sheet">
+    <div class="ov-title">ごほうびボックス</div>
+    <div class="badge-summary"><strong id="badge-summary-count">0 / 0</strong><span>バッジを あつめたよ！</span></div>
+    <div id="badge-gallery"></div>
+    <button class="badge-close" onclick="closeOv('ov-badges')">とじる</button>
+  </div>
+</div>
+
 <script>
 'use strict';
 /* ── ピンチ・ダブルタップ防止 ── */
@@ -567,7 +614,51 @@ let dailyState=JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],d
 let streak=parseInt(localStorage.getItem('km_streak'))||0;
 let lastStreakDate=localStorage.getItem('km_streakdate')||'';
 let dailyKind=localStorage.getItem('km_dailykind')||'hira';
-function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));localStorage.setItem('km_practice_done',JSON.stringify(practiceDone));localStorage.setItem('km_test_done',JSON.stringify(testDone));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);}
+let randomCount=parseInt(localStorage.getItem('km_random_count'))||0;
+let reviewCount=parseInt(localStorage.getItem('km_review_count'))||0;
+let dailyCount=parseInt(localStorage.getItem('km_daily_count'))||0;
+let earnedBadges=JSON.parse(localStorage.getItem('km_badges'))||{};
+const ASSET_BASE='https://tt-sensei.github.io/edu-assets/assets/';
+const BADGE_GROUPS=[
+  {title:'できた！バッジ',items:[
+    ['first-step','はじめの一歩','common/first-step',()=>practiceTotal()>=1],
+    ['careful-writing','ていねい名人','common/careful-writing',()=>practiceTotal()>=5],
+    ['practice-master','れんしゅうマスター','common/practice-master',()=>practiceTotal()>=20],
+    ['test-first','はじめてのテスト','common/clear',()=>testTotal()>=1],
+    ['word-detective','もじたんてい','japanese/word-detective',()=>testTotal()>=10],
+    ['mastery','かなマスター','common/mastery',()=>testTotal()>=25],
+    ['steady-progress','こつこつ名人','common/steady-progress',()=>testTotal()>=46],
+    ['mission-complete','ミッション達成','common/mission-complete',()=>dailyCount>=1],
+    ['review-master','ふくしゅう名人','common/review-master',()=>reviewCount>=5],
+    ['speed','チャレンジャー','common/speed',()=>randomCount>=1],
+    ['streak','れんぞくパワー','common/streak',()=>streak>=3],
+    ['never-give-up','あきらめない心','common/never-give-up',()=>Object.keys(niga).length>=1]
+  ]},
+  {title:'エレメントバッジ',items:[
+    ['fire','ファイヤー','elements/fire/level-1',()=>practiceTotal()>=1],
+    ['water','ウォーター','elements/water/level-1',()=>testTotal()>=1],
+    ['nature','ネイチャー','elements/nature/level-2',()=>practiceTotal()>=10],
+    ['thunder','サンダー','elements/thunder/level-2',()=>testTotal()>=10],
+    ['light','ライト','elements/light/level-3',()=>testTotal()>=46],
+    ['rainbow','レインボー','elements/rainbow/level-3',()=>streak>=7]
+  ]},
+  {title:'コレクションバッジ',items:[
+    ['animal-cat','ねこコレクション','collections/animal/common/cat',()=>testTotal()>=5],
+    ['animal-rabbit','うさぎコレクション','collections/animal/common/rabbit',()=>practiceTotal()>=10],
+    ['flower-tulip','チューリップコレクション','collections/flower/common/tulip',()=>dailyCount>=1],
+    ['music-note','おんぷコレクション','collections/music/common/music-note',()=>randomCount>=1],
+    ['dino-triceratops','きょうりゅうコレクション','collections/dinosaur/common/triceratops',()=>testTotal()>=25],
+    ['fantasy-dragon','ドラゴンコレクション','collections/fantasy/common/dragon',()=>getXP().lv>=10]
+  ]}
+];
+const ALL_BADGES=BADGE_GROUPS.flatMap(group=>group.items.map(([id,name,path,condition])=>({id,name,path,condition,group:group.title})));
+function practiceTotal(){return Object.keys(practiceDone).length;}
+function testTotal(){return Object.keys(testDone).length;}
+function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));localStorage.setItem('km_practice_done',JSON.stringify(practiceDone));localStorage.setItem('km_test_done',JSON.stringify(testDone));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);localStorage.setItem('km_random_count',randomCount);localStorage.setItem('km_review_count',reviewCount);localStorage.setItem('km_daily_count',dailyCount);localStorage.setItem('km_badges',JSON.stringify(earnedBadges));}
+function badgeCount(){return ALL_BADGES.filter(b=>earnedBadges[b.id]).length;}
+function checkBadges(){let changed=false;for(const badge of ALL_BADGES){if(!earnedBadges[badge.id]&&badge.condition()){earnedBadges[badge.id]={earnedAt:Date.now()};changed=true;}}if(changed)save();return changed;}
+function updateBadgeCard(){checkBadges();const count=badgeCount();document.getElementById('badge-card-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-summary-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-new-dot').hidden=count===0;document.getElementById('badge-card-sub').textContent=count===ALL_BADGES.length?'ぜんぶ あつめた！':'できたことをバッジであつめよう！';}
+function openBadges(){snd('click');updateBadgeCard();const gallery=document.getElementById('badge-gallery');gallery.innerHTML=BADGE_GROUPS.map(group=>`<section><div class="badge-section-title">${group.title}</div><div class="badge-grid">${group.items.map(([id,name,path])=>{const unlocked=!!earnedBadges[id];return `<div class="badge-tile${unlocked?'':' locked'}"><img src="${ASSET_BASE}${path}/badge.png" alt="${unlocked?name:'ひみつのバッジ'}" loading="lazy"><span class="badge-tile-name">${unlocked?name:'？？？'}</span></div>`;}).join('')}</div></section>`).join('');showOv('ov-badges');}
 function dateKey(dt=new Date()){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
 function todayStr(){return dateKey(new Date());}
 function addDays(d,n){const [y,m,day]=d.split('-').map(Number),dt=new Date(y,m-1,day+n);return dateKey(dt);}
@@ -599,6 +690,7 @@ function updateTitle(){
   document.getElementById('t-nxp').innerHTML=cur?'<span class="material-symbols-rounded filled" aria-hidden="true">star</span>'.repeat(cur):'－';
   for(const g of Object.keys(GROUPS)){const total=GROUPS[g].total,done=KANA_WORDS[g].filter(w=>testDone[w.char]).length,pct=Math.round(done/total*100);document.getElementById(`gp-${g}`).textContent=`${done} / ${total}`;document.getElementById(`gpct-${g}`).textContent=`${pct}%`;document.getElementById(`gbar-${g}`).style.width=`${pct}%`;}
   updateDailyBanner();
+  updateBadgeCard();
 }
 function updateDailyBanner(){
   initDaily();
@@ -888,7 +980,7 @@ async function doAnime(){
 function toggleTokk(){if(!curQ)return;snd('click');if(tokk[curQ.char])delete tokk[curQ.char];else tokk[curQ.char]=true;save();updateRegBtns();}
 function toggleNiga(){if(!curQ)return;snd('click');if(niga[curQ.char])delete niga[curQ.char];else niga[curQ.char]=true;save();updateRegBtns();}
 function updateRegBtns(){if(!curQ)return;const ch=curQ.char,bt=document.getElementById('btn-tokk'),bn=document.getElementById('btn-niga');if(!bt||!bn)return;bt.className='reg-btn'+(tokk[ch]?' active-tokk':'');bt.innerHTML=`<span class="material-symbols-rounded" aria-hidden="true">workspace_premium</span> とっくん${tokk[ch]?' ✓':''}`;bn.className='reg-btn'+(niga[ch]?' active-niga':'');bn.innerHTML=`<span class="material-symbols-rounded" aria-hidden="true">exercise</span> にがて${niga[ch]?' ✓':''}`;}
-function rateSRS(rating){if(!curQ)return;srsInit(curQ.char);srsUpdate(curQ.char,rating);document.getElementById('srs-eval').classList.remove('show');doNext();}
+function rateSRS(rating){if(!curQ)return;srsInit(curQ.char);srsUpdate(curQ.char,rating);reviewCount++;save();updateBadgeCard();document.getElementById('srs-eval').classList.remove('show');doNext();}
 function drawHanamaru(){const layer=document.getElementById('hanamaru-layer');layer.innerHTML='';const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 100 100');svg.style.cssText='width:100%;height:100%;overflow:visible';const c=document.createElementNS(ns,'circle');c.setAttribute('cx','50');c.setAttribute('cy','50');c.setAttribute('r','40');c.setAttribute('fill','none');c.setAttribute('stroke','var(--c-action)');c.setAttribute('stroke-width','5');c.setAttribute('stroke-linecap','round');c.setAttribute('stroke-dasharray','251');c.setAttribute('stroke-dashoffset','251');c.style.transformOrigin='50% 50%';c.style.transform='rotate(-90deg)';c.style.animation='hanamaru 0.8s cubic-bezier(.4,0,.2,1) forwards';svg.appendChild(c);layer.appendChild(svg);setTimeout(()=>{svg.style.transition='opacity 0.5s';svg.style.opacity='0';setTimeout(()=>{layer.innerHTML='';},500);},1800);}
 function showResultBanner(stars){const rb=document.getElementById('result-banner');const msgs=['','クリア！','すごい！','はなまる！'],colors=['','var(--c-action)','var(--c-done)','var(--c-srs)'];document.getElementById('rb-stars').innerHTML='<span class="material-symbols-rounded filled" aria-hidden="true">star</span>'.repeat(stars);const rl=document.getElementById('rb-label');rl.textContent=msgs[stars];rl.style.color=colors[stars];rb.classList.add('show');}
 function hideResultBanner(){document.getElementById('result-banner').classList.remove('show');}
@@ -899,22 +991,22 @@ function onComplete(){
   const cx=cW/2,cy=cW/2,cnt=stars===3?20:stars===2?12:5;for(let i=0;i<cnt;i++)setTimeout(()=>{const a=Math.random()*Math.PI*2,r=cW*(.05+Math.random()*.32);addSparkle(cx+Math.cos(a)*r,cy+Math.sin(a)*r);if(!isSparkling&&sparkles.length){isSparkling=true;drawSparkles();}},i*25);
   if(curMode==='practice'){
     if(practiceRound<3){practiceRound++;setTimeout(()=>loadQ(),1150);return;}
-    practiceDone[curQ.char]=true;xpTotal+=stars;save();document.getElementById('practice-char').textContent=curQ.char;setTimeout(()=>showOv('ov-practice'),900);return;
+    practiceDone[curQ.char]=true;xpTotal+=stars;save();updateBadgeCard();document.getElementById('practice-char').textContent=curQ.char;setTimeout(()=>showOv('ov-practice'),900);return;
   }
   const oldLv=getXP().lv;
   if(curMode==='test'){testDone[curQ.char]=true;cleared[curQ.char]=true;srsInit(curQ.char);}
-  xpTotal+=stars;save();const newLv=getXP().lv;
+  xpTotal+=stars;save();updateBadgeCard();const newLv=getXP().lv;
   if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}
   if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}
   setTimeout(()=>doNext(),1800);
 }
 function continuePracticeQueue(){closeOv('ov-practice');qIdx++;if(qIdx<queue.length){practiceRound=1;loadQ();return;}renderKanaGrid();showScreen('scr-list');}
 function startUnlockedTest(){const word=curQ;closeOv('ov-practice');curMode='test';practiceRound=1;queue=[word];qIdx=0;isRandom=false;setModePip('test');showScreen('scr-game',loadQ);}
-function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}if(isRandom){bonXP+=10;save();showOv('ov-rc');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
+function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;dailyCount++;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();updateBadgeCard();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}if(isRandom){randomCount++;bonXP+=10;save();updateBadgeCard();showOv('ov-rc');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
 function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=null;userPts=[];sparkles=[];isSparkling=false;resetStrokeScores();userDrawRecord=[];currentStrokePts=[];stopStartDot();document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';document.getElementById('canvas-ov').style.opacity='0';hideResultBanner();ctxFx.clearRect(0,0,cW,cW);ctxDr.clearRect(0,0,cW,cW);const isTest=(curMode==='test');setMsg(getRoundMessage(),isTest?'var(--c-action)':'var(--c-practice)');if(strokes.length)startStartDot();}
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
-function doReset(){localStorage.clear();cleared={};practiceDone={};testDone={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';updateTitle();}
+function doReset(){localStorage.clear();cleared={};practiceDone={};testDone={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';randomCount=0;reviewCount=0;dailyCount=0;earnedBadges={};updateTitle();}
 window.addEventListener('resize',()=>{if(document.getElementById('scr-game').classList.contains('active')){requestAnimationFrame(()=>{resizeCanvas();const newW=document.getElementById('canvas-wrap').offsetWidth;if(newW>0&&newW!==cW)initCanvas();});}});
 let AC;
 function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
