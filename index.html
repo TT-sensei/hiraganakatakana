@@ -411,6 +411,27 @@ body {
   .badge-tile-name { font-size:.65rem; margin-top:5px; }
 }
 
+/* edu-kit を基調にした、落ち着いて親しみやすい配色 */
+:root {
+  --c-action:#2762D4; --c-action-d:#1E4EAB; --c-action-l:#EDF3FF;
+  --c-practice:#2F8B68; --c-practice-l:#E4F3EC;
+  --c-srs:#7657A6; --c-srs-l:#F0EBF8;
+  --c-done:#4B78C4; --c-done-l:#EAF1FC;
+  --c-caution:#D76B58; --c-caution-l:#FBEDEA;
+  --c-ink:#172033; --c-ink-mid:#5D6677; --c-ink-dim:#7D8797;
+  --c-paper:#F5F2EA; --c-surface:#FFFFFF; --c-border:#D9D4C8; --c-border-l:#EEEAE1;
+  --shadow-sm:0 3px 10px rgba(23,32,51,.08); --shadow-md:0 7px 22px rgba(23,32,51,.09);
+}
+body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12) 0%,transparent 46%),radial-gradient(ellipse at 88% 82%,rgba(231,167,45,.10) 0%,transparent 46%),radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.48) 0%,transparent 70%); }
+.lv-card-full { background:linear-gradient(135deg,#F8FBFF 0%,#F3F7F2 100%); }
+.lv-card-full::after { border-color:rgba(39,98,212,.12); }
+.daily-card { background:linear-gradient(135deg,#3568BE 0%,#2762D4 62%,#4C78C4 100%); box-shadow:0 6px 0 rgba(30,78,171,.35),0 8px 20px rgba(39,98,212,.20); }
+.daily-card.is-done { background:linear-gradient(135deg,#2F8B68 0%,#256E52 100%); box-shadow:0 6px 0 rgba(32,101,74,.35),0 8px 20px rgba(47,139,104,.18); }
+.btn-random { background:linear-gradient(135deg,#F0C75A 0%,#E7A72D 55%,#D9951C 100%); color:#172033; box-shadow:0 5px 0 rgba(166,112,15,.34),0 8px 20px rgba(231,167,45,.22); }
+.reward-card { background:linear-gradient(135deg,#64528E 0%,#7657A6 55%,#8A70B7 100%); box-shadow:0 5px 0 rgba(72,54,109,.32),0 10px 22px rgba(118,87,166,.18); }
+.btn-all,.ov-btn.primary { background:linear-gradient(135deg,#3568BE,#2762D4); box-shadow:0 5px 0 rgba(30,78,171,.35),0 8px 16px rgba(39,98,212,.18); }
+.daily-done-sheet { background:linear-gradient(160deg,#2F8B68 0%,#256E52 65%,#477AA8 100%); }
+
 </style>
 </head>
 <body>
