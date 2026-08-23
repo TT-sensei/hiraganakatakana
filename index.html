@@ -432,6 +432,13 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
 .btn-all,.ov-btn.primary { background:linear-gradient(135deg,#3568BE,#2762D4); box-shadow:0 5px 0 rgba(30,78,171,.35),0 8px 16px rgba(39,98,212,.18); }
 .daily-done-sheet { background:linear-gradient(160deg,#2F8B68 0%,#256E52 65%,#477AA8 100%); }
 
+
+/* 学習メッセージのそばに、控えめな応援キャラ */
+.game-nav-feedback { min-height:56px; display:flex; align-items:center; justify-content:center; gap:8px; margin:-2px 0 4px; pointer-events:none; }
+.game-nav-feedback img { width:52px; height:52px; object-fit:contain; animation:navFeedbackIn .25s ease both; filter:drop-shadow(0 3px 4px rgba(23,32,51,.12)); }
+@keyframes navFeedbackIn { from{opacity:0;transform:translateY(5px) scale(.88)} to{opacity:1;transform:translateY(0) scale(1)} }
+@media (min-width:760px) { .game-nav-feedback { min-height:64px; } .game-nav-feedback img { width:58px; height:58px; } }
+
 </style>
 </head>
 <body>
@@ -446,7 +453,7 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
         <div class="title-logo-sub">ひらがな・カタカナ れんしゅう</div>
       </div>
     </div>
-    <img class="nav-character title-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/characters/sora/fullbody/greeting.png" alt="" aria-hidden="true">
+    <img class="nav-character title-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/sora/fullbody/greeting.webp" alt="" aria-hidden="true">
   </div>
 
   <div class="home-learning-grid">
@@ -489,7 +496,7 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
         <div class="lv-xp-label">あつめたスター <span id="t-nxp"></span></div>
         <div class="lv-xp-wrap"><div class="lv-xp-bar" id="t-xpbar" style="width:0%"></div></div>
       </div>
-      <img class="nav-character lv-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/characters/tsuki/fullbody/thumbs-up.png" alt="" aria-hidden="true">
+      <img class="nav-character lv-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/tsuki/fullbody/thumbs-up.webp" alt="" aria-hidden="true">
     </div>
   </div>
 
@@ -504,13 +511,13 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
   </div>
 
   <div class="random-zone">
-    <img class="nav-character zone-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/characters/kai/fullbody/hint.png" alt="" aria-hidden="true">
+    <img class="nav-character zone-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/fullbody/hint.webp" alt="" aria-hidden="true">
     <div class="zone-label">チャレンジ</div>
     <button class="btn-random" onclick="startRandom()"><span class="material-symbols-rounded button-icon" aria-hidden="true">casino</span>ランダムテスト！</button>
   </div>
 
   <div class="groups-zone">
-    <img class="nav-character zone-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/characters/nami/fullbody/reading.png" alt="" aria-hidden="true">
+    <img class="nav-character zone-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/nami/fullbody/reading.webp" alt="" aria-hidden="true">
     <div class="zone-label">グループ</div>
     <div class="group-grid">
       <div class="group-card" onclick="openList('h1')">
@@ -596,6 +603,7 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
     <span class="result-label" id="rb-label"></span>
   </div>
   <div class="game-msg" id="game-msg">うすいせんを なぞろう！</div>
+  <div class="game-nav-feedback" aria-hidden="true"><img id="game-nav-img" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/sora/fullbody/thumbs-up.webp" alt=""></div>
   <div class="game-controls">
     <div class="ctrl-row">
       <button class="btn-sub anim" onclick="doAnime()"><span class="material-symbols-rounded" aria-hidden="true">play_arrow</span> じゅん</button>
@@ -711,7 +719,7 @@ let randomCount=parseInt(localStorage.getItem('km_random_count'))||0;
 let reviewCount=parseInt(localStorage.getItem('km_review_count'))||0;
 let dailyCount=parseInt(localStorage.getItem('km_daily_count'))||0;
 let earnedBadges=JSON.parse(localStorage.getItem('km_badges'))||{};
-const ASSET_BASE='https://tt-sensei.github.io/edu-assets/assets/';
+const ASSET_BASE='https://tt-sensei.github.io/edu-assets/assets/web/';
 const BADGE_GROUPS=[
   {title:'できた！バッジ',items:[
     ['first-step','はじめの一歩','badges/common/first-step',()=>practiceTotal()>=1],
@@ -725,7 +733,13 @@ const BADGE_GROUPS=[
     ['review-master','ふくしゅう名人','badges/common/review-master',()=>reviewCount>=5],
     ['speed','チャレンジャー','badges/common/speed',()=>randomCount>=1],
     ['streak','れんぞくパワー','badges/common/streak',()=>streak>=3],
-    ['never-give-up','あきらめない心','badges/common/never-give-up',()=>Object.keys(niga).length>=1]
+    ['never-give-up','あきらめない心','badges/common/never-give-up',()=>Object.keys(niga).length>=1],
+    ['accuracy','せいかく名人','badges/common/accuracy',()=>testTotal()>=10],
+    ['growth','ぐんぐん成長','badges/common/growth',()=>practiceTotal()>=15],
+    ['discovery','はっけん名人','badges/common/discovery',()=>dailyCount>=2],
+    ['keep-going','つづける力','badges/common/keep-going',()=>streak>=5],
+    ['helper','おたすけ名人','badges/common/helper',()=>Object.keys(tokk).length>=5],
+    ['perfect','パーフェクト','badges/common/perfect',()=>testTotal()>=46]
   ]},
   {title:'エレメントバッジ',items:[
     ['fire','ファイヤー','elements/fire/level-1',()=>practiceTotal()>=1],
@@ -751,7 +765,7 @@ function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));loca
 function badgeCount(){return ALL_BADGES.filter(b=>earnedBadges[b.id]).length;}
 function checkBadges(){let changed=false;for(const badge of ALL_BADGES){if(!earnedBadges[badge.id]&&badge.condition()){earnedBadges[badge.id]={earnedAt:Date.now()};changed=true;}}if(changed)save();return changed;}
 function updateBadgeCard(){checkBadges();const count=badgeCount();document.getElementById('badge-card-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-summary-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-new-dot').hidden=count===0;document.getElementById('badge-card-sub').textContent=count===ALL_BADGES.length?'ぜんぶ あつめた！':'できたことをバッジであつめよう！';}
-function openBadges(){snd('click');updateBadgeCard();const gallery=document.getElementById('badge-gallery');gallery.innerHTML=BADGE_GROUPS.map(group=>`<section><div class="badge-section-title">${group.title}</div><div class="badge-grid">${group.items.map(([id,name,path])=>{const unlocked=!!earnedBadges[id];return `<div class="badge-tile${unlocked?'':' locked'}"><img src="${ASSET_BASE}${path}/badge.png" alt="${unlocked?name:'ひみつのバッジ'}" loading="lazy"><span class="badge-tile-name">${unlocked?name:'？？？'}</span></div>`;}).join('')}</div></section>`).join('');showOv('ov-badges');}
+function openBadges(){snd('click');updateBadgeCard();const gallery=document.getElementById('badge-gallery');gallery.innerHTML=BADGE_GROUPS.map(group=>`<section><div class="badge-section-title">${group.title}</div><div class="badge-grid">${group.items.map(([id,name,path])=>{const unlocked=!!earnedBadges[id];return `<div class="badge-tile${unlocked?'':' locked'}"><img src="${ASSET_BASE}${path}/badge.webp" alt="${unlocked?name:'ひみつのバッジ'}" loading="lazy"><span class="badge-tile-name">${unlocked?name:'？？？'}</span></div>`;}).join('')}</div></section>`).join('');showOv('ov-badges');}
 function dateKey(dt=new Date()){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
 function todayStr(){return dateKey(new Date());}
 function addDays(d,n){const [y,m,day]=d.split('-').map(Number),dt=new Date(y,m-1,day+n);return dateKey(dt);}
@@ -947,7 +961,36 @@ function evalEnd(x,y){
     showHint(currentStroke);
   }
 }
-function setMsg(t,c){const el=document.getElementById('game-msg');el.textContent=t;el.style.color=c;}
+const NAV_FEEDBACK={
+  encourage:[
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/sora/fullbody/thumbs-up.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/nami/fullbody/waving.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/saku/fullbody/heart-hands.webp'
+  ],
+  correct:[
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/fullbody/correct.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/tsuki/fullbody/correct.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/riku/fullbody/correct.webp'
+  ],
+  retry:[
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/nami/fullbody/retry.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/riku/fullbody/retry.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/saku/fullbody/retry.webp'
+  ],
+  hint:[
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/fullbody/hint.webp',
+    'https://tt-sensei.github.io/navi-character-/assets/web/characters/tsuki/fullbody/hint.webp'
+  ]
+};
+function setMsg(t,c){
+  const el=document.getElementById('game-msg');el.textContent=t;el.style.color=c;
+  const img=document.getElementById('game-nav-img');
+  if(!img)return;
+  const s=String(t);
+  const group=/かんぺき|いいぞ|できたよ|かけたね|せいかい|クリア/.test(s)?'correct':/もういちど|おしい|きをつけて|ながく/.test(s)?'retry':/じゅんび|なぞろう|かく むき/.test(s)?'hint':'encourage';
+  const list=NAV_FEEDBACK[group];img.src=list[Math.floor(Math.random()*list.length)];
+  img.style.animation='none';void img.offsetWidth;img.style.animation='navFeedbackIn .25s ease both';
+}
 function trackDraw(x,y){if(lastX!==null)drawLength+=Math.hypot(x-lastX,y-lastY);lastX=x;lastY=y;}
 let toastTimer=null;
 function showStrokeToast(score){const t=document.getElementById('stroke-toast');if(!t)return;const items=[{min:1,text:'かんぺき！',color:'var(--c-srs)'},{min:.67,text:'いいぞ！',color:'var(--c-practice)'},{min:0,text:'できたよ！',color:'#8A5E00'}];const{text,color}=items.find(i=>score>=i.min);t.textContent=text;t.style.color=color;t.style.animation='none';void t.offsetWidth;t.style.animation='toastIn .22s cubic-bezier(.2,1.4,.4,1) forwards';if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.animation='toastOut .28s ease forwards';},600);}
