@@ -95,7 +95,7 @@ body {
 .lv-card-full::after { content:''; position:absolute; right:-16px; top:-22px; width:78px; height:78px; border:10px dotted rgba(255,140,60,.16); border-radius:50%; animation:spin 8s linear infinite; }
 @keyframes spin { to{transform:rotate(360deg)} }
 .lv-card-left { display:flex; align-items:center; gap:12px; }
-.lv-mascot-lg { font-size:2.8rem; line-height:1; color:var(--c-action); animation:bounce 2s ease-in-out infinite; }
+.lv-mascot-lg { width:58px; height:58px; flex:none; background-repeat:no-repeat; background-position:center; background-size:contain; font-size:0; line-height:1; color:transparent; animation:bounce 2s ease-in-out infinite; }
 @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
 .lv-card-title { font-size:1.35rem; font-weight:900; color:var(--c-action); line-height:1; text-shadow:0 2px 0 rgba(255,140,60,.2); }
 .lv-card-name { font-size:.72rem; color:var(--c-ink-dim); margin-top:3px; }
@@ -324,7 +324,7 @@ body {
 .overlay.show { display:flex; }
 @keyframes slideUp { from{transform:translateY(36px);opacity:0} to{transform:translateY(0);opacity:1} }
 .ov-sheet { background:var(--c-surface); border-radius:28px; padding:28px 24px; text-align:center; width:calc(100% - 32px); max-width:380px; animation:slideUp .25s cubic-bezier(.2,.8,.4,1) forwards; box-shadow:0 -4px 40px rgba(0,0,0,.15); }
-.ov-emoji { font-size:3.2rem; display:block; margin-bottom:12px; color:var(--c-action); animation:emoji-pop .4s .1s cubic-bezier(.2,1.4,.4,1) both; }
+.ov-emoji { width:96px; height:96px; background-repeat:no-repeat; background-position:center; background-size:contain; font-size:0; display:block; margin:0 auto 12px; color:transparent; animation:emoji-pop .4s .1s cubic-bezier(.2,1.4,.4,1) both; }
 .ov-title { font-size:1.3rem; font-weight:900; margin-bottom:6px; color:var(--c-ink); }
 .ov-sub   { font-size:.8rem; color:var(--c-ink-dim); margin-bottom:20px; }
 .ov-btns  { display:flex; gap:8px; }
@@ -698,8 +698,7 @@ document.addEventListener('touchmove',function(e){
 
 const ALL_WORDS=Object.values(KANA_WORDS).flat();
 const GROUPS={h1:{total:25},h2:{total:21},k1:{total:25},k2:{total:21}};
-const TITLE_ICONS=[{lv:1,m:'egg'},{lv:5,m:'flutter_dash'},{lv:30,m:'pets'},{lv:80,m:'water'},{lv:100,m:'crown'},{lv:105,m:'cloud'},{lv:130,m:'stars'},{lv:150,m:'rocket_launch'},{lv:155,m:'auto_awesome'},{lv:180,m:'temple_buddhist'},{lv:205,m:'school'},{lv:230,m:'edit_note'},{lv:255,m:'all_inclusive'},{lv:280,m:'trophy'}];
-function getTitle(lv){let r=(typeof TITLES==='undefined'||!TITLES.length)?{lv:1,t:'かなカナタマゴ'}:TITLES[0];if(typeof TITLES!=='undefined')for(const t of TITLES){if(lv>=t.lv)r=t;else break;}let icon=TITLE_ICONS[0].m;for(const item of TITLE_ICONS){if(lv>=item.lv)icon=item.m;else break;}return{...r,m:icon};}
+function getTitle(lv){let r=(typeof TITLES==='undefined'||!TITLES.length)?{lv:1,t:'かなカナ「はじめのバッジ」',m:''}:TITLES[0];if(typeof TITLES!=='undefined')for(const t of TITLES){if(lv>=t.lv)r=t;else break;}return r;}
 let cleared=JSON.parse(localStorage.getItem('km_cleared'))||{};
 let practiceDone=JSON.parse(localStorage.getItem('km_practice_done'))||{};
 let testDone=JSON.parse(localStorage.getItem('km_test_done'))||{};
@@ -749,14 +748,9 @@ const BADGE_GROUPS=[
     ['light','ライト','elements/light/level-3',()=>testTotal()>=46],
     ['rainbow','レインボー','elements/rainbow/level-3',()=>streak>=7]
   ]},
-  {title:'コレクションバッジ',items:[
-    ['animal-cat','ねこコレクション','collections/animal/common/cat',()=>testTotal()>=5],
-    ['animal-rabbit','うさぎコレクション','collections/animal/common/rabbit',()=>practiceTotal()>=10],
-    ['flower-tulip','チューリップコレクション','collections/flower/common/tulip',()=>dailyCount>=1],
-    ['music-note','おんぷコレクション','collections/music/common/music-note',()=>randomCount>=1],
-    ['dino-triceratops','きょうりゅうコレクション','collections/dinosaur/common/triceratops',()=>testTotal()>=25],
-    ['fantasy-dragon','ドラゴンコレクション','collections/fantasy/common/dragon',()=>getXP().lv>=10]
-  ]}
+  {title:'コレクションバッジ',items:COLLECTION_LEVELS.map(b=>[
+    b.badgeId,b.t,b.m.split('/web/')[1].replace('/badge.webp',''),()=>getXP().lv>=b.lv
+  ])}
 ];
 const ALL_BADGES=BADGE_GROUPS.flatMap(group=>group.items.map(([id,name,path,condition])=>({id,name,path,condition,group:group.title})));
 function practiceTotal(){return Object.keys(practiceDone).length;}
@@ -790,7 +784,7 @@ function setDailyKind(kind,e){e.stopPropagation();if(dailyKind===kind)return;dai
 function getXP(){const x=xpTotal+bonXP;return{lv:Math.floor(x/10)+1,cur:x%10,total:x};}
 function updateTitle(){
   const{lv,cur}=getXP();const ti=getTitle(lv);
-  document.getElementById('t-mascot').textContent=ti.m;
+  const levelImage=ti.m||'';document.getElementById('t-mascot').textContent='';document.getElementById('t-mascot').style.backgroundImage=levelImage?'url("'+levelImage+'")':'';
   document.getElementById('t-lv').textContent=lv;
   document.getElementById('t-name').textContent=ti.t;
   document.getElementById('t-xpbar').style.width=`${(cur/10)*100}%`;
@@ -1132,7 +1126,7 @@ function onComplete(){
   const oldLv=getXP().lv;
   if(curMode==='test'){testDone[curQ.char]=true;cleared[curQ.char]=true;srsInit(curQ.char);}
   xpTotal+=stars;save();updateBadgeCard();const newLv=getXP().lv;
-  if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent=ti.m;document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}
+  if(newLv>oldLv){setTimeout(()=>{const ti=getTitle(newLv);document.getElementById('lv-mascot').textContent='';document.getElementById('lv-mascot').style.backgroundImage=ti.m?'url("'+ti.m+'")':'';document.getElementById('lv-num').textContent=newLv;document.getElementById('lv-name').textContent=ti.t;showOv('ov-lv');},900);return;}
   if(curMode==='srs'){document.getElementById('srs-eval').classList.add('show');return;}
   setTimeout(()=>doNext(),1800);
 }
