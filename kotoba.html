@@ -5,51 +5,47 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#fff8f0">
 <title>ことばを書く｜かなカナ</title>
-<link rel="stylesheet" href="kotoba.css">
+<link rel="stylesheet" href="./kotoba.css">
 </head>
 <body>
 <main class="app">
   <header class="topbar">
     <a class="back" href="./index.html" aria-label="かなカナにもどる">←</a>
-    <div>
-      <div class="eyebrow">ことばのれんしゅう</div>
-      <h1>ことばを書く</h1>
-    </div>
+    <div><div class="eyebrow">ことばのれんしゅう</div><h1>ことばを書く</h1></div>
     <button id="soundTop" class="icon-btn" aria-label="ことばをきく">🔊</button>
   </header>
 
   <section class="word-card" aria-live="polite">
     <div class="label">この ことばを かこう</div>
     <div class="word-line"><img id="wordIcon" class="word-icon" hidden alt=""><div id="word" class="word">ねこ</div></div>
-    <div id="meaning" class="meaning"></div>
     <div id="progress" class="progress"></div>
   </section>
 
   <section class="step-card">
     <div class="step-head">
-      <div>
-        <div class="label">つぎに かく もじ</div>
-        <div id="currentChar" class="current-char">ね</div>
-      </div>
-      <div id="stepText" class="step-text">1もじめ</div>
+      <div><div class="label">つぎに かく もじ</div><div id="currentChar" class="current-char">ね</div></div>
+      <div id="stepText" class="step-text">1 / 2</div>
     </div>
-
+    <div id="hintArea" class="hint-area"></div>
     <div class="canvas-wrap" id="canvasWrap">
-      <canvas id="guide"></canvas>\n      <svg id="guideSvg" aria-hidden="true"></svg>
-      <canvas id="fx"></canvas>
-      <canvas id="draw"></canvas>
+      <canvas id="canvasBg"></canvas>
+      <canvas id="canvasFx"></canvas>
+      <canvas id="canvasDr"></canvas>
+      <div id="strokeToast"></div>
+      <div id="resultBanner"><span id="resultStars"></span><span id="resultLabel"></span></div>
+      <div id="confettiLayer"></div>
     </div>
-
-    <div id="message" class="message">うすい せんを なぞってみよう</div>
+    <div id="message" class="message">うすいせんを なぞろう</div>
+    <div class="feedback"><img id="navFeedback" alt="" aria-hidden="true"></div>
     <div class="actions">
       <button id="hintBtn" class="secondary">おてほん</button>
-      <button id="clearBtn" class="secondary">もういちど</button>
+      <button id="clearBtn" class="secondary">やりなおし</button>
     </div>
   </section>
 
   <section id="doneCard" class="done-card" hidden>
     <div class="done-mark">✓</div>
-    <div class="done-title">できた！</div>
+    <div class="done-title">ことば クリア！</div>
     <div id="doneWord" class="done-word">ねこ</div>
     <button id="nextBtn" class="primary">つぎの ことば</button>
   </section>
@@ -58,8 +54,7 @@
     <button id="prevBtn" class="nav-btn">‹ まえの ことば</button>
     <button id="randomBtn" class="nav-btn">ランダム</button>
   </div>
-
-  <p class="note">かなカナの「かなを書く」練習とは別ページです。書く判定には現在のサイトと同じ KanjiVG の書き順データを利用します。</p>
+  <p class="note">かなを書く練習と同じ書き判定・書き順データを使い、ことばは1文字ずつ続けて書きます。</p>
   <p class="license">KanjiVG © Ulrich Apel / CC BY-SA 3.0</p>
 </main>
 <script src="./kana_words.js"></script>
