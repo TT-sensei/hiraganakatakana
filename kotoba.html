@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#fff8f0">
+<title>ことばを書く｜かなカナ</title>
+<link rel="stylesheet" href="kotoba.css">
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <a class="back" href="./index.html" aria-label="かなカナにもどる">←</a>
+    <div>
+      <div class="eyebrow">ことばのれんしゅう</div>
+      <h1>ことばを書く</h1>
+    </div>
+    <button id="soundTop" class="icon-btn" aria-label="ことばをきく">🔊</button>
+  </header>
+
+  <section class="word-card" aria-live="polite">
+    <div class="label">この ことばを かこう</div>
+    <div id="word" class="word">ねこ</div>
+    <div id="meaning" class="meaning"></div>
+    <div id="progress" class="progress"></div>
+  </section>
+
+  <section class="step-card">
+    <div class="step-head">
+      <div>
+        <div class="label">つぎに かく もじ</div>
+        <div id="currentChar" class="current-char">ね</div>
+      </div>
+      <div id="stepText" class="step-text">1もじめ</div>
+    </div>
+
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="guide"></canvas>
+      <canvas id="fx"></canvas>
+      <canvas id="draw"></canvas>
+    </div>
+
+    <div id="message" class="message">うすい せんを なぞってみよう</div>
+    <div class="actions">
+      <button id="hintBtn" class="secondary">おてほん</button>
+      <button id="clearBtn" class="secondary">もういちど</button>
+    </div>
+  </section>
+
+  <section id="doneCard" class="done-card" hidden>
+    <div class="done-mark">✓</div>
+    <div class="done-title">できた！</div>
+    <div id="doneWord" class="done-word">ねこ</div>
+    <button id="nextBtn" class="primary">つぎの ことば</button>
+  </section>
+
+  <div class="nav-row">
+    <button id="prevBtn" class="nav-btn">‹ まえの ことば</button>
+    <button id="randomBtn" class="nav-btn">ランダム</button>
+  </div>
+
+  <p class="note">かなカナの「かなを書く」練習とは別ページです。書く判定には現在のサイトと同じ KanjiVG の書き順データを利用します。</p>
+  <p class="license">KanjiVG © Ulrich Apel / CC BY-SA 3.0</p>
+</main>
+<script src="./kana_words.js"></script>
+<script src="./kotoba.js"></script>
+</body>
+</html>
