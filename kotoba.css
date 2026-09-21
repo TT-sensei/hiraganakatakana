@@ -25,7 +25,7 @@ h1{font-size:1.35rem;margin:2px 0 0;font-weight:900}
 .step-text{font-size:.78rem;color:var(--mid);font-weight:700}
 .canvas-wrap{position:relative;width:min(88vw,540px);aspect-ratio:1;margin:0 auto;background:#fffdf9;border:2px solid #f1dfd0;border-radius:20px;overflow:hidden}
 .canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
-#draw{cursor:crosshair}
+#guide{z-index:1}\n#guideSvg{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;overflow:visible}\n#fx{z-index:3}\n#draw{z-index:4;cursor:crosshair}
 .message{text-align:center;min-height:1.6em;font-size:.82rem;font-weight:800;color:var(--green);padding:9px 0 4px}
 .actions{display:flex;gap:8px}.secondary,.primary,.nav-btn{border:0;border-radius:15px;padding:12px 14px;font-weight:800;cursor:pointer}
 .secondary{flex:1;background:#fff4e9;color:var(--orange);border:2px solid #ffd8bc}.primary{width:100%;background:var(--orange);color:#fff;box-shadow:0 4px 0 #d85b13}
