@@ -313,8 +313,13 @@
 
   function completeChar(){
     if(animating) return;
+    animating=true;
     snd("complete"); stopStartDot();
     const stars=calcStars();
+    // 「かなを書く」と同じスター（XP）データに加算する
+    // 1文字につき1回だけ加算し、同じ文字を書き直しても二重加算しない。
+    const xp = parseInt(localStorage.getItem("km_xp") || "0", 10) || 0;
+    localStorage.setItem("km_xp", String(xp + stars));
     showResult(stars);
     speak(curChar);
     setTimeout(()=>{
