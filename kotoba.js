@@ -30,7 +30,7 @@
   let userPts = [];
   let drawLength = 0;
   let last = null;
-  let ctxGuide,ctxFx,ctxDraw,cW=0;
+  let ctxGuide,ctxFx,ctxDraw,cW=0;\n  const guideSvg = () => $("guideSvg");
   let refCache = {};
   let animFrame = null;
   let messageTimer = null;
@@ -50,7 +50,24 @@
     const wrap=$("canvasWrap");cW=wrap.clientWidth;
     ["guide","fx","draw"].forEach(id=>{const c=$(id);c.width=cW;c.height=cW});
     ctxGuide=$("guide").getContext("2d");ctxFx=$("fx").getContext("2d");ctxDraw=$("draw").getContext("2d");
-    drawGrid(); if(strokes.length)drawCompleted();
+    drawGrid(); if(strokes.length){drawCompleted();renderGuideSvg();}
+  }
+  function renderGuideSvg(){
+    const svg=guideSvg();
+    if(!svg)return;
+    svg.innerHTML="";
+    svg.setAttribute("viewBox","0 0 109 109");
+    strokes.forEach((d,i)=>{
+      if(!d)return;
+      const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+      p.setAttribute("d",d);
+      p.setAttribute("fill","none");
+      p.setAttribute("stroke",i===strokeIndex?"rgba(255,123,47,.42)":"rgba(90,105,120,.16)");
+      p.setAttribute("stroke-width","7");
+      p.setAttribute("stroke-linecap","round");
+      p.setAttribute("stroke-linejoin","round");
+      svg.appendChild(p);
+    });
   }
   function drawGrid(){
     ctxGuide.clearRect(0,0,cW,cW);
@@ -146,7 +163,7 @@
     if(current<item.word.length)loadChar([...item.word][current]);else setMessage("ことばが かけたよ！","var(--green)");
   }
   function completeChar(){
-    strokeIndex=strokes.length;drawCompleted();cancelAnimationFrame(dotFrame);
+    strokeIndex=strokes.length;renderGuideSvg();drawCompleted();cancelAnimationFrame(dotFrame);
     speak([...words[index].word][current]);
     current++;
     if(current<[...words[index].word].length){
