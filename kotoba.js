@@ -3,7 +3,7 @@
 
   // かなカナの既存データから、ひらがなで書ける語を自動収集。
   // 同じ語が複数の文字に登録されていても1回だけ扱う。
-  const all = Object.values(window.KANA_WORDS || {}).flat();
+  const all = Object.values(typeof KANA_WORDS !== "undefined" ? KANA_WORDS : {}).flat();
   const words = [...new Set(all.map(x => x.word).filter(Boolean))]
     .filter(w => /^[ぁ-ゖー]+$/.test(w))
     .filter(w => w.length >= 2 && w.length <= 6)
@@ -36,7 +36,7 @@
   let messageTimer = null;
 
   const $ = id => document.getElementById(id);
-  const wordEl=$("word"),meaningEl=$("meaning"),progressEl=$("progress"),charEl=$("currentChar");
+  const wordEl=$("word"),meaningEl=$("meaning"),progressEl=$("progress"),charEl=$("currentChar"),iconEl=$("wordIcon");
   const msgEl=$("message"),doneCard=$("doneCard"),doneWord=$("doneWord");
 
   function save(){localStorage.setItem(stateKey,JSON.stringify({index}));}
@@ -76,8 +76,7 @@
     const total=ds[ds.length-1];if(total<1)return userPts;const out=[];
     for(let i=0;i<N;i++){const t=total*i/(N-1);let lo=0,hi=ds.length-1;while(lo<hi-1){const m=(lo+hi)>>1;if(ds[m]<=t)lo=m;else hi=m}
       const z=ds[lo]===ds[hi]?0:(t-ds[lo])/(ds[hi]-ds[lo]);
-      out.push({x:userPts[lo]+0,y:userPts[lo].y+(userPts[hi].y-userPts[lo].y)*z});
-      out[i].x=userPts[lo].x+(userPts[hi].x-userPts[lo].x)*z;
+      out.push({x:userPts[lo].x+(userPts[hi].x-userPts[lo].x)*z,y:userPts[lo].y+(userPts[hi].y-userPts[lo].y)*z});
     } return out;
   }
   function dtw(a,b){
@@ -134,6 +133,11 @@
     if(!words.length){setMessage("ことばが ありません","var(--orange)");return}
     if(index<0)index=words.length-1;if(index>=words.length)index=0;save();
     const item=words[index];wordEl.textContent=item.word;doneWord.textContent=item.word;meaningEl.textContent="";
+    const iconItem = all.find(x => x.word === item.word && x.icon);
+    if(iconEl){
+      if(iconItem){ iconEl.src=iconItem.icon; iconEl.alt=item.word+"のイメージ"; iconEl.hidden=false; }
+      else iconEl.hidden=true;
+    }
     progressEl.innerHTML=[...item.word].map((_,i)=>'<i class="'+(i<current?'done ':i===current?'current':'')+'"></i>').join("");
     charEl.textContent=[...item.word][current];
     $("stepText").textContent=(current+1)+"もじめ";
