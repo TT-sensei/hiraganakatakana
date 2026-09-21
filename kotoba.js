@@ -192,6 +192,8 @@
     };
   }
 
+  function trackDraw(x,y){if(lastX!==null)drawLength+=Math.hypot(x-lastX,y-lastY);lastX=x;lastY=y;}
+
   function drawGrid(){
     ctxBg.clearRect(0,0,cW,cW);
     ctxBg.strokeStyle="rgba(255,200,160,.4)"; ctxBg.lineWidth=1; ctxBg.setLineDash([4,4]);
@@ -213,15 +215,10 @@
       strokes=sg?[...sg.querySelectorAll("path")].map(p=>p.getAttribute("d")):[];
       currentStroke=0; drawLength=0; lastX=null; lastY=null; strokeRefCache={};
       if(strokes.length) startStartDot();
-      const styled=svgText.replace("</svg>",
-        '<style>path{stroke:rgba(255,190,140,.7)!important;stroke-width:9!important;fill:none!important}text{fill:#FFB080!important;font-size:8px!important;font-family:sans-serif}</style></svg>');
-      const blobUrl=URL.createObjectURL(new Blob([styled],{type:"image/svg+xml;charset=utf-8"}));
-      await new Promise(resolve=>{
-        const img=new Image();
-        img.onload=()=>{ctxBg.clearRect(0,0,cW,cW);drawGrid();ctxBg.drawImage(img,0,0,cW,cW);URL.revokeObjectURL(blobUrl);resolve();};
-        img.onerror=()=>{URL.revokeObjectURL(blobUrl);resolve();};
-        img.src=blobUrl;
-      });
+      // 書き順データだけ取得し、練習画面にはお手本のオレンジ線を表示しない。
+      // スタート位置の番号と、おてほんボタンからのヒントだけで確認できるようにする。
+      ctxBg.clearRect(0,0,cW,cW);
+      drawGrid();
     }catch(e){
       console.warn(curChar+" KanjiVGなし");
       strokes=[]; currentStroke=0;
