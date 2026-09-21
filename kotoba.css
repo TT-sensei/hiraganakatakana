@@ -36,3 +36,5 @@ h1{font-size:1.35rem;margin:2px 0 0;font-weight:900}
 .note{font-size:.62rem;line-height:1.6;color:#8b7d72;margin:14px 3px 0}.license{text-align:center;font-size:.56rem;color:#a6978b;margin:5px 0}
 [hidden]{display:none!important}
 @media(min-width:600px){.app{padding-top:20px}.word{font-size:3.1rem}}
+
+.word-line{display:flex;align-items:center;justify-content:center;gap:12px}.word-icon{width:56px;height:56px;object-fit:contain;border-radius:14px}.word-line .word{margin:5px 0}
