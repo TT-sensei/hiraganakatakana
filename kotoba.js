@@ -2,13 +2,15 @@
   "use strict";
 
   const all = Object.values(typeof KANA_WORDS !== "undefined" ? KANA_WORDS : {}).flat();
-  const words = [...new Map(
-    all.filter(x => x && x.word).map(x => [x.word, {word:x.word, icon:x.icon || ""}])
-  ).values()]
-    .filter(x => /^[ぁ-ゖー]+$/.test(x.word))
-    .filter(x => x.word.length >= 2 && x.word.length <= 6)
-    .filter(x => !/[っゃゅょぁぃぅぇぉゎ]/.test(x.word));
-
+  const allWords = [...new Map(all.filter(x => x && x.word).map(x => [x.word, {word:x.word, icon:x.icon || ""}])).values()];
+  let wordType = "hira";
+  let words = [];
+  function buildWordList(){
+    const re = wordType === "kata" ? /^[ァ-ヺー]+$/ : /^[ぁ-ゖー]+$/;
+    words = allWords.filter(x => re.test(x.word))
+      .filter(x => x.word.length >= 2 && x.word.length <= 6)
+      .filter(x => !/[っゃゅょぁぃぅぇぉゎッャュョァィゥェォヮ]/.test(x.word));
+  }
   let wordIndex = 0;
   let charIndex = 0;
   let curWord = null;
@@ -90,6 +92,14 @@
           .forEach(([off,f,d,v])=>o(f,"sine",d,v,now+off));
       }
     }catch(e){}
+  }
+
+  function setWordType(type){
+    wordType=type; buildWordList();
+    wordIndex=Math.floor(Math.random()*Math.max(words.length,1));
+    $("hiraBtn").classList.toggle("active",type==="hira");
+    $("kataBtn").classList.toggle("active",type==="kata");
+    if(words.length) loadWord(wordIndex);
   }
 
   function renderWords(){
@@ -439,6 +449,8 @@
     if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.animation="toastOut .28s ease forwards";},600);
   }
 
+  $("hiraBtn").onclick=()=>{snd("click");setWordType("hira");};
+  $("kataBtn").onclick=()=>{snd("click");setWordType("kata");};
   $("hintBtn").onclick=()=>{snd("click");showHint(currentStroke);};
   $("clearBtn").onclick=()=>{snd("click");doRetry();};
   $("nextBtn").onclick=nextWord;
@@ -457,7 +469,8 @@
   document.addEventListener("gesturechange",e=>e.preventDefault(),{passive:false});
   document.addEventListener("gestureend",e=>e.preventDefault(),{passive:false});
 
-  if(words.length) loadWord(0);
+  buildWordList();
+  if(words.length) loadWord(Math.floor(Math.random()*words.length));
   else {
     $("word").textContent="ことばが ありません";
     $("currentChar").textContent="—";
