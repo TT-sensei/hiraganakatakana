@@ -362,7 +362,10 @@
     $("doneCard").hidden=false;
     $("message").textContent="ことばを ぜんぶ かけたよ！";
     $("message").style.color="var(--green)";
-    $("nextBtn").focus({preventScroll:true});
+    setTimeout(()=>{
+      $("doneCard").hidden=true;
+      nextWord();
+    },900);
   }
 
   function loadCurrentChar(){
