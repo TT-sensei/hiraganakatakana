@@ -29,3 +29,5 @@ button,a{font:inherit;touch-action:manipulation}
 @keyframes navFeedbackIn{from{opacity:0;transform:translateY(5px) scale(.8)}to{opacity:1;transform:none}}
 [hidden]{display:none!important}
 @media(min-width:600px){.app{padding:18px 28px 40px}.word{font-size:3.1rem}.canvas-wrap{max-width:600px}}
+
+.type-switch{display:flex;gap:8px;margin:0 0 12px;background:#f4eee8;padding:5px;border-radius:14px}.type-btn{flex:1;border:0;border-radius:10px;padding:10px 8px;background:transparent;color:#6d625a;font:700 1rem inherit;cursor:pointer}.type-btn.active{background:#fff;color:#243447;box-shadow:0 2px 7px rgba(0,0,0,.08)}
