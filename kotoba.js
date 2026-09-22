@@ -340,7 +340,7 @@
       }else{
         finishWord();
       }
-    },850);
+    },280);
   }
 
   function showResult(stars){
