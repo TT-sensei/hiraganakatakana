@@ -440,6 +440,11 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
 @keyframes navFeedbackIn { from{opacity:0;transform:translateY(5px) scale(.88)} to{opacity:1;transform:translateY(0) scale(1)} }
 @media (min-width:760px) { .game-nav-feedback { min-height:64px; } .game-nav-feedback img { width:58px; height:58px; } }
 
+
+/* ことば練習 */
+.word-practice-zone{position:relative}.word-practice-card{display:grid;grid-template-columns:1fr 1fr;gap:8px}.word-practice-btn{min-height:92px;display:flex;align-items:center;gap:10px;padding:13px 12px;border:2px solid var(--c-border);border-radius:18px;background:var(--c-surface);color:var(--c-ink);text-decoration:none;box-shadow:0 4px 0 rgba(23,32,51,.08);transition:transform .12s,box-shadow .12s}.word-practice-btn:active{transform:translateY(3px);box-shadow:none}.word-practice-btn>.material-symbols-rounded:first-child{font-size:1.8rem;color:var(--c-action)}.word-practice-btn.kata>.material-symbols-rounded:first-child{color:var(--c-done)}.word-practice-btn span:nth-child(2){flex:1;min-width:0}.word-practice-btn strong{display:block;font-size:.95rem}.word-practice-btn small{display:block;margin-top:3px;color:var(--c-ink-dim);font-size:.62rem}.word-practice-btn .arrow{font-size:1.15rem;color:var(--c-ink-dim)}
+@media (min-width:760px){#scr-title .word-practice-btn{min-height:104px;padding:16px}#scr-title .word-practice-btn strong{font-size:1.05rem}}
+
 </style>
 </head>
 <body>
@@ -511,10 +516,13 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
     </button>
   </div>
 
-  <div class="random-zone">
+  <div class="random-zone word-practice-zone">
     <img class="nav-character zone-nav-character" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/fullbody/hint.webp" alt="" aria-hidden="true">
-    <div class="zone-label">チャレンジ</div>
-    <button class="btn-random" onclick="startRandom()"><span class="material-symbols-rounded button-icon" aria-hidden="true">casino</span>ランダムテスト！</button>
+    <div class="zone-label">ことばで練習</div>
+    <div class="word-practice-card">
+      <a class="word-practice-btn hira" href="kotoba.html?type=hira"><span class="material-symbols-rounded" aria-hidden="true">spa</span><span><strong>ひらがな</strong><small>ことばを書く</small></span><span class="material-symbols-rounded arrow" aria-hidden="true">arrow_forward</span></a>
+      <a class="word-practice-btn kata" href="kotoba.html?type=kata"><span class="material-symbols-rounded" aria-hidden="true">diamond</span><span><strong>カタカナ</strong><small>ことばを書く</small></span><span class="material-symbols-rounded arrow" aria-hidden="true">arrow_forward</span></a>
+    </div>
   </div>
 
   <div class="groups-zone">
@@ -636,15 +644,6 @@ body { background-image:radial-gradient(ellipse at 12% 14%,rgba(116,151,214,.12)
     <button class="lv-btn" onclick="closeOv('ov-lv');doNext()">やったー！</button>
   </div>
 </div>
-<!-- ov: ランダム完了 -->
-<div class="overlay" id="ov-rc">
-  <div class="ov-sheet">
-    <span class="ov-emoji material-symbols-rounded filled">celebration</span>
-    <div class="ov-title">テストクリア！</div>
-    <div class="ov-sub">ボーナス +10XP ゲット！</div>
-    <div class="ov-btns"><button class="ov-btn primary" onclick="closeOv('ov-rc');showScreen('scr-title')">ホームへ</button></div>
-  </div>
-</div>
 <!-- ov: デイリー完了 -->
 <div class="overlay" id="ov-daily">
   <div class="daily-done-sheet">
@@ -715,7 +714,6 @@ let dailyState=JSON.parse(localStorage.getItem('km_daily'))||{date:'',chars:[],d
 let streak=parseInt(localStorage.getItem('km_streak'))||0;
 let lastStreakDate=localStorage.getItem('km_streakdate')||'';
 let dailyKind=localStorage.getItem('km_dailykind')||'hira';
-let randomCount=parseInt(localStorage.getItem('km_random_count'))||0;
 let reviewCount=parseInt(localStorage.getItem('km_review_count'))||0;
 let dailyCount=parseInt(localStorage.getItem('km_daily_count'))||0;
 let earnedBadges=JSON.parse(localStorage.getItem('km_badges'))||{};
@@ -731,7 +729,6 @@ const BADGE_GROUPS=[
     ['steady-progress','こつこつ名人','badges/common/steady-progress',()=>testTotal()>=46],
     ['mission-complete','ミッション達成','badges/common/mission-complete',()=>dailyCount>=1],
     ['review-master','ふくしゅう名人','badges/common/review-master',()=>reviewCount>=5],
-    ['speed','チャレンジャー','badges/common/speed',()=>randomCount>=1],
     ['streak','れんぞくパワー','badges/common/streak',()=>streak>=3],
     ['never-give-up','あきらめない心','badges/common/never-give-up',()=>Object.keys(niga).length>=1],
     ['accuracy','せいかく名人','badges/common/accuracy',()=>testTotal()>=10],
@@ -756,7 +753,7 @@ const BADGE_GROUPS=[
 const ALL_BADGES=BADGE_GROUPS.flatMap(group=>group.items.map(([id,name,path,condition])=>({id,name,path,condition,group:group.title})));
 function practiceTotal(){return Object.keys(practiceDone).length;}
 function testTotal(){return Object.keys(testDone).length;}
-function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));localStorage.setItem('km_practice_done',JSON.stringify(practiceDone));localStorage.setItem('km_test_done',JSON.stringify(testDone));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);localStorage.setItem('km_random_count',randomCount);localStorage.setItem('km_review_count',reviewCount);localStorage.setItem('km_daily_count',dailyCount);localStorage.setItem('km_badges',JSON.stringify(earnedBadges));}
+function save(){localStorage.setItem('km_cleared',JSON.stringify(testDone));localStorage.setItem('km_practice_done',JSON.stringify(practiceDone));localStorage.setItem('km_test_done',JSON.stringify(testDone));localStorage.setItem('km_tokk',JSON.stringify(tokk));localStorage.setItem('km_niga',JSON.stringify(niga));localStorage.setItem('km_bonxp',bonXP);localStorage.setItem('km_xp',xpTotal);localStorage.setItem('km_mist',JSON.stringify(mistCnt));localStorage.setItem('km_srs',JSON.stringify(srsData));localStorage.setItem('km_daily',JSON.stringify(dailyState));localStorage.setItem('km_streak',streak);localStorage.setItem('km_streakdate',lastStreakDate);localStorage.setItem('km_dailykind',dailyKind);localStorage.setItem('km_review_count',reviewCount);localStorage.setItem('km_daily_count',dailyCount);localStorage.setItem('km_badges',JSON.stringify(earnedBadges));}
 function badgeCount(){return ALL_BADGES.filter(b=>earnedBadges[b.id]).length;}
 function checkBadges(){let changed=false;for(const badge of ALL_BADGES){if(!earnedBadges[badge.id]&&badge.condition()){earnedBadges[badge.id]={earnedAt:Date.now()};changed=true;}}if(changed)save();return changed;}
 function updateBadgeCard(){checkBadges();const count=badgeCount();document.getElementById('badge-card-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-summary-count').textContent=`${count} / ${ALL_BADGES.length}`;document.getElementById('badge-new-dot').hidden=count===0;document.getElementById('badge-card-sub').textContent=count===ALL_BADGES.length?'ぜんぶ あつめた！':'できたことをバッジであつめよう！';}
@@ -807,9 +804,9 @@ function updateDailyBanner(){
   const due=getDueChars();const sc=document.getElementById('srs-card');
   if(due.length>0&&!completed){sc.style.display='flex';document.getElementById('srs-count').textContent=due.length+'こ';}else{sc.style.display='none';}
 }
-let queue=[],qIdx=0,curQ=null,curMode='practice',isRandom=false,curGroup='h1',practiceRound=1;
-function startDaily(){initDaily();if(dailyState.completed){return;}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';isRandom=false;queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
-function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';isRandom=false;queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game',loadQ);}
+let queue=[],qIdx=0,curQ=null,curMode='practice',curGroup='h1',practiceRound=1;
+function startDaily(){initDaily();if(dailyState.completed){return;}snd('click');const words=getDailyWords();if(!words.length)return;curMode='daily';queue=[...words];qIdx=0;setModePip('daily');showScreen('scr-game',loadQ);}
+function startSRS(){snd('click');const due=getDueChars();if(!due.length){alert('ふくしゅうはありません');return;}curMode='srs';queue=due.sort(()=>Math.random()-.5).slice(0,10);qIdx=0;setModePip('srs');showScreen('scr-game',loadQ);}
 function setModePip(mode){const pip=document.getElementById('mode-pip');const labels={practice:'れんしゅう',test:'テスト',daily:'デイリー',srs:'ふくしゅう',tokkun:'とっくん',nigate:'にがて'};pip.textContent=labels[mode]||mode;pip.className='mode-pip'+(mode==='daily'?' daily':mode==='srs'?' srs':mode==='test'?' test':'');}
 let listMode='practice';
 function openList(g){snd('click');curGroup=g;const labels={h1:'あ〜な行',h2:'は〜ん',k1:'ア〜ナ行',k2:'ハ〜ン'};document.getElementById('list-title').textContent=labels[g];listMode='practice';updateListModeBtns();renderKanaGrid();showScreen('scr-list');}
@@ -824,22 +821,14 @@ function renderKanaGrid(){
     if(hasTest||hasPractice){const mark=document.createElement('div');mark.className='k-done-mark';mark.innerHTML='<svg viewBox="0 0 8 8" width="8" height="8"><polyline points="1,4 3,6 7,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';card.appendChild(mark);}
     if(srs&&!isDue){const tag=document.createElement('div');tag.className='k-srs-tag';const days=Math.round((new Date(srs.due)-new Date(today))/86400000);tag.textContent=days<=0?'きょう':days+'日後';card.appendChild(tag);}
     card.appendChild(document.createTextNode(w.char));
-    card.onclick=()=>{snd('click');curMode=listMode;practiceRound=1;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);};
+    card.onclick=()=>{snd('click');curMode=listMode;practiceRound=1;queue=KANA_WORDS[curGroup].slice(KANA_WORDS[curGroup].indexOf(w));qIdx=0;setModePip(curMode);showScreen('scr-game',loadQ);};
     grid.appendChild(card);
   });
 }
-function startAll(){snd('click');curMode=listMode;practiceRound=1;queue=[...KANA_WORDS[curGroup]];if(!queue.length){alert('もじが ありません');return;}qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
-function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;isRandom=false;setModePip(curMode);showScreen('scr-game',loadQ);}
-function startRandom(){snd('click');curMode='test';isRandom=true;queue=ALL_WORDS.sort(()=>Math.random()-.5).slice(0,10);if(!queue.length){alert('もじが ありません');return;}qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
-function showScreen(id,cb){
-  window.scrollTo(0,0);
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if(id==='scr-title'){updateTitle();if(cb)cb();}
-  else if(id==='scr-game'){requestAnimationFrame(()=>requestAnimationFrame(()=>{resizeCanvas();if(cb)cb();}));}
-  else{if(cb)cb();}
-}
-function goBack(){animating=false;if(isRandom||['tokkun','nigate','daily','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
+function startAll(){snd('click');curMode=listMode;practiceRound=1;queue=[...KANA_WORDS[curGroup]];if(!queue.length){alert('もじが ありません');return;}qIdx=0;setModePip(curMode);showScreen('scr-game',loadQ);}
+function startSpecial(m){snd('click');curMode=m;const list=Object.keys(GROUPS).flatMap(g=>KANA_WORDS[g].filter(w=>m==='tokkun'?tokk[w.char]:niga[w.char]));if(!list.length){alert('もじが ありません');return;}queue=list;qIdx=0;setModePip(curMode);showScreen('scr-game',loadQ);}
+
+function goBack(){animating=false;if(['tokkun','nigate','daily','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
 function resizeCanvas(){
   const wrap=document.getElementById('canvas-wrap');
   if(!wrap)return;
@@ -1132,12 +1121,12 @@ function onComplete(){
   setTimeout(()=>doNext(),1800);
 }
 function continuePracticeQueue(){closeOv('ov-practice');qIdx++;if(qIdx<queue.length){practiceRound=1;loadQ();return;}renderKanaGrid();showScreen('scr-list');}
-function startUnlockedTest(){const word=curQ;closeOv('ov-practice');curMode='test';practiceRound=1;queue=[word];qIdx=0;isRandom=false;setModePip('test');showScreen('scr-game',loadQ);}
-function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;dailyCount++;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();updateBadgeCard();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}if(isRandom){randomCount++;bonXP+=10;save();updateBadgeCard();showOv('ov-rc');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
+function startUnlockedTest(){const word=curQ;closeOv('ov-practice');curMode='test';practiceRound=1;queue=[word];qIdx=0;setModePip('test');showScreen('scr-game',loadQ);}
+function doNext(){qIdx++;if(qIdx<queue.length){loadQ();return;}if(curMode==='daily'){dailyState.done=[...dailyState.chars];dailyState.completed=true;dailyCount++;const today=todayStr(),yesterday=addDays(today,-1);if(lastStreakDate===yesterday||lastStreakDate===today){if(lastStreakDate!==today)streak++;}else{streak=1;}lastStreakDate=today;bonXP+=5;save();updateBadgeCard();document.getElementById('ov-streak').textContent=streak;showOv('ov-daily');return;}snd('levelup');if(['tokkun','nigate','srs'].includes(curMode))showScreen('scr-title');else{renderKanaGrid();showScreen('scr-list');}}
 function doRetry(){currentStroke=0;drawing=false;drawLength=0;lastX=null;lastY=null;userPts=[];sparkles=[];isSparkling=false;resetStrokeScores();userDrawRecord=[];currentStrokePts=[];stopStartDot();document.getElementById('srs-eval').classList.remove('show');document.getElementById('hanamaru-layer').innerHTML='';document.getElementById('canvas-ov').style.opacity='0';hideResultBanner();ctxFx.clearRect(0,0,cW,cW);ctxDr.clearRect(0,0,cW,cW);const isTest=(curMode==='test');setMsg(getRoundMessage(),isTest?'var(--c-action)':'var(--c-practice)');if(strokes.length)startStartDot();}
 function showOv(id){document.getElementById(id).classList.add('show');}
 function closeOv(id){document.getElementById(id).classList.remove('show');}
-function doReset(){localStorage.clear();cleared={};practiceDone={};testDone={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';randomCount=0;reviewCount=0;dailyCount=0;earnedBadges={};updateTitle();}
+function doReset(){localStorage.clear();cleared={};practiceDone={};testDone={};tokk={};niga={};bonXP=0;xpTotal=0;mistCnt={};srsData={};dailyState={date:'',chars:[],done:[],completed:false};streak=0;lastStreakDate='';reviewCount=0;dailyCount=0;earnedBadges={};updateTitle();}
 window.addEventListener('resize',()=>{if(document.getElementById('scr-game').classList.contains('active')){requestAnimationFrame(()=>{resizeCanvas();const newW=document.getElementById('canvas-wrap').offsetWidth;if(newW>0&&newW!==cW)initCanvas();});}});
 let AC;
 function snd(t){try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const now=AC.currentTime;const o=(f,w,d,v=.1,s=now)=>{const os=AC.createOscillator(),g=AC.createGain();os.type=w;os.frequency.setValueAtTime(f,s);g.gain.setValueAtTime(v,s);g.gain.exponentialRampToValueAtTime(.01,s+d);os.connect(g);g.connect(AC.destination);os.start(s);os.stop(s+d);};if(t==='stroke'){o(520,'sine',.06,.18,now);o(1040,'sine',.18,.13,now+.04);o(1560,'sine',.12,.06,now+.09);}else if(t==='error')o(200,'sawtooth',.25,.15);else if(t==='click')o(500,'triangle',.1,.08);else if(t==='complete')[[0,880,.08,.18],[.07,1108,.08,.15],[.13,1318,.1,.15],[.2,1760,.18,.12],[.28,2093,.15,.1],[.33,1760,.12,.08]].forEach(([off,f,d,v])=>o(f,'sine',d,v,now+off));else if(t==='levelup')[[0,523,.12],[.1,659,.12],[.2,784,.12],[.3,1047,.35]].forEach(([off,f,d])=>o(f,'triangle',d,.2,now+off));}catch(e){}}
