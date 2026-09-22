@@ -3,7 +3,8 @@
 
   const all = Object.values(typeof KANA_WORDS !== "undefined" ? KANA_WORDS : {}).flat();
   const allWords = [...new Map(all.filter(x => x && x.word).map(x => [x.word, {word:x.word, icon:x.icon || ""}])).values()];
-  let wordType = "hira";
+  const initialType = new URLSearchParams(location.search).get("type");
+  let wordType = initialType === "kata" ? "kata" : "hira";
   let words = [];
   function buildWordList(){
     const re = wordType === "kata" ? /^[ァ-ヺー]+$/ : /^[ぁ-ゖー]+$/;
