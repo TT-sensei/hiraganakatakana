@@ -32,6 +32,7 @@
   let startDotRaf = null, startDotPhase = 0;
   let currentStrokePts = [];
   let toastTimer = null;
+  let wordTransitionTimer = null;
   const svgCache = {};
   let strokeRefCache = {};
   const TOLERANCE_RATIO = 0.22;
@@ -362,7 +363,10 @@
     $("doneCard").hidden=false;
     $("message").textContent="ことばを ぜんぶ かけたよ！";
     $("message").style.color="var(--green)";
-    setTimeout(()=>{
+    if(wordTransitionTimer) clearTimeout(wordTransitionTimer);
+    wordTransitionTimer=setTimeout(()=>{
+      wordTransitionTimer=null;
+      animating=false;
       $("doneCard").hidden=true;
       nextWord();
     },900);
@@ -389,7 +393,7 @@
     loadCurrentChar();
   }
 
-  function nextWord(){snd("click");loadWord(wordIndex+1);}
+  function nextWord(){if(wordTransitionTimer){clearTimeout(wordTransitionTimer);wordTransitionTimer=null;}animating=false;snd("click");loadWord(wordIndex+1);}
   function prevWord(){snd("click");loadWord(wordIndex-1);}
   function randomWord(){snd("click");loadWord(Math.floor(Math.random()*words.length));}
 
