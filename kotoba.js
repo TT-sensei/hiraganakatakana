@@ -466,6 +466,25 @@
   $("randomBtn").onclick=randomWord;
   $("soundTop").onclick=()=>{snd("click");speak(curWord?curWord.word:"");};
 
+  const HAND_LAYOUT_KEY = "kana-kotoba-writing-hand";
+  function setWritingHand(hand, persist=true){
+    const isLeft = hand === "left";
+    document.body.classList.toggle("hand-left", isLeft);
+    $("rightHandBtn").classList.toggle("active", !isLeft);
+    $("leftHandBtn").classList.toggle("active", isLeft);
+    $("rightHandBtn").setAttribute("aria-pressed", String(!isLeft));
+    $("leftHandBtn").setAttribute("aria-pressed", String(isLeft));
+    if(persist){
+      try{ localStorage.setItem(HAND_LAYOUT_KEY, isLeft ? "left" : "right"); }catch(e){}
+    }
+  }
+  $("rightHandBtn").onclick=()=>{snd("click");setWritingHand("right");};
+  $("leftHandBtn").onclick=()=>{snd("click");setWritingHand("left");};
+  let savedHand = "right";
+  try{ savedHand = localStorage.getItem(HAND_LAYOUT_KEY) === "left" ? "left" : "right"; }catch(e){}
+  setWritingHand(savedHand, false);
+
+
   window.addEventListener("resize",()=>{
     requestAnimationFrame(()=>{
       const old=cW; resizeCanvas(); const w=$("canvasWrap").offsetWidth;
