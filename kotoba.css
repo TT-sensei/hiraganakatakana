@@ -149,3 +149,45 @@ h1{font-size:1.15rem}
   .secondary{padding:7px 9px}
   .nav-btn{padding:6px 9px;font-size:.85rem}
 }
+
+
+/* 書く場所を選ぶ：選択肢は小さく、練習スペースを優先 */
+.hand-switch{
+  display:flex;align-items:center;gap:5px;flex:none;
+  padding:3px;background:#f4eee8;border-radius:12px;
+}
+.hand-label{font-size:.7rem;font-weight:800;color:var(--mid);padding:0 4px;white-space:nowrap}
+.hand-btn{
+  flex:1;min-width:0;border:0;border-radius:9px;background:transparent;
+  color:#6d625a;padding:6px 7px;font-size:.75rem;font-weight:800;
+  white-space:nowrap;cursor:pointer
+}
+.hand-btn.active{background:#fff;color:var(--orange);box-shadow:0 2px 7px rgba(0,0,0,.08)}
+.hand-btn:focus-visible{outline:2px solid var(--orange);outline-offset:1px}
+
+/* 右手用を標準に：書く場所が右、ことば・設定が左 */
+@media (min-width:760px) and (min-height:520px){
+  .app{
+    grid-template-columns:clamp(250px,28vw,330px) minmax(0,1fr);
+    grid-template-rows:auto auto auto auto minmax(0,1fr)
+  }
+  .topbar{grid-column:1;grid-row:1}
+  .type-switch{grid-column:1;grid-row:2}
+  .hand-switch{grid-column:1;grid-row:3}
+  .word-card{grid-column:1;grid-row:4}
+  .step-card{grid-column:2;grid-row:1 / 6}
+  .nav-row{grid-column:1;grid-row:5;align-self:end}
+  /* 左手を選ぶと、これまでの配置（書く場所が左）に切り替える */
+  body.hand-left .app{grid-template-columns:minmax(0,1fr) clamp(250px,28vw,330px)}
+  body.hand-left .topbar{grid-column:2;grid-row:1}
+  body.hand-left .type-switch{grid-column:2;grid-row:2}
+  body.hand-left .hand-switch{grid-column:2;grid-row:3}
+  body.hand-left .word-card{grid-column:2;grid-row:4}
+  body.hand-left .step-card{grid-column:1;grid-row:1 / 6}
+  body.hand-left .nav-row{grid-column:2;grid-row:5}
+}
+@media (max-width:759px){
+  .hand-switch{gap:3px;padding:3px}
+  .hand-label{font-size:.66rem;padding:0 2px}
+  .hand-btn{padding:5px 4px;font-size:.7rem}
+}
