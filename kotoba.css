@@ -31,3 +31,121 @@ button,a{font:inherit;touch-action:manipulation}
 @media(min-width:600px){.app{padding:18px 28px 40px}.word{font-size:3.1rem}.canvas-wrap{max-width:600px}}
 
 .type-switch{display:flex;gap:8px;margin:0 0 12px;background:#f4eee8;padding:5px;border-radius:14px}.type-btn{flex:1;border:0;border-radius:10px;padding:10px 8px;background:transparent;color:#6d625a;font:700 1rem inherit;cursor:pointer}.type-btn.active{background:#fff;color:#243447;box-shadow:0 2px 7px rgba(0,0,0,.08)}
+
+
+/* ── 画面内で書き切れるレイアウト ── */
+html,body{width:100%;height:100%;overflow:hidden}
+.app{
+  width:100%;max-width:1280px;height:100vh;height:100dvh;min-height:0;
+  margin:0 auto;padding:7px 10px 5px;gap:5px;
+  display:flex;flex-direction:column;overflow:hidden
+}
+.topbar{flex:none;gap:10px;padding:2px 0 4px}
+.back,.icon-btn{width:40px;height:40px;flex:none}
+h1{font-size:1.15rem}
+.type-switch{flex:none;margin:0;padding:3px}
+.type-btn{padding:8px 6px}
+.word-card{flex:none;margin:0;padding:7px 10px;border-radius:17px}
+.word-line{gap:8px}
+.word{font-size:2.05rem;line-height:1.05;margin:2px 0 3px}
+.word-icon{width:42px;height:42px}
+.progress{margin-top:5px;gap:6px}
+.progress i{width:7px;height:7px}
+.step-card{
+  flex:1 1 auto;min-height:0;overflow:hidden;
+  display:flex;flex-direction:column;padding:6px 8px;border-radius:18px
+}
+.step-head{flex:none;padding:0 4px 3px}
+.current-char{font-size:1.5rem}
+.step-text{font-size:.72rem}
+.hint-area{flex:none;height:42px;min-height:42px;padding:0;gap:8px}
+.hint-icon-lg{width:36px;height:36px;border-radius:12px;padding:4px}
+.hint-char{font-size:1.65rem}
+.sound-btn{width:36px;height:36px;border-radius:11px}
+.canvas-wrap{
+  flex:0 1 auto;width:min(88vw,32svh,410px);max-width:100%;
+  aspect-ratio:1;margin:0 auto;border-radius:16px
+}
+.message{flex:none;min-height:1.35em;font-size:.76rem;padding:4px 0 0}
+.feedback{flex:none;height:27px}
+.feedback img{height:27px;width:27px}
+.actions{flex:none;gap:8px}
+.secondary,.primary{padding:9px 10px;border-radius:12px}
+.nav-row{flex:none;gap:8px;margin-top:0}
+.nav-btn{padding:8px 10px}
+.note,.license{display:none!important}
+.done-card{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:30;width:min(90vw,360px);margin:0;
+  box-shadow:0 12px 40px rgba(42,58,80,.22)
+}
+
+/* タブレット・PC：書く場所とお題を左右に分ける */
+@media (min-width:760px) and (min-height:520px){
+  .app{
+    width:100%;max-width:1280px;height:100vh;height:100dvh;
+    padding:8px 16px;gap:8px clamp(14px,2vw,24px);
+    display:grid;grid-template-columns:minmax(0,1fr) clamp(250px,28vw,330px);
+    grid-template-rows:auto auto auto minmax(0,1fr);align-content:stretch
+  }
+  .topbar{grid-column:2;grid-row:1;padding:0 0 2px;min-width:0}
+  .type-switch{grid-column:2;grid-row:2;align-self:start}
+  .word-card{grid-column:2;grid-row:3;align-self:start;padding:12px 10px}
+  .word{font-size:clamp(2.1rem,3.2vw,3.1rem);margin:5px 0}
+  .word-icon{width:52px;height:52px}
+  .progress{margin-top:9px}
+  .progress i{width:9px;height:9px}
+  .step-card{
+    grid-column:1;grid-row:1 / 5;
+    min-width:0;min-height:0;margin:0;padding:8px 12px;
+    display:flex;flex-direction:column;overflow:hidden
+  }
+  .step-head{padding:0 4px 4px}
+  .current-char{font-size:1.7rem}
+  .hint-area{height:42px;min-height:42px;padding:0}
+  .hint-icon-lg{width:38px;height:38px}
+  .hint-char{font-size:1.8rem}
+  .canvas-wrap{width:min(62vh,100%,620px);max-width:100%;flex:0 1 auto}
+  .message{padding:5px 0 0;font-size:.82rem}
+  .feedback{height:29px}
+  .feedback img{width:29px;height:29px}
+  .actions .secondary{padding:9px 12px}
+  .nav-row{grid-column:2;grid-row:4;align-self:end;margin:0}
+  .nav-btn{padding:12px 10px}
+}
+@media (min-width:760px) and (max-height:680px){
+  .app{padding-top:5px;padding-bottom:5px;gap:5px 14px}
+  .step-card{padding:5px 8px}
+  .step-head{padding-bottom:2px}
+  .hint-area{height:34px;min-height:34px}
+  .hint-icon-lg{width:30px;height:30px}
+  .hint-char{font-size:1.55rem}
+  .canvas-wrap{width:min(51vh,100%,620px)}
+  .message{padding-top:2px;min-height:1.25em}
+  .feedback{height:22px}
+  .feedback img{width:22px;height:22px}
+  .secondary{padding:7px 10px}
+}
+@media (max-width:759px) and (max-height:640px){
+  .app{padding:3px 8px;gap:3px}
+  .topbar{padding:0 0 2px}
+  .back,.icon-btn{width:34px;height:34px}
+  h1{font-size:1rem}
+  .type-btn{padding:6px}
+  .word-card{padding:5px 8px}
+  .word{font-size:1.8rem;margin:1px 0}
+  .word-icon{width:34px;height:34px}
+  .progress{margin-top:3px}
+  .step-card{padding:4px 6px}
+  .current-char{font-size:1.3rem}
+  .hint-area{height:32px;min-height:32px}
+  .hint-icon-lg{width:28px;height:28px}
+  .hint-char{font-size:1.4rem}
+  .sound-btn{width:30px;height:30px}
+  .canvas-wrap{width:min(88vw,calc(100dvh - 390px),410px);min-width:135px}
+  .message{padding-top:2px;font-size:.7rem}
+  .feedback{height:20px}
+  .feedback img{width:20px;height:20px}
+  .secondary{padding:7px 9px}
+  .nav-btn{padding:6px 9px;font-size:.85rem}
+}
