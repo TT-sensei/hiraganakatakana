@@ -26,7 +26,7 @@ const KANA_WORDS = {
     { char:'か', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/kaeru.webp',         word:'かえる',word:'かえる',     pos:0 },
     { char:'き', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/kinoko.webp',       word:'きのこ',word:'きのこ',     pos:0 },
     { char:'く', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/kuma.webp',         word:'くま',word:'くま',       pos:0 },
-    { char:'け', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/kemushi.webp',   word:'けむし',word:'けむし',     pos:0 },
+    { char:'け', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/keito.webp',   word:'けいと',word:'けいと',     pos:0 },
     { char:'こ', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/koara.webp',         word:'こあら',word:'こあら',     pos:0 },
     { char:'さ', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/sakana.webp',  word:'さかな',   pos:0 },
     { char:'し', icon:'https://tt-sensei.github.io/navi-character-/assets/web/words/shika.webp',         word:'しか',word:'しか',       pos:0 },
