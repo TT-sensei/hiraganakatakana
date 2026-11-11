@@ -121,7 +121,7 @@
 
   function renderHintIcon(icon){
     if(!icon) return "💡";
-    if(icon.startsWith("https://koboyo.com/icons/svg/")){
+    if(/^https?:\/\//.test(icon)){
       return '<img class="hint-icon-lg" src="'+icon+'" alt="" aria-hidden="true">';
     }
     return '<span class="hint-icon-lg">'+icon+"</span>";

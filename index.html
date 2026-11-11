@@ -857,7 +857,7 @@ function resizeCanvas(){
 }
 function renderHintIcon(icon){
   const value=icon||'image';
-  if(value.startsWith('https://koboyo.com/icons/svg/')){
+  if(/^https?:\/\//.test(value)){
     return '<img class="hint-icon-lg koboyo-icon" src="'+value+'" alt="" aria-hidden="true" loading="eager" onerror="this.replaceWith(document.createTextNode(\'🖼️\'))">';
   }
   return '<span class="hint-icon-lg material-symbols-rounded filled" aria-hidden="true">'+value+'</span>';
